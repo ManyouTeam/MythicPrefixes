@@ -88,14 +88,18 @@ public class ObjectPrefix implements Comparable {
     }
 
     public PrefixStatus getConditionMeet(Player player) {
+        if (CommonUtil.checkPermission(player, "mythicprefixes.bypass." + getId())
+        && !MythicPrefixesAPI.getActivedPrefixes(player).contains(this)) {
+            return PrefixStatus.CAN_USE;
+        }
+        if (MythicPrefixesAPI.getActivedPrefixes(player).contains(this)) {
+            return PrefixStatus.USING;
+        }
         if (!condition.getBoolean(player)) {
             return PrefixStatus.CONDITION_NOT_MEET;
         }
         if (MythicPrefixesAPI.getMaxPrefixesAmount(player) == MythicPrefixesAPI.getActivedPrefixes(player).size()) {
             return PrefixStatus.MAX_LIMIT_REACHED;
-        }
-        if (MythicPrefixesAPI.getActivedPrefixes(player).contains(this)) {
-            return PrefixStatus.USING;
         }
         return PrefixStatus.CAN_USE;
     }

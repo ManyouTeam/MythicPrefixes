@@ -1,10 +1,12 @@
 package cn.superiormc.mythicprefixes.papi;
 
 import cn.superiormc.mythicprefixes.MythicPrefixes;
+import cn.superiormc.mythicprefixes.api.MythicPrefixesAPI;
 import cn.superiormc.mythicprefixes.manager.CacheManager;
 import cn.superiormc.mythicprefixes.manager.ConfigManager;
 import cn.superiormc.mythicprefixes.manager.LanguageManager;
 import cn.superiormc.mythicprefixes.objects.ObjectDisplayPlaceholder;
+import cn.superiormc.mythicprefixes.objects.ObjectPrefix;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -58,6 +60,16 @@ public class PlaceholderAPIExpansion extends PlaceholderExpansion {
         }
         if (args[0].equals("amount")) {
             return String.valueOf(CacheManager.cacheManager.getPlayerCache(player).getActivePrefixes().size());
+        }
+        else if (args[0].equals("status") && args.length > 1) {
+            ObjectPrefix prefix = ConfigManager.configManager.getPrefix(args[1]);
+            if (prefix == null) {
+                return LanguageManager.languageManager.getStringText("placeholderapi.unknown-prefix");
+            }
+            return String.valueOf(prefix.getConditionMeet(player));
+        }
+        else if (args[0].equals("max")) {
+            return String.valueOf(MythicPrefixesAPI.getMaxPrefixesAmount(player));
         }
         ObjectDisplayPlaceholder displayPlaceholder = ConfigManager.configManager.getDisplayPlaceholder(args[0]);
         if (displayPlaceholder == null) {

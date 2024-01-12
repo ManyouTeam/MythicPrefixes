@@ -6,6 +6,7 @@ import cn.superiormc.mythicprefixes.manager.LanguageManager;
 import cn.superiormc.mythicprefixes.objects.ObjectCache;
 import cn.superiormc.mythicprefixes.objects.ObjectCommand;
 import cn.superiormc.mythicprefixes.objects.ObjectPrefix;
+import cn.superiormc.mythicprefixes.objects.PrefixStatus;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -46,8 +47,20 @@ public class SubAddPrefix extends ObjectCommand {
             return;
         }
         ObjectCache playerCache = CacheManager.cacheManager.getPlayerCache(whoWillAdd);
-        if (playerCache.getActivePrefixes().contains(whatPrefix)) {
+        if (whatPrefix.getConditionMeet(player) == PrefixStatus.USING) {
             LanguageManager.languageManager.sendStringText(player, "error.prefix-is-using",
+                    "player", whoWillAdd.getName(),
+                    "prefix", args[args.length - 1]);
+            return;
+        }
+        if (whatPrefix.getConditionMeet(player) == PrefixStatus.MAX_LIMIT_REACHED) {
+            LanguageManager.languageManager.sendStringText(player, "error.max-prefix-reached",
+                    "player", whoWillAdd.getName(),
+                    "prefix", args[args.length - 1]);
+            return;
+        }
+        if (whatPrefix.getConditionMeet(player) == PrefixStatus.CONDITION_NOT_MEET) {
+            LanguageManager.languageManager.sendStringText(player, "error.prefix-condition-not-meet",
                     "player", whoWillAdd.getName(),
                     "prefix", args[args.length - 1]);
             return;

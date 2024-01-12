@@ -37,6 +37,7 @@ public class GUIListener implements Listener {
             }
         }
         catch (Exception ep) {
+            ep.printStackTrace();
             e.setCancelled(true);
         }
     }

@@ -7,12 +7,15 @@ error:
   prefix-not-using: "&#98FB98[MythicPrefixes] &cPlayer {player} is not using prefix {prefix}!"
   prefix-is-using: "&#98FB98[MythicPrefixes] &cPlayer {player} is using prefix {prefix}!"
   prefix-is-empty: "&#98FB98[MythicPrefixes] &cPlayer {player} do not have any prefix using!"
+  max-prefix-reached: "&#98FB98[MythicPrefixes] &cPlayer {player} has reached max amount of using prefix!"
+  prefix-condition-not-meet: "&#98FB98[MythicPrefixes] &cPlayer {player} does not meet {prefix}'s condition!"
 
 plugin:
   reloaded: "&#98FB98[MythicPrefixes] &fPlugin reloaded!"
 
 placeholderapi:
   unknown-display-placeholder: "Unknown Display Placeholder ID"
+  unknown-prefix: "Unknown Prefix"
 
 success-add-prefix: "&#98FB98[MythicPrefixes] &fSuccessfully add prefix {prefix} for player {player}!"
 success-remove-prefix: "&#98FB98[MythicPrefixes] &fSuccessfully remove prefix {prefix} for player {player}!"

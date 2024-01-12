@@ -9,6 +9,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.TreeSet;
 
 public class ObjectCache {
@@ -90,25 +91,39 @@ public class ObjectCache {
     }
 
     public Collection<ObjectPrefix> getActivePrefixes() {
-        prefixCaches.removeIf(tempVal1 -> tempVal1.getConditionMeet(player) == PrefixStatus.MAX_LIMIT_REACHED ||
-                tempVal1.getConditionMeet(player) == PrefixStatus.CONDITION_NOT_MEET);
+        Iterator<ObjectPrefix> iterator = prefixCaches.iterator();
+        while (iterator.hasNext()) {
+            ObjectPrefix tempVal1 = iterator.next();
+            if (tempVal1.getConditionMeet(player) == PrefixStatus.CONDITION_NOT_MEET) {
+                iterator.remove(); // 使用迭代器的 remove() 方法删除元素
+                if (ConfigManager.configManager.getBoolean("debug")) {
+                    Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicPrefixes] §fRemoved active prefix " + tempVal1.getId() + "" +
+                            " for player " + player.getName() + " because now prefix status is " + tempVal1.getConditionMeet(player) + "!");
+                }
+            }
+        }
         return prefixCaches;
     }
 
     public String getActivePrefixesID() {
         int i = 0;
         StringBuilder tempVal2 = new StringBuilder();
-        for (ObjectPrefix tempVal1 : prefixCaches) {
-            if (tempVal1.getConditionMeet(player) == PrefixStatus.MAX_LIMIT_REACHED ||
-                    tempVal1.getConditionMeet(player) == PrefixStatus.CONDITION_NOT_MEET) {
-                removeActivePrefix(tempVal1);
+        Iterator<ObjectPrefix> iterator = prefixCaches.iterator();
+        while (iterator.hasNext()) {
+            ObjectPrefix tempVal1 = iterator.next();
+            if (tempVal1.getConditionMeet(player) == PrefixStatus.CONDITION_NOT_MEET) {
+                iterator.remove(); // 使用迭代器的 remove() 方法删除元素
+                if (ConfigManager.configManager.getBoolean("debug")) {
+                    Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicPrefixes] §fRemoved active prefix " + tempVal1.getId() + "" +
+                            " for player " + player.getName() + " because now prefix status is " + tempVal1.getConditionMeet(player) + "!");
+                }
                 continue;
             }
             if (i > 0) {
                 tempVal2.append(";;");
             }
             tempVal2.append(tempVal1.getId());
-            i ++;
+            i++;
         }
         return tempVal2.toString();
     }

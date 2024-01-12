@@ -2,6 +2,8 @@
 #
 # Read the wiki here: simple.superiormc.cn
 
+debug: false
+
 display-placeholder:
   chat:
     start-symbol: '&f['

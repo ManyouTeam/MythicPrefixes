@@ -147,24 +147,4 @@ public class LanguageManager {
         return this.messageFile.getString(path);
     }
 
-    public List<String> getStringListText(String path) {
-        if (this.messageFile.getStringList(path).isEmpty()) {
-            List<String> tempVal1 = new ArrayList<>();
-            if (this.tempMessageFile.getString(path) == null) {
-                tempVal1.add("§cCan not found language key: " + path + "!");
-                return tempVal1;
-            }
-            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicPrefixes] §cUpdated your language file, added " +
-                    "new language key and it's default value: " + path + "!");
-            messageFile.set(path, this.tempMessageFile.getStringList(path));
-            try {
-                messageFile.save(file);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            return this.tempMessageFile.getStringList(path);
-        }
-        return this.messageFile.getStringList(path);
-    }
-
 }
