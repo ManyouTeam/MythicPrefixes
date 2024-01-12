@@ -1,0 +1,71 @@
+# MythicPrefixes Made by @PQguanfang
+#
+# Read the wiki here: simple.superiormc.cn
+
+display-placeholder:
+  chat:
+    start-symbol: '&f['
+    split-symbol: '&f, '
+    end-symbol: '&f]'
+    black-prefixes: []
+    display-amount: 10
+
+# {status} Placeholder
+status-placeholder:
+  unlocked: '&eClick to use'
+  using: '&eClick to cancel use this prefix.'
+  locked: '&cYou do not have permission to use this prefix.'
+  max-reached: '&cYou can not use anymore prefix.'
+
+max-prefixes-amount:
+  default: 1
+  vip: 2
+
+max-prefixes-amount-conditions:
+  vip:
+    - 'group.default'
+
+choose-prefix-gui:
+  title: 'Choose your prefix'
+  size: 54
+  prefix-item-slot: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,
+                     16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,
+                     31,32,33,34,35,36,37,38,39,40,41,42,43,44]
+  # Remove this section if you do not want this item.
+  next-page-item:
+    slot: 52
+    material: ARROW
+    name: '&cNext page'
+    lore:
+      - '&7Page: {now}/{max}'
+      - '&eClick to view next page'
+  # Remove this section if you do not want this item.
+  previous-page-item:
+    slot: 46
+    material: ARROW
+    name: '&cPrevious page'
+    lore:
+      - '&7Page: {now}/{max}'
+      - '&eClick to view previous page'
+
+database:
+  enabled: false
+  jdbc-url: "jdbc:mysql://localhost:3306/mythicprefixes?useSSL=false&autoReconnect=true"
+  jdbc-class: "com.mysql.cj.jdbc.Driver"
+  properties:
+    user: root
+    password: 123456
+
+libreforge-hook: false
+libreforge-effects:
+  - id: default
+    effects:
+      - id: bonus_health
+        args:
+          health: 40
+      - id: damage_multiplier
+        args:
+          multiplier: 4.0
+        triggers:
+          - melee_attack
+    conditions: []

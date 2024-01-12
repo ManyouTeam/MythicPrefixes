@@ -1,0 +1,14 @@
+name: MythicPrefixes
+version: '${project.version}'
+main: cn.superiormc.mythicprefixes.MythicPrefixes
+api-version: '1.13'
+softdepend:
+  - PlaceholderAPI
+  - MythicLib
+commands:
+  mythicprefixes:
+    aliases:
+      - "prefix"
+      - "prefixes"
+    usage: "/mythicprefixes"
+    description: "MythicPrefixes Main Command."

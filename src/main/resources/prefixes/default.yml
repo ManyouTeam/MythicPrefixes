@@ -1,0 +1,38 @@
+# Remove whole display item section to make it hide in GUI
+display-item:
+  unlocked:
+    material: DRAGON_EGG
+    name: '{display-value}'
+    lore:
+      - '&7Preview: {display-value} %player_name%'
+      - '&eClick to use!'
+  using:
+    material: DRAGON_EGG
+    name: '{display-value}'
+    lore:
+      - '&7Preview: {display-value} %player_name%'
+      - '&cYou are now using this prefix!'
+      - '&eClick to cancel use this prefix!'
+  locked:
+    material: DRAGON_EGG
+    name: '&cLocked'
+    lore:
+      - '&7Preview: {display-value} %player_name%'
+      - '&cKill a dragon to unlock!'
+  max-reached:
+    material: DRAGON_EGG
+    name: '{display-value}'
+    lore:
+      - '&7Preview: {display-value} %player_name%'
+      - '&cYou have reached max use of prefix!'
+display-value: '&8Dragon Killer'
+weight: 15
+effects:
+  libreforge: false
+  MythicLib: false
+MythicLib-effects:
+  1:
+    stat: MAX_HEALTH
+    value: 1
+conditions:
+  - 'permission: killed.dragon'
