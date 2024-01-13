@@ -3,7 +3,8 @@ package cn.superiormc.mythicprefixes.manager;
 import cn.superiormc.mythicprefixes.MythicPrefixes;
 import cn.superiormc.mythicprefixes.libreforge.LibreforgeEffects;
 import cn.superiormc.mythicprefixes.objects.ObjectDisplayPlaceholder;
-import cn.superiormc.mythicprefixes.objects.ObjectPrefix;
+import cn.superiormc.mythicprefixes.objects.buttons.ObjectButton;
+import cn.superiormc.mythicprefixes.objects.buttons.ObjectPrefix;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -20,6 +21,8 @@ public class ConfigManager {
 
     public Map<String, ObjectPrefix> prefixConfigs = new TreeMap<>();
 
+    public Map<Integer, ObjectButton> buttonConfigs = new TreeMap<>();
+
     public Map<String, ObjectDisplayPlaceholder> placeholderConfigs = new HashMap<>();
 
     public ConfigManager() {
@@ -29,6 +32,7 @@ public class ConfigManager {
         initLibreforgeHook();
         initDisplayPlaceholderConfigs();
         initPrefixesConfigs();
+        initButtonConfigs();
     }
 
     private void initLibreforgeHook() {
@@ -43,7 +47,6 @@ public class ConfigManager {
     }
 
     private void initDisplayPlaceholderConfigs() {
-        this.placeholderConfigs = new HashMap<>();
         ConfigurationSection tempVal1 = config.getConfigurationSection("display-placeholder");
         if (tempVal1 == null) {
             return;
@@ -55,8 +58,19 @@ public class ConfigManager {
         }
     }
 
+    private void initButtonConfigs() {
+        ConfigurationSection tempVal1 = config.getConfigurationSection("choose-prefix-gui.custom-item");
+        if (tempVal1 == null) {
+            return;
+        }
+        for (String id : tempVal1.getKeys(false)) {
+            buttonConfigs.put(Integer.parseInt(id), new ObjectButton(tempVal1.getConfigurationSection(id)));
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicPrefixes] §fLoaded custom button: " +
+                    id + "!");
+        }
+    }
+
     private void initPrefixesConfigs() {
-        this.prefixConfigs = new HashMap<>();
         File dir = new File(MythicPrefixes.instance.getDataFolder(), "prefixes");
         if (!dir.exists()) {
             dir.mkdir();
@@ -104,21 +118,8 @@ public class ConfigManager {
         return resultPrefixes;
     }
 
-    public List<String> getListWithColor(String... args) {
-        List<String> resultList = new ArrayList<>();
-        for (String s : config.getStringList(args[0])) {
-            for (int i = 1 ; i < args.length ; i += 2) {
-                String var = "{" + args[i] + "}";
-                if (args[i + 1] == null) {
-                    s = s.replace(var, "");
-                }
-                else {
-                    s = s.replace(var, args[i + 1]);
-                }
-            }
-            //resultList.add(TextUtil.parse(s));
-        }
-        return resultList;
+    public Map<Integer, ObjectButton> getButtons() {
+        return buttonConfigs;
     }
 
     public boolean getBoolean(String path) {

@@ -1,8 +1,12 @@
-package cn.superiormc.mythicprefixes.objects;
+package cn.superiormc.mythicprefixes.objects.buttons;
 
 import cn.superiormc.mythicprefixes.api.MythicPrefixesAPI;
 import cn.superiormc.mythicprefixes.libreforge.LibreforgeEffects;
+import cn.superiormc.mythicprefixes.manager.CacheManager;
 import cn.superiormc.mythicprefixes.manager.ConfigManager;
+import cn.superiormc.mythicprefixes.objects.ObjectCondition;
+import cn.superiormc.mythicprefixes.objects.ObjectMMOEffect;
+import cn.superiormc.mythicprefixes.objects.PrefixStatus;
 import cn.superiormc.mythicprefixes.utils.CommonUtil;
 import cn.superiormc.mythicprefixes.utils.ItemUtil;
 import cn.superiormc.mythicprefixes.utils.TextUtil;
@@ -11,6 +15,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,20 +24,17 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-public class ObjectPrefix implements Comparable {
+public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPrefix> {
 
-    private String id;
+    private final String id;
 
-    private YamlConfiguration config;
-
-    private ObjectCondition condition;
-
-    private Map<Player, Collection<ObjectMMOEffect>> mmoEffects = new HashMap<>();
+    private final Map<Player, Collection<ObjectMMOEffect>> mmoEffects = new HashMap<>();
 
 
     public ObjectPrefix(String id, YamlConfiguration config) {
+        super(config);
         this.id = id;
-        this.config = config;
+        this.type = ButtonType.PREFIX;
         this.condition = new ObjectCondition(config.getStringList("conditions"));
         initEffects();
     }
@@ -70,8 +72,8 @@ public class ObjectPrefix implements Comparable {
         if (mmoEffects.get(player) != null) {
             for (ObjectMMOEffect tempVal1 : mmoEffects.get(player)) {
                 tempVal1.removePlayerStat();
-                mmoEffects.remove(tempVal1);
             }
+            mmoEffects.remove(player);
         }
     }
 
@@ -108,6 +110,19 @@ public class ObjectPrefix implements Comparable {
         return config.contains("display-item", true);
     }
 
+    @Override
+    public void clickEvent(ClickType type, Player player) {
+        switch (getConditionMeet(player)) {
+            case CAN_USE:
+                CacheManager.cacheManager.getPlayerCache(player).addActivePrefix(this);
+                break;
+            case USING:
+                CacheManager.cacheManager.getPlayerCache(player).removeActivePrefix(this);
+                break;
+        }
+    }
+
+    @Override
     public ItemStack getDisplayItem(Player player) {
         ConfigurationSection section = null;
         if (getConditionMeet(player) == PrefixStatus.CAN_USE) {
@@ -131,8 +146,7 @@ public class ObjectPrefix implements Comparable {
     }
 
     @Override
-    public int compareTo(@NotNull Object o) {
-        ObjectPrefix otherPrefix = (ObjectPrefix) o;
+    public int compareTo(@NotNull ObjectPrefix otherPrefix) {
         if (getWeight() == otherPrefix.getWeight()) {
             int len1 = getId().length();
             int len2 = otherPrefix.getId().length();

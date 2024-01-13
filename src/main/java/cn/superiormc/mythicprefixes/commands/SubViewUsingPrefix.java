@@ -1,11 +1,10 @@
 package cn.superiormc.mythicprefixes.commands;
 
 import cn.superiormc.mythicprefixes.manager.CacheManager;
-import cn.superiormc.mythicprefixes.manager.ConfigManager;
 import cn.superiormc.mythicprefixes.manager.LanguageManager;
 import cn.superiormc.mythicprefixes.objects.ObjectCache;
 import cn.superiormc.mythicprefixes.objects.ObjectCommand;
-import cn.superiormc.mythicprefixes.objects.ObjectPrefix;
+import cn.superiormc.mythicprefixes.objects.buttons.ObjectPrefix;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 

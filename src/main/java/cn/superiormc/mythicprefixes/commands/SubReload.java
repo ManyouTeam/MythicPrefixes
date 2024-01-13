@@ -1,5 +1,6 @@
 package cn.superiormc.mythicprefixes.commands;
 
+import cn.superiormc.mythicprefixes.MythicPrefixes;
 import cn.superiormc.mythicprefixes.manager.CacheManager;
 import cn.superiormc.mythicprefixes.manager.ConfigManager;
 import cn.superiormc.mythicprefixes.manager.LanguageManager;
@@ -23,6 +24,7 @@ public class SubReload extends ObjectCommand {
      */
     @Override
     public void executeCommandInGame(String[] args, Player player) {
+        MythicPrefixes.instance.reloadConfig();
         new ConfigManager();
         new LanguageManager();
         CacheManager.cacheManager.reload();

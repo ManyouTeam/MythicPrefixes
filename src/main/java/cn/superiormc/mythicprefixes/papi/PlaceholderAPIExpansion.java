@@ -6,7 +6,7 @@ import cn.superiormc.mythicprefixes.manager.CacheManager;
 import cn.superiormc.mythicprefixes.manager.ConfigManager;
 import cn.superiormc.mythicprefixes.manager.LanguageManager;
 import cn.superiormc.mythicprefixes.objects.ObjectDisplayPlaceholder;
-import cn.superiormc.mythicprefixes.objects.ObjectPrefix;
+import cn.superiormc.mythicprefixes.objects.buttons.ObjectPrefix;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;

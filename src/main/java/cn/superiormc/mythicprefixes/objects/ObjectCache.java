@@ -5,6 +5,7 @@ import cn.superiormc.mythicprefixes.api.MythicPrefixesAPI;
 import cn.superiormc.mythicprefixes.database.SQLDatabase;
 import cn.superiormc.mythicprefixes.database.YamlDatabase;
 import cn.superiormc.mythicprefixes.manager.ConfigManager;
+import cn.superiormc.mythicprefixes.objects.buttons.ObjectPrefix;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 

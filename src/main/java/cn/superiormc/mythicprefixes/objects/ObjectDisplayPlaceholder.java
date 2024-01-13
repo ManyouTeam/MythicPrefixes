@@ -1,11 +1,11 @@
 package cn.superiormc.mythicprefixes.objects;
 
 import cn.superiormc.mythicprefixes.manager.CacheManager;
+import cn.superiormc.mythicprefixes.objects.buttons.ObjectPrefix;
 import cn.superiormc.mythicprefixes.utils.TextUtil;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ObjectDisplayPlaceholder {

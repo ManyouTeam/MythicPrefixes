@@ -49,6 +49,21 @@ choose-prefix-gui:
     lore:
       - '&7Page: {now}/{max}'
       - '&eClick to view previous page'
+  custom-item:
+    49: # Mean the slot
+      material: SPAWNER
+      name: '&4Unequip All tags'
+      lore:
+        - '&cClick to unequip.'
+      actions:
+        - 'removeall'
+    53: # Mean the slot
+      material: BARRIER
+      name: '&cClose'
+      lore:
+        - '&cClick to close this menu.'
+      actions:
+        - 'close'
 
 database:
   enabled: false

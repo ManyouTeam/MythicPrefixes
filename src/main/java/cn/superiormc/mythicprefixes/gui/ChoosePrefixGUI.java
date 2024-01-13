@@ -1,10 +1,8 @@
 package cn.superiormc.mythicprefixes.gui;
 
-import cn.superiormc.mythicprefixes.gui.InvGUI;
-import cn.superiormc.mythicprefixes.manager.CacheManager;
 import cn.superiormc.mythicprefixes.manager.ConfigManager;
-import cn.superiormc.mythicprefixes.objects.ObjectPrefix;
-import cn.superiormc.mythicprefixes.objects.PrefixStatus;
+import cn.superiormc.mythicprefixes.objects.buttons.AbstractButton;
+import cn.superiormc.mythicprefixes.objects.buttons.ObjectPrefix;
 import cn.superiormc.mythicprefixes.utils.ItemUtil;
 import cn.superiormc.mythicprefixes.utils.TextUtil;
 import org.bukkit.Bukkit;
@@ -18,9 +16,11 @@ import java.util.*;
 
 public class ChoosePrefixGUI extends InvGUI {
 
-    private Map<Integer, ObjectPrefix> prefixCache = new HashMap<>();
+    private Map<Integer, AbstractButton> prefixCache = new HashMap<>();
 
-    private List<Integer> slotCache = new ArrayList<>();
+    private Map<Integer, AbstractButton> buttonCache = new HashMap<>();
+
+    private List<Integer> slotCache;
 
     private int needPages = 1;
 
@@ -39,8 +39,8 @@ public class ChoosePrefixGUI extends InvGUI {
     @Override
     protected void constructGUI() {
         int i = 0;
-        for (ObjectPrefix shop : ConfigManager.configManager.getPrefixesWithoutHide()) {
-            prefixCache.put(i, shop);
+        for (ObjectPrefix prefix : ConfigManager.configManager.getPrefixesWithoutHide()) {
+            prefixCache.put(i, prefix);
             i ++;
         }
         if (prefixCache.size() >= slotCache.size()) {
@@ -52,12 +52,19 @@ public class ChoosePrefixGUI extends InvGUI {
                             "title")));
         }
         for (int c = 0 ; c < slotCache.size() ; c ++) {
-            ObjectPrefix prefix = prefixCache.get((nowPage - 1)  * slotCache.size() + c);
+            AbstractButton prefix = prefixCache.get((nowPage - 1)  * slotCache.size() + c);
             if (prefix == null) {
                 continue;
             }
-            ItemStack prefixItem = prefix.getDisplayItem(player);
-            inv.setItem(c, prefixItem);
+            inv.setItem(slotCache.get(c), prefix.getDisplayItem(player));
+        }
+        for (int slot : ConfigManager.configManager.getButtons().keySet()) {
+            AbstractButton button = ConfigManager.configManager.getButtons().get(slot);
+            if (button == null) {
+                continue;
+            }
+            buttonCache.put(slot, button);
+            inv.setItem(slot, button.getDisplayItem(player));
         }
         ConfigurationSection nextPageSection = ConfigManager.configManager.getSection().
                 getConfigurationSection("choose-prefix-gui.next-page-item");
@@ -89,20 +96,7 @@ public class ChoosePrefixGUI extends InvGUI {
 
     @Override
     public boolean clickEventHandle(Inventory inventory, ClickType type, int slot) {
-        if (slotCache.contains(slot)) {
-            ObjectPrefix prefix = prefixCache.get(slot);
-            if (prefix != null) {
-                switch (prefix.getConditionMeet(player)) {
-                    case CAN_USE:
-                        CacheManager.cacheManager.getPlayerCache(player).addActivePrefix(prefix);
-                        break;
-                    case USING:
-                        CacheManager.cacheManager.getPlayerCache(player).removeActivePrefix(prefix);
-                        break;
-                }
-            }
-        }
-        else if (slot == nextPageSlot) {
+        if (slot == nextPageSlot) {
             if (nowPage < needPages) {
                 nowPage++;
             }
@@ -110,6 +104,17 @@ public class ChoosePrefixGUI extends InvGUI {
         else if (slot == previousPageSlot) {
             if (nowPage > 0) {
                 nowPage--;
+            }
+        }
+        else {
+            AbstractButton prefix = prefixCache.get((nowPage - 1)  * slotCache.size() + slotCache.indexOf(slot));
+            if (prefix != null) {
+                prefix.clickEvent(type, player);
+            } else {
+                AbstractButton button = buttonCache.get(slot);
+                if (button != null) {
+                    button.clickEvent(type, player);
+                }
             }
         }
         constructGUI();

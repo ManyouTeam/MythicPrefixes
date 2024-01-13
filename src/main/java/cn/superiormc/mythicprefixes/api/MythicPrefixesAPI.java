@@ -4,7 +4,7 @@ import cn.superiormc.mythicprefixes.MythicPrefixes;
 import cn.superiormc.mythicprefixes.manager.ConfigManager;
 import cn.superiormc.mythicprefixes.manager.ErrorManager;
 import cn.superiormc.mythicprefixes.objects.ObjectCondition;
-import cn.superiormc.mythicprefixes.objects.ObjectPrefix;
+import cn.superiormc.mythicprefixes.objects.buttons.ObjectPrefix;
 import cn.superiormc.mythicprefixes.manager.CacheManager;
 import cn.superiormc.mythicprefixes.utils.TextUtil;
 import org.bukkit.configuration.ConfigurationSection;

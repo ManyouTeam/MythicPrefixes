@@ -4,7 +4,8 @@ import cn.superiormc.mythicprefixes.MythicPrefixes;
 import cn.superiormc.mythicprefixes.objects.ObjectCache;
 import cn.superiormc.mythicprefixes.manager.CacheManager;
 import cn.superiormc.mythicprefixes.manager.ErrorManager;
-import cn.superiormc.mythicprefixes.objects.ObjectPrefix;
+import cn.superiormc.mythicprefixes.objects.buttons.ObjectPrefix;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
@@ -36,7 +37,6 @@ public class YamlDatabase {
                         "Can not create new data file: " + cache.getPlayer().getUniqueId() + ".yml!");
             }
         }
-        // 次数储存系统
         YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
         StringBuilder tempVal3 = new StringBuilder();
         int i = 0;
@@ -46,6 +46,7 @@ public class YamlDatabase {
                 tempVal3.append(";;");
             }
             tempVal3.append(tempVal2);
+            i ++;
         }
         cache.setActivePrefixes(tempVal3.toString());
     }

@@ -1,7 +1,7 @@
 package cn.superiormc.mythicprefixes.libreforge;
 
 import cn.superiormc.mythicprefixes.MythicPrefixes;
-import cn.superiormc.mythicprefixes.objects.ObjectPrefix;
+import cn.superiormc.mythicprefixes.objects.buttons.ObjectPrefix;
 import cn.superiormc.mythicprefixes.api.MythicPrefixesAPI;
 import com.willfp.eco.core.config.ConfigType;
 import com.willfp.eco.core.config.Configs;
