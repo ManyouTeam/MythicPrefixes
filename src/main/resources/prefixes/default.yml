@@ -5,6 +5,9 @@ display-item:
     name: '{display-value}'
     lore:
       - '&7Preview: {display-value} %player_name%'
+      - '&dOp will always can use the tag, give'
+      - '&dyourself &4-mythicprefixes.bypass.*'
+      - '&dpermission to avoid that.'
       - '&eClick to use!'
   using:
     material: DRAGON_EGG

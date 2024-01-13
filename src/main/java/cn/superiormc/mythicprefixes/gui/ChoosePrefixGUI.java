@@ -54,6 +54,7 @@ public class ChoosePrefixGUI extends InvGUI {
         for (int c = 0 ; c < slotCache.size() ; c ++) {
             AbstractButton prefix = prefixCache.get((nowPage - 1)  * slotCache.size() + c);
             if (prefix == null) {
+                inv.clear(slotCache.get(c));
                 continue;
             }
             inv.setItem(slotCache.get(c), prefix.getDisplayItem(player));
