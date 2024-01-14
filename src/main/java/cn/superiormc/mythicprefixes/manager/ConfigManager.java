@@ -21,6 +21,8 @@ public class ConfigManager {
 
     public Map<String, ObjectPrefix> prefixConfigs = new TreeMap<>();
 
+    public Collection<ObjectPrefix> prefixCaches = new TreeSet<>();
+
     public Map<Integer, ObjectButton> buttonConfigs = new TreeMap<>();
 
     public Map<String, ObjectDisplayPlaceholder> placeholderConfigs = new HashMap<>();
@@ -83,8 +85,9 @@ public class ConfigManager {
             String fileName = file.getName();
             if (fileName.endsWith(".yml")) {
                 String substring = fileName.substring(0, fileName.length() - 4);
-                prefixConfigs.put(substring,
-                        new ObjectPrefix(substring, YamlConfiguration.loadConfiguration(file)));
+                ObjectPrefix prefix = new ObjectPrefix(substring, YamlConfiguration.loadConfiguration(file));
+                prefixConfigs.put(substring, prefix);
+                prefixCaches.add(prefix);
                 Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicPrefixes] §fLoaded prefix: " +
                         fileName + "!");
             }
@@ -101,8 +104,7 @@ public class ConfigManager {
 
     public Collection<ObjectPrefix> getPrefixesWithoutHide() {
         Collection<ObjectPrefix> resultPrefixes = new TreeSet<>();
-        for (String key : prefixConfigs.keySet()) {
-            ObjectPrefix prefix = prefixConfigs.get(key);
+        for (ObjectPrefix prefix : prefixCaches) {
             if (prefix.getDisplayInGUI()) {
                 resultPrefixes.add(prefix);
             }
@@ -111,11 +113,7 @@ public class ConfigManager {
     }
 
     public Collection<ObjectPrefix> getPrefixes() {
-        Collection<ObjectPrefix> resultPrefixes = new TreeSet<>();
-        for (String key : prefixConfigs.keySet()) {
-            resultPrefixes.add(prefixConfigs.get(key));
-        }
-        return resultPrefixes;
+        return prefixCaches;
     }
 
     public Map<Integer, ObjectButton> getButtons() {

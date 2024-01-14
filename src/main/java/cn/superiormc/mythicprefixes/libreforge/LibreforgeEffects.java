@@ -48,6 +48,7 @@ public class LibreforgeEffects {
     }
 
     public void registerLibreforgeEffect(String id) {
+        libreforgeEffectMap = new HashMap<>();
         File file = new File(MythicPrefixes.instance.getDataFolder(), "config.yml");
         if (!file.exists()) {
             return;

@@ -194,7 +194,13 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
                 char c2 = otherPrefix.getId().charAt(i);
 
                 if (c1 != c2) {
-                    return c1 - c2;
+                    if (Character.isDigit(c1) && Character.isDigit(c2)) {
+                        // 如果字符都是数字，则按照数字大小进行比较
+                        return Integer.compare(Integer.parseInt(getId().substring(i)), Integer.parseInt(otherPrefix.getId().substring(i)));
+                    } else {
+                        // 否则，按照字符的unicode值进行比较
+                        return c1 - c2;
+                    }
                 }
             }
 
