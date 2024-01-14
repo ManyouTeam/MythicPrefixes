@@ -134,6 +134,10 @@ public class ConfigManager {
         return config.getIntegerList(path);
     }
 
+    public long getLong(String path, long defaultValue) {
+        return config.getLong(path, defaultValue);
+    }
+
     public String getString(String path, String... args) {
         String s = config.getString(path);
         if (s == null) {

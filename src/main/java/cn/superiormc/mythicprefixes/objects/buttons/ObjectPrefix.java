@@ -1,9 +1,11 @@
 package cn.superiormc.mythicprefixes.objects.buttons;
 
+import cn.superiormc.mythicprefixes.MythicPrefixes;
 import cn.superiormc.mythicprefixes.api.MythicPrefixesAPI;
 import cn.superiormc.mythicprefixes.libreforge.LibreforgeEffects;
 import cn.superiormc.mythicprefixes.manager.CacheManager;
 import cn.superiormc.mythicprefixes.manager.ConfigManager;
+import cn.superiormc.mythicprefixes.objects.ObjectAction;
 import cn.superiormc.mythicprefixes.objects.ObjectCondition;
 import cn.superiormc.mythicprefixes.objects.ObjectMMOEffect;
 import cn.superiormc.mythicprefixes.objects.PrefixStatus;
@@ -17,6 +19,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
@@ -28,7 +31,15 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
 
     private final String id;
 
-    private final Map<Player, Collection<ObjectMMOEffect>> mmoEffects = new HashMap<>();
+    private final ObjectAction startAction;
+
+    private final ObjectAction endAction;
+
+    private final ObjectAction circleAction;
+
+    private Map<Player, Collection<ObjectMMOEffect>> mmoEffects = new HashMap<>();
+
+    private Map<Player, BukkitTask> taskCache = new HashMap<>();
 
 
     public ObjectPrefix(String id, YamlConfiguration config) {
@@ -36,6 +47,9 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
         this.id = id;
         this.type = ButtonType.PREFIX;
         this.condition = new ObjectCondition(config.getStringList("conditions"));
+        this.startAction = new ObjectAction(config.getStringList("equip-actions"));
+        this.endAction = new ObjectAction(config.getStringList("unequip-actions"));
+        this.circleAction = new ObjectAction(config.getStringList("circle-actions"));
         initEffects();
     }
 
@@ -46,12 +60,35 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
         }
     }
 
-    public boolean useMMOEffect() {
+    private boolean useMMOEffect() {
         return CommonUtil.checkPluginLoad("MythicLib") &&
                 config.getBoolean("effects.MythicLib", false);
     }
 
-    public void startMMOEffect(Player player) {
+    public void runStartAction(Player player) {
+        if (useMMOEffect()) {
+            startMMOEffect(player);
+        }
+        startAction.doAction(player);
+        if (!circleAction.isEmpty()) {
+            BukkitTask task = Bukkit.getScheduler().runTaskTimer(MythicPrefixes.instance, () ->
+                    circleAction.doAction(player), 0L, ConfigManager.configManager.getLong("circle-actions.period-tick", 20L));
+            taskCache.put(player, task);
+        }
+    }
+
+    public void runEndAction(Player player) {
+        if (useMMOEffect()) {
+            endMMOEffect(player);
+        }
+        endAction.doAction(player);
+        if (taskCache.get(player) != null) {
+            taskCache.get(player).cancel();
+        }
+        taskCache.remove(player);
+    }
+
+    private void startMMOEffect(Player player) {
         ConfigurationSection section = config.getConfigurationSection("MythicLib-effects");
         Collection<ObjectMMOEffect> mmoResult = new HashSet<>();
         if (section != null) {
@@ -68,7 +105,7 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
         mmoEffects.put(player, mmoResult);
     }
 
-    public void endMMOEffect(Player player) {
+    private void endMMOEffect(Player player) {
         if (mmoEffects.get(player) != null) {
             for (ObjectMMOEffect tempVal1 : mmoEffects.get(player)) {
                 tempVal1.removePlayerStat();

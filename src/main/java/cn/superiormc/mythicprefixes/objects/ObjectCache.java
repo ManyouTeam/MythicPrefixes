@@ -72,16 +72,12 @@ public class ObjectCache {
         if (prefix.getConditionMeet(player) != PrefixStatus.CAN_USE) {
             return;
         }
-        if (prefix.useMMOEffect()) {
-            prefix.startMMOEffect(player);
-        }
+        prefix.runStartAction(player);
         prefixCaches.add(prefix);
     }
 
     public void removeActivePrefix(ObjectPrefix prefix) {
-        if (prefix.useMMOEffect()) {
-            prefix.endMMOEffect(player);
-        }
+        prefix.runEndAction(player);
         prefixCaches.remove(prefix);
     }
 

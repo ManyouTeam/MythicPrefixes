@@ -19,6 +19,9 @@ status-placeholder:
   locked: '&cYou do not have permission to use this prefix.'
   max-reached: '&cYou can not use anymore prefix.'
 
+circle-actions:
+  period-tick: 20
+
 max-prefixes-amount:
   default: 1
   vip: 2

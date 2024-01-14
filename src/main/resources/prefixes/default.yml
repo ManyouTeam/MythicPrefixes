@@ -37,5 +37,11 @@ MythicLib-effects:
   1:
     stat: MAX_HEALTH
     value: 1
+equip-actions:
+  - 'message: Start equip the tag!'
+unequip-actions:
+  - 'message: Not equip the tag!'
+circle-actions:
+  - 'console_command: say Wow!'
 conditions:
   - 'permission: killed.dragon'

@@ -12,11 +12,6 @@ public class ObjectCondition {
 
     private final List<String> condition;
 
-    public ObjectCondition() {
-        this.condition = new ArrayList<>();
-        condition.add("none");
-    }
-
     public ObjectCondition(List<String> condition) {
         this.condition = condition;
     }

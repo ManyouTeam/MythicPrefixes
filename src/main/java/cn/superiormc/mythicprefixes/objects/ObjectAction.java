@@ -21,14 +21,14 @@ import java.util.List;
 
 public class ObjectAction {
 
-    private final List<String> actions = new ArrayList<>();
+    private final List<String> actions;
 
-    public ObjectAction() {
-        // Empty...
+    public ObjectAction(List<String> actions) {
+        this.actions = actions;
     }
 
-    public ObjectAction(List<String> action) {
-        this.actions.addAll(action);
+    public boolean isEmpty() {
+        return actions.isEmpty();
     }
 
     public void doAction(Player player) {
