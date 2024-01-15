@@ -20,10 +20,15 @@ public class LibreforgeEffects {
 
     private Config config;
 
-    private Map<String, LibreforgeEffect> libreforgeEffectMap = new HashMap<>();
+    private Map<String, LibreforgeEffect> libreforgeEffectMap;
     public LibreforgeEffects() {
         libreforgeEffects = this;
+        cleanMap();
         initLibreforgeHook();
+    }
+
+    public void cleanMap() {
+        libreforgeEffectMap = new HashMap<>();
     }
 
     private void initLibreforgeHook() {
@@ -48,7 +53,6 @@ public class LibreforgeEffects {
     }
 
     public void registerLibreforgeEffect(String id) {
-        libreforgeEffectMap = new HashMap<>();
         File file = new File(MythicPrefixes.instance.getDataFolder(), "config.yml");
         if (!file.exists()) {
             return;

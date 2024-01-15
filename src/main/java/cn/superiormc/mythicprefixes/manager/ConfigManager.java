@@ -41,7 +41,11 @@ public class ConfigManager {
         if (ConfigManager.configManager.getBoolean("libreforge-hook")) {
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicPrefixes] §fHooking into libreforge...");
             try {
-                new LibreforgeEffects();
+                if (LibreforgeEffects.libreforgeEffects == null) {
+                    new LibreforgeEffects();
+                } else {
+                    LibreforgeEffects.libreforgeEffects.cleanMap();
+                }
             } catch (Exception ignored) {
                 Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicPrefixes] §cFailed to hook into.");
             }
