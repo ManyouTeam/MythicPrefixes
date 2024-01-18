@@ -45,7 +45,7 @@ public class CacheManager {
 
     public void savePlayerCache(Player player) {
         if (playerCacheMap.get(player) == null) {
-            ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicPrefixes] §cError: Can not save player data: " + player.getName() + "!");
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicPrefixes] §cError: Can not save player data: " + player.getName() + "!");
             return;
         }
         playerCacheMap.get(player).shutPlayerCache();
@@ -53,7 +53,7 @@ public class CacheManager {
 
     public void savePlayerCacheOnDisable(Player player) {
         if (playerCacheMap.get(player) == null) {
-            ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicPrefixes] §cError: Can not save player data: " + player.getName() + "!");
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicPrefixes] §cError: Can not save player data: " + player.getName() + "!");
         }
         playerCacheMap.get(player).shutPlayerCacheOnDisable();
     }

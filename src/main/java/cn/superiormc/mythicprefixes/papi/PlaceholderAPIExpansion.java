@@ -68,6 +68,17 @@ public class PlaceholderAPIExpansion extends PlaceholderExpansion {
             }
             return String.valueOf(prefix.getConditionMeet(player));
         }
+        else if (args[0].equals("prefix") && args.length > 2) {
+            ObjectPrefix prefix = ConfigManager.configManager.getPrefix(args[1]);
+            if (prefix == null) {
+                return LanguageManager.languageManager.getStringText("placeholderapi.unknown-prefix");
+            }
+            ObjectDisplayPlaceholder displayPlaceholder = ConfigManager.configManager.getDisplayPlaceholder(args[2]);
+            if (displayPlaceholder == null) {
+                return LanguageManager.languageManager.getStringText("placeholderapi.unknown-display-placeholder");
+            }
+            return displayPlaceholder.getDisplayText(player, prefix);
+        }
         else if (args[0].equals("max")) {
             return String.valueOf(MythicPrefixesAPI.getMaxPrefixesAmount(player));
         }

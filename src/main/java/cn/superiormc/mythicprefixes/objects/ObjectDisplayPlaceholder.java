@@ -6,7 +6,9 @@ import cn.superiormc.mythicprefixes.utils.TextUtil;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.TreeSet;
 
 public class ObjectDisplayPlaceholder {
 
@@ -37,10 +39,18 @@ public class ObjectDisplayPlaceholder {
     }
 
     public String getDisplayText(Player player) {
+        return getDisplayText(player, null);
+    }
+
+    public String getDisplayText(Player player, ObjectPrefix prefix) {
         StringBuilder tempVal1 = new StringBuilder(startSymbol);
         int tempVal4 = 0;
         ObjectCache tempVal2 = CacheManager.cacheManager.getPlayerCache(player);
-        for (ObjectPrefix tempVal3 : tempVal2.getActivePrefixes()) {
+        Collection<ObjectPrefix> tempVal5 = tempVal2.getActivePrefixes();
+        if (prefix != null) {
+            tempVal5.add(prefix);
+        }
+        for (ObjectPrefix tempVal3 : tempVal5) {
             if (displayAmount > 0 && tempVal4 >= displayAmount) {
                 continue;
             }
