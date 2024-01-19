@@ -127,12 +127,11 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
     }
 
     public PrefixStatus getConditionMeet(Player player) {
-        if (CommonUtil.checkPermission(player, "mythicprefixes.bypass." + getId())
-        && !MythicPrefixesAPI.getActivedPrefixes(player).contains(this)) {
-            return PrefixStatus.CAN_USE;
-        }
         if (MythicPrefixesAPI.getActivedPrefixes(player).contains(this)) {
             return PrefixStatus.USING;
+        }
+        if (CommonUtil.checkPermission(player, "mythicprefixes.bypass." + getId())) {
+            return PrefixStatus.CAN_USE;
         }
         if (!condition.getBoolean(player)) {
             return PrefixStatus.CONDITION_NOT_MEET;

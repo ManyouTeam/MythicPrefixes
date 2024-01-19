@@ -4,6 +4,7 @@ display-item:
     material: DRAGON_EGG
     name: '{display-value}'
     lore:
+      - '&7Display Value: {display-value}'
       - '&7Preview: %mythicprefixes_prefix_default_chat% %player_name%'
       - '&dOp will always can use the tag, give'
       - '&dyourself &4-mythicprefixes.bypass.*'
@@ -13,6 +14,7 @@ display-item:
     material: DRAGON_EGG
     name: '{display-value}'
     lore:
+      - '&7Display Value: {display-value}'
       - '&7Preview: %mythicprefixes_prefix_default_chat% %player_name%'
       - '&cYou are now using this prefix!'
       - '&eClick to cancel use this prefix!'
@@ -20,6 +22,7 @@ display-item:
     material: DRAGON_EGG
     name: '&cLocked'
     lore:
+      - '&7Display Value: {display-value}'
       - '&7Preview: %mythicprefixes_prefix_default_chat% %player_name%'
       - '&cKill a dragon to unlock!'
   max-reached:

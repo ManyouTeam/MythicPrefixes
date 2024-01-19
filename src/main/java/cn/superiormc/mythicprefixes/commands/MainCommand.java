@@ -19,11 +19,11 @@ public class MainCommand implements CommandExecutor {
                 return true;
             }
             if (!sender.hasPermission(object.getRequiredPermission())) {
-                LanguageManager.languageManager.sendStringText("error.miss-permission");
+                LanguageManager.languageManager.sendStringText(sender, "error.miss-permission");
                 return true;
             }
             if (!object.getLengthCorrect(args.length)) {
-                LanguageManager.languageManager.sendStringText("error.args");
+                LanguageManager.languageManager.sendStringText(sender, "error.args");
                 return true;
             }
             if (sender instanceof Player) {
@@ -33,11 +33,7 @@ public class MainCommand implements CommandExecutor {
             object.executeCommandInConsole(args);
             return true;
         }
-        if (sender instanceof Player) {
-            LanguageManager.languageManager.sendStringText((Player) sender, "error.args");
-            return true;
-        }
-        LanguageManager.languageManager.sendStringText("error.args");
+        LanguageManager.languageManager.sendStringText(sender, "error.args");
         return true;
     }
 }

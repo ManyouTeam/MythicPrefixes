@@ -45,7 +45,7 @@ public class SQLDatabase {
     public static void createTable() {
         sqlManager.createTable("mythicprefixes")
                 .addColumn("playerUUID", "VARCHAR(36) NOT NULL PRIMARY KEY")
-                .addColumn("prefixID", "VARCHAR(65535)")
+                .addColumn("prefixID", "TEXT")
                 .build().execute(null);
     }
 
@@ -63,7 +63,7 @@ public class SQLDatabase {
         });
     }
 
-    public static void updateData(ObjectCache cache) {
+    public static void updateData(ObjectCache cache, boolean quitServer) {
         String playerUUID = cache.getPlayer().getUniqueId().toString();
         sqlManager.createReplace("mythicprefixes")
                 .setColumnNames("playerUUID",
@@ -71,7 +71,9 @@ public class SQLDatabase {
                 .setParams(playerUUID,
                         cache.getActivePrefixesID())
                 .executeAsync();
-        CacheManager.cacheManager.removePlayerCache(cache.getPlayer());
+        if (quitServer) {
+            CacheManager.cacheManager.removePlayerCache(cache.getPlayer());
+        }
     }
 
     public static void updateDataNoAsync(ObjectCache cache) {

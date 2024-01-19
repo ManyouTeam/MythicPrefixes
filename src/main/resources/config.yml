@@ -22,6 +22,10 @@ status-placeholder:
 circle-actions:
   period-tick: 20
 
+auto-save:
+  enabled: true
+  period-tick: 6000
+
 max-prefixes-amount:
   default: 1
   vip: 2

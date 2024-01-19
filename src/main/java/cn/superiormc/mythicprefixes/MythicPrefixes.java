@@ -22,6 +22,7 @@ public final class MythicPrefixes extends JavaPlugin {
         new CacheManager();
         new CommandManager();
         new ListenerManager();
+        new TaskManager();
         if (CommonUtil.checkPluginLoad("PlaceholderAPI")) {
             PlaceholderAPIExpansion.papi = new PlaceholderAPIExpansion(this);
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicPrefixes] §fHooking into PlaceholderAPI...");

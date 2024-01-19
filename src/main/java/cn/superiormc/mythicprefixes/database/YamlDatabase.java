@@ -51,7 +51,7 @@ public class YamlDatabase {
         cache.setActivePrefixes(tempVal3.toString());
     }
 
-    public static void updateData(ObjectCache cache) {
+    public static void updateData(ObjectCache cache, boolean quitServer) {
         File dir = new File(MythicPrefixes.instance.getDataFolder() + "/datas");
         if (!dir.exists()) {
             dir.mkdir();
@@ -71,7 +71,9 @@ public class YamlDatabase {
         for (String key : data.keySet()) {
             config.set(key, data.get(key));
         }
-        CacheManager.cacheManager.removePlayerCache(cache.getPlayer());
+        if (quitServer) {
+            CacheManager.cacheManager.removePlayerCache(cache.getPlayer());
+        }
         try {
             if (file.exists()) {
                 file.delete();

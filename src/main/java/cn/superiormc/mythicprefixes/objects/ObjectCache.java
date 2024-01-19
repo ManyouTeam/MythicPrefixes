@@ -34,13 +34,13 @@ public class ObjectCache {
         });
     }
 
-    public void shutPlayerCache() {
+    public void shutPlayerCache(boolean quitServer) {
         Bukkit.getScheduler().runTaskAsynchronously(MythicPrefixes.instance, () -> {
             if (ConfigManager.configManager.getBoolean("database.enabled")) {
-                SQLDatabase.updateData(this);
+                SQLDatabase.updateData(this, quitServer);
             }
             else {
-                YamlDatabase.updateData(this);
+                YamlDatabase.updateData(this, quitServer);
             }
         });
     }
@@ -50,7 +50,7 @@ public class ObjectCache {
             SQLDatabase.updateDataNoAsync(this);
         }
         else {
-            YamlDatabase.updateData(this);
+            YamlDatabase.updateData(this, true);
         }
     }
 
