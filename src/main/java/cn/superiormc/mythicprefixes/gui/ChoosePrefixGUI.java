@@ -3,8 +3,12 @@ package cn.superiormc.mythicprefixes.gui;
 import cn.superiormc.mythicprefixes.manager.ConfigManager;
 import cn.superiormc.mythicprefixes.objects.buttons.AbstractButton;
 import cn.superiormc.mythicprefixes.objects.buttons.ObjectPrefix;
+import cn.superiormc.mythicprefixes.utils.CommonUtil;
 import cn.superiormc.mythicprefixes.utils.ItemUtil;
 import cn.superiormc.mythicprefixes.utils.TextUtil;
+import net.kyori.adventure.key.Key;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -47,9 +51,19 @@ public class ChoosePrefixGUI extends InvGUI {
             needPages = (int) (Math.ceil((double) prefixCache.size() / slotCache.size()));
         }
         if (Objects.isNull(inv)) {
-            inv = Bukkit.createInventory(player, ConfigManager.configManager.getInt("choose-prefix-gui.size", 54),
-                    TextUtil.parse(ConfigManager.configManager.getString("choose-prefix-gui." +
-                            "title")));
+            int size = ConfigManager.configManager.getInt("choose-prefix-gui.size", 54);
+            String font = ConfigManager.configManager.getString("choose-prefix-gui.font", "");
+            String title = TextUtil.parse(ConfigManager.configManager.getString("choose-prefix-gui." +
+                    "title", "Tag GUI",
+                    "max", String.valueOf(needPages),
+                    "now", String.valueOf(nowPage)));
+            if (!font.isEmpty()) {
+                TextComponent.Builder textComponent = Component.text().content(title);
+                textComponent.font(Key.key(font));
+                inv = Bukkit.createInventory(player, size, textComponent.build());
+            } else {
+                inv = Bukkit.createInventory(player, size, title);
+            }
         }
         for (int c = 0 ; c < slotCache.size() ; c ++) {
             AbstractButton prefix = prefixCache.get((nowPage - 1)  * slotCache.size() + c);
