@@ -1,6 +1,8 @@
 package cn.superiormc.mythicprefixes.utils;
 
 import cn.superiormc.mythicprefixes.MythicPrefixes;
+import cn.superiormc.mythicprefixes.manager.ConfigManager;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.luckperms.api.LuckPermsProvider;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -43,6 +45,36 @@ public class CommonUtil {
             Bukkit.dispatchCommand(player, command);
         } finally {
             player.setOp(playerIsOp);
+        }
+    }
+
+    public static boolean getClass(String className) {
+        if (!ConfigManager.configManager.getBoolean("check-class.enabled")) {
+            return ConfigManager.configManager.config.getStringList("check-class.classes").contains(className);
+        }
+        try {
+            Class.forName(className);
+            return true;
+        }
+        catch (ClassNotFoundException e) {
+            return false;
+        }
+    }
+
+    public static void sendMessage(Player player, String text) {
+        if (CommonUtil.getClass("io.papermc.paperclip.Paperclip") &&
+                ConfigManager.configManager.getBoolean("use-component.message")) {
+            if (player == null) {
+                Bukkit.getConsoleSender().sendMessage(MiniMessage.miniMessage().deserialize(text));
+            } else {
+                player.sendMessage(MiniMessage.miniMessage().deserialize(TextUtil.withPAPI(text, player)));
+            }
+        } else {
+            if (player == null) {
+                Bukkit.getConsoleSender().sendMessage(TextUtil.parse(text));
+            } else {
+                player.sendMessage(TextUtil.parse(text, player));
+            }
         }
     }
 

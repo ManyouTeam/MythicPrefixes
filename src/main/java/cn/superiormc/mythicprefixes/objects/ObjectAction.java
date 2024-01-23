@@ -69,11 +69,11 @@ public class ObjectAction {
                     ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[UltimateShop] §cError: Invalid sound action format.");
                 }
             } else if (singleAction.startsWith("message: ")) {
-                player.sendMessage(TextUtil.parse(singleAction.substring(9), player));
+                CommonUtil.sendMessage(player, singleAction.substring(9));
             } else if (singleAction.startsWith("announcement: ")) {
                 Collection<? extends Player> players = Bukkit.getOnlinePlayers();
                 for (Player p : players) {
-                    p.sendMessage(TextUtil.parse(singleAction.substring(14), player));
+                    CommonUtil.sendMessage(p, singleAction.substring(14));
                 }
             } else if (singleAction.startsWith("effect: ")) {
                 try {

@@ -9,6 +9,7 @@ import cn.superiormc.mythicprefixes.utils.TextUtil;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -52,18 +53,17 @@ public class ChoosePrefixGUI extends InvGUI {
         }
         if (Objects.isNull(inv)) {
             int size = ConfigManager.configManager.getInt("choose-prefix-gui.size", 54);
-            String font = ConfigManager.configManager.getString("choose-prefix-gui.font", "");
-            String title = TextUtil.parse(ConfigManager.configManager.getString("choose-prefix-gui." +
-                    "title", "Tag GUI",
+            String title = ConfigManager.configManager.getString("choose-prefix-gui." +
+                            "title", "Tag GUI",
                     "max", String.valueOf(needPages),
-                    "now", String.valueOf(nowPage)));
-            if (!font.isEmpty()) {
-                TextComponent.Builder textComponent = Component.text().content(title);
-                textComponent.font(Key.key(font));
-                inv = Bukkit.createInventory(player, size, textComponent.build());
+                    "now", String.valueOf(nowPage));
+            if (CommonUtil.getClass("io.papermc.paperclip.Paperclip") &&
+                    ConfigManager.configManager.getBoolean("use-component.menu-title")) {
+                inv = Bukkit.createInventory(player, size, MiniMessage.miniMessage().deserialize(TextUtil.withPAPI(title, player)));
             } else {
-                inv = Bukkit.createInventory(player, size, title);
+                inv = Bukkit.createInventory(player, size, TextUtil.parse(title, player));
             }
+
         }
         for (int c = 0 ; c < slotCache.size() ; c ++) {
             AbstractButton prefix = prefixCache.get((nowPage - 1)  * slotCache.size() + c);

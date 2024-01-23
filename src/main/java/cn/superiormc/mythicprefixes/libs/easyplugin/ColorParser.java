@@ -1,8 +1,8 @@
-package cc.carm.lib.easyplugin;
+package cn.superiormc.mythicprefixes.libs.easyplugin;
 
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;

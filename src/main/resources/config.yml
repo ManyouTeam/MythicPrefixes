@@ -4,6 +4,12 @@
 
 debug: false
 
+# Paper only feature.
+use-component:
+  menu-title: false
+  message: false
+  item: false
+
 display-placeholder:
   chat:
     start-symbol: '&f['
@@ -93,3 +99,7 @@ libreforge-effects:
         triggers:
           - melee_attack
     conditions: []
+
+check-class:
+  enabled: true
+  classes: []

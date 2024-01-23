@@ -1,6 +1,6 @@
 package cn.superiormc.mythicprefixes.utils;
 
-import cc.carm.lib.easyplugin.ColorParser;
+import cn.superiormc.mythicprefixes.libs.easyplugin.ColorParser;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.entity.Player;
 

@@ -1,6 +1,7 @@
 package cn.superiormc.mythicprefixes.manager;
 
 import cn.superiormc.mythicprefixes.MythicPrefixes;
+import cn.superiormc.mythicprefixes.utils.CommonUtil;
 import cn.superiormc.mythicprefixes.utils.TextUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -92,7 +93,7 @@ public class LanguageManager {
             }
         }
         if (text.length() != 0) {
-            Bukkit.getConsoleSender().sendMessage(TextUtil.parse(text));
+            CommonUtil.sendMessage(null, text);
         }
     }
 
@@ -125,7 +126,7 @@ public class LanguageManager {
             }
         }
         if (text.length() != 0) {
-            player.sendMessage(TextUtil.parse(text, player));
+            CommonUtil.sendMessage(player, text);
         }
     }
 
