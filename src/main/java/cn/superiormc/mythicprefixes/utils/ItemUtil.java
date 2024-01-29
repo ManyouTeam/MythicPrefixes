@@ -58,7 +58,7 @@ public class ItemUtil {
         }
         String displayNameKey = section.getString("name");
         if (displayNameKey != null) {
-            if (CommonUtil.getClass("io.papermc.paperclip.Paperclip") &&
+            if (CommonUtil.getClass("com.destroystokyo.paper.PaperConfig") &&
                     ConfigManager.configManager.getBoolean("use-component.item")) {
                 meta.displayName(MiniMessage.miniMessage().deserialize(TextUtil.withPAPI(
                         CommonUtil.modifyString(displayNameKey, args), player)));
@@ -72,7 +72,7 @@ public class ItemUtil {
             List<Component> veryNewLore = new ArrayList<>();
             for (String singleLore : section.getStringList("lore")) {
                 if (singleLore.isEmpty()) {
-                    if (CommonUtil.getClass("io.papermc.paperclip.Paperclip") &&
+                    if (CommonUtil.getClass("com.destroystokyo.paper.PaperConfig") &&
                             ConfigManager.configManager.getBoolean("use-component.item")) {
                         veryNewLore.add(Component.space());
                     } else {
@@ -80,7 +80,7 @@ public class ItemUtil {
                     }
                     continue;
                 }
-                if (CommonUtil.getClass("io.papermc.paperclip.Paperclip") &&
+                if (CommonUtil.getClass("com.destroystokyo.paper.PaperConfig") &&
                         ConfigManager.configManager.getBoolean("use-component.item")) {
                     veryNewLore.add(MiniMessage.miniMessage().deserialize(TextUtil.withPAPI(singleLore, player)));
                 } else {

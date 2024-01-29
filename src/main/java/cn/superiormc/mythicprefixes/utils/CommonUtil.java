@@ -62,7 +62,7 @@ public class CommonUtil {
     }
 
     public static void sendMessage(Player player, String text) {
-        if (CommonUtil.getClass("io.papermc.paperclip.Paperclip") &&
+        if (CommonUtil.getClass("com.destroystokyo.paper.PaperConfig") &&
                 ConfigManager.configManager.getBoolean("use-component.message")) {
             if (player == null) {
                 Bukkit.getConsoleSender().sendMessage(MiniMessage.miniMessage().deserialize(text));

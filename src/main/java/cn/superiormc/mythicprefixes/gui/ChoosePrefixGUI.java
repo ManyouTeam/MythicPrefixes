@@ -57,7 +57,7 @@ public class ChoosePrefixGUI extends InvGUI {
                             "title", "Tag GUI",
                     "max", String.valueOf(needPages),
                     "now", String.valueOf(nowPage));
-            if (CommonUtil.getClass("io.papermc.paperclip.Paperclip") &&
+            if (CommonUtil.getClass("com.destroystokyo.paper.PaperConfig") &&
                     ConfigManager.configManager.getBoolean("use-component.menu-title")) {
                 inv = Bukkit.createInventory(player, size, MiniMessage.miniMessage().deserialize(TextUtil.withPAPI(title, player)));
             } else {
