@@ -172,7 +172,9 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
         }
         if (section == null) {
             if (config.getConfigurationSection("display-item") != null) {
-                return ItemUtil.buildItemStack(player, config.getConfigurationSection("display-item"));
+                return ItemUtil.buildItemStack(player, config.getConfigurationSection("display-item"),
+                        "display-value", getDisplayValue(player),
+                        "status", MythicPrefixesAPI.getStatusPlaceholder(this, player));
             }
             return new ItemStack(Material.STONE);
         }
