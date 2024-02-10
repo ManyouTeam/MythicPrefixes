@@ -34,7 +34,7 @@ max-prefixes-amount:
 
 max-prefixes-amount-conditions:
   vip:
-    - 'group.default'
+    - 'permission: group.vip'
 
 choose-prefix-gui:
   title: 'Choose your prefix - {now}/{max}'
