@@ -46,7 +46,7 @@ public class SubRemovePrefix extends ObjectCommand {
             return;
         }
         ObjectCache playerCache = CacheManager.cacheManager.getPlayerCache(whoWillAdd);
-        if (!playerCache.getActivePrefixes().contains(whatPrefix)) {
+        if (playerCache.getActivePrefixes().contains(whatPrefix)) {
             LanguageManager.languageManager.sendStringText(player, "error.prefix-not-using",
                     "player", whoWillAdd.getName(),
                     "prefix", args[args.length - 1]);
@@ -71,7 +71,7 @@ public class SubRemovePrefix extends ObjectCommand {
             return;
         }
         ObjectCache playerCache = CacheManager.cacheManager.getPlayerCache(whoWillAdd);
-        if (!playerCache.getActivePrefixes().contains(whatPrefix)) {
+        if (playerCache.getActivePrefixes().contains(whatPrefix)) {
             LanguageManager.languageManager.sendStringText("error.prefix-not-using",
                     "player", whoWillAdd.getName(),
                     "prefix", args[args.length - 1]);
