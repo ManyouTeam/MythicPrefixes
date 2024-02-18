@@ -37,9 +37,11 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
 
     private final ObjectAction circleAction;
 
-    private Map<Player, Collection<ObjectMMOEffect>> mmoEffects = new HashMap<>();
+    private final Map<Player, Collection<ObjectMMOEffect>> mmoEffects = new HashMap<>();
 
     private Map<Player, BukkitTask> taskCache = new HashMap<>();
+
+    private boolean useMMOEffect;
 
 
     public ObjectPrefix(String id, YamlConfiguration config) {
@@ -58,15 +60,14 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
                 config.getBoolean("effects.libreforge", false)) {
             LibreforgeEffects.libreforgeEffects.registerLibreforgeEffect(id);
         }
-    }
-
-    private boolean useMMOEffect() {
-        return CommonUtil.checkPluginLoad("MythicLib") &&
-                config.getBoolean("effects.MythicLib", false);
+        if (CommonUtil.checkPluginLoad("MythicLib") &&
+                config.getBoolean("effects.MythicLib", false)) {
+            useMMOEffect = true;
+        }
     }
 
     public void runStartAction(Player player) {
-        if (useMMOEffect()) {
+        if (useMMOEffect) {
             startMMOEffect(player);
         }
         startAction.doAction(player);
@@ -78,7 +79,7 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
     }
 
     public void runEndAction(Player player) {
-        if (useMMOEffect()) {
+        if (useMMOEffect) {
             endMMOEffect(player);
         }
         endAction.doAction(player);
@@ -161,13 +162,14 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
     @Override
     public ItemStack getDisplayItem(Player player) {
         ConfigurationSection section = null;
-        if (getConditionMeet(player) == PrefixStatus.CAN_USE) {
+        PrefixStatus status = getConditionMeet(player);
+        if (status == PrefixStatus.CAN_USE) {
             section = config.getConfigurationSection("display-item.unlocked");
-        } else if (getConditionMeet(player) == PrefixStatus.CONDITION_NOT_MEET) {
+        } else if (status == PrefixStatus.CONDITION_NOT_MEET) {
             section = config.getConfigurationSection("display-item.locked");
-        } else if (getConditionMeet(player) == PrefixStatus.MAX_LIMIT_REACHED) {
+        } else if (status == PrefixStatus.MAX_LIMIT_REACHED) {
             section = config.getConfigurationSection("display-item.max-reached");
-        } else if (getConditionMeet(player) == PrefixStatus.USING) {
+        } else if (status == PrefixStatus.USING) {
             section = config.getConfigurationSection("display-item.using");
         }
         if (section == null) {

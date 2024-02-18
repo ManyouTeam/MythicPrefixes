@@ -1,5 +1,6 @@
 package cn.superiormc.mythicprefixes.gui;
 
+import cn.superiormc.mythicprefixes.MythicPrefixes;
 import cn.superiormc.mythicprefixes.manager.ConfigManager;
 import cn.superiormc.mythicprefixes.objects.buttons.AbstractButton;
 import cn.superiormc.mythicprefixes.objects.buttons.ObjectPrefix;
@@ -54,16 +55,12 @@ public class ChoosePrefixGUI extends InvGUI {
         if (Objects.isNull(inv)) {
             int size = ConfigManager.configManager.getInt("choose-prefix-gui.size", 54);
             String title = ConfigManager.configManager.getString("choose-prefix-gui." +
-                            "title", "Tag GUI",
-                    "max", String.valueOf(needPages),
-                    "now", String.valueOf(nowPage));
-            if (CommonUtil.getClass("com.destroystokyo.paper.PaperConfig") &&
-                    ConfigManager.configManager.getBoolean("use-component.menu-title")) {
+                            "title", "Tag GUI");
+            if (MythicPrefixes.isPaper && ConfigManager.configManager.getBoolean("use-component.menu-title")) {
                 inv = Bukkit.createInventory(player, size, MiniMessage.miniMessage().deserialize(TextUtil.withPAPI(title, player)));
             } else {
                 inv = Bukkit.createInventory(player, size, TextUtil.parse(title, player));
             }
-
         }
         for (int c = 0 ; c < slotCache.size() ; c ++) {
             AbstractButton prefix = prefixCache.get((nowPage - 1)  * slotCache.size() + c);

@@ -1,5 +1,6 @@
 package cn.superiormc.mythicprefixes.utils;
 
+import cn.superiormc.mythicprefixes.MythicPrefixes;
 import cn.superiormc.mythicprefixes.manager.ConfigManager;
 import cn.superiormc.mythicprefixes.manager.ErrorManager;
 import com.google.common.base.Enums;
@@ -50,8 +51,7 @@ public class ItemUtil {
         }
         String displayNameKey = section.getString("name");
         if (displayNameKey != null) {
-            if (CommonUtil.getClass("com.destroystokyo.paper.PaperConfig") &&
-                    ConfigManager.configManager.getBoolean("use-component.item")) {
+            if (MythicPrefixes.isPaper && ConfigManager.configManager.getBoolean("use-component.item")) {
                 meta.displayName(MiniMessage.miniMessage().deserialize(TextUtil.withPAPI(
                         CommonUtil.modifyString(displayNameKey, args), player)));
             } else {
@@ -64,16 +64,14 @@ public class ItemUtil {
             List<Component> veryNewLore = new ArrayList<>();
             for (String singleLore : section.getStringList("lore")) {
                 if (singleLore.isEmpty()) {
-                    if (CommonUtil.getClass("com.destroystokyo.paper.PaperConfig") &&
-                            ConfigManager.configManager.getBoolean("use-component.item")) {
+                    if (MythicPrefixes.isPaper && ConfigManager.configManager.getBoolean("use-component.item")) {
                         veryNewLore.add(Component.space());
                     } else {
                         newLore.add(" ");
                     }
                     continue;
                 }
-                if (CommonUtil.getClass("com.destroystokyo.paper.PaperConfig") &&
-                        ConfigManager.configManager.getBoolean("use-component.item")) {
+                if (MythicPrefixes.isPaper && ConfigManager.configManager.getBoolean("use-component.item")) {
                     veryNewLore.add(MiniMessage.miniMessage().deserialize(TextUtil.withPAPI(singleLore, player)));
                 } else {
                     newLore.add(TextUtil.parse(singleLore, player));

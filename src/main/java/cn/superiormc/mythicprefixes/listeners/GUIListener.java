@@ -1,7 +1,6 @@
 package cn.superiormc.mythicprefixes.listeners;
 
 import cn.superiormc.mythicprefixes.gui.InvGUI;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;

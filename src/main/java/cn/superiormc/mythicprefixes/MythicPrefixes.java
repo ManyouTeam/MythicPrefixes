@@ -12,6 +12,8 @@ public final class MythicPrefixes extends JavaPlugin {
 
     public static JavaPlugin instance;
 
+    public static boolean isPaper;
+
     @Override
     public void onEnable() {
         instance = this;
@@ -29,6 +31,9 @@ public final class MythicPrefixes extends JavaPlugin {
             if (PlaceholderAPIExpansion.papi.register()){
                 Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicPrefixes] §fFinished hook!");
             }
+        }
+        if (CommonUtil.getClass("com.destroystokyo.paper.PaperConfig")) {
+            isPaper = true;
         }
         Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicPrefixes] §fPlugin is loaded. Author: PQguanfang.");
     }
