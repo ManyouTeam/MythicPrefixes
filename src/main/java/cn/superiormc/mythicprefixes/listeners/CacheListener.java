@@ -1,6 +1,8 @@
 package cn.superiormc.mythicprefixes.listeners;
 
+import cn.superiormc.mythicprefixes.MythicPrefixes;
 import cn.superiormc.mythicprefixes.manager.CacheManager;
+import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerLoginEvent;
@@ -10,7 +12,9 @@ public class CacheListener implements Listener {
 
     @EventHandler
     public void onLogin(PlayerLoginEvent event) {
-        CacheManager.cacheManager.addPlayerCache(event.getPlayer());
+        Bukkit.getScheduler().runTaskLater(MythicPrefixes.instance, () -> {
+            CacheManager.cacheManager.addPlayerCache(event.getPlayer());
+        }, 5L);
     }
 
     @EventHandler
