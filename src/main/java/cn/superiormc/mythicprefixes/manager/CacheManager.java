@@ -54,6 +54,7 @@ public class CacheManager {
     public void savePlayerCacheOnDisable(Player player) {
         if (playerCacheMap.get(player) == null) {
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicPrefixes] §cError: Can not save player data: " + player.getName() + "!");
+            return;
         }
         playerCacheMap.get(player).shutPlayerCacheOnDisable();
     }
