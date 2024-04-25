@@ -113,7 +113,7 @@ public class ItemUtil {
             SkullMeta skullMeta = (SkullMeta) meta;
             String skullTextureNameKey = section.getString("skull-meta", section.getString("skull"));
             if (skullTextureNameKey != null) {
-                GameProfile profile = new GameProfile(UUID.randomUUID(), null);
+                GameProfile profile = new GameProfile(UUID.randomUUID(), "");
                 profile.getProperties().put("textures", new Property("textures", skullTextureNameKey));
                 try {
                     Method mtd = skullMeta.getClass().getDeclaredMethod("setProfile", GameProfile.class);

@@ -1,5 +1,5 @@
 error:
-  args: "&#98FB98[MythicPrefixes] &cWrong command usage, if you need help, use /prefix help!"
+  args: "&#98FB98[MythicPrefixes] &cWrong command usage, if you need help, use view plugin Wiki!"
   in-game: "&#98FB98[MythicPrefixes] &cYou have to use this command in game!"
   miss-permission: "&#98FB98[MythicPrefixes] &cYou don't have permission to use this command!"
   player-not-found: "&#98FB98[MythicPrefixes] &cWe can't find player {player}!"

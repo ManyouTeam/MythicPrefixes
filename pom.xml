@@ -6,7 +6,7 @@
 
     <groupId>cn.superiormc</groupId>
     <artifactId>MythicPrefixes</artifactId>
-    <version>1.2.2</version>
+    <version>1.2.4</version>
     <packaging>jar</packaging>
 
     <name>MythicPrefixes</name>
@@ -109,7 +109,6 @@
             <groupId>cc.carm.lib</groupId>
             <artifactId>easysql-hikaricp</artifactId>
             <version>0.4.3</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.willfp</groupId>

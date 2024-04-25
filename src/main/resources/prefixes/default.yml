@@ -45,6 +45,6 @@ equip-actions:
 unequip-actions:
   - 'message: Not equip the tag!'
 circle-actions:
-  - 'console_command: say Wow!'
+  - 'console_command: say This is default message. Default prefix has equipped so prefix effect also actived!'
 conditions:
   - 'permission: killed.dragon'
