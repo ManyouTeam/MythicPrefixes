@@ -20,6 +20,10 @@ public final class MythicPrefixes extends JavaPlugin {
         new ErrorManager();
         new InitManager();
         new ConfigManager();
+        if (CommonUtil.getClass("com.destroystokyo.paper.PaperConfig")) {
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicPrefixes] §fPaper is found, enabled Paper only feature!");
+            isPaper = true;
+        }
         new LanguageManager();
         new CacheManager();
         new CommandManager();
@@ -31,9 +35,6 @@ public final class MythicPrefixes extends JavaPlugin {
             if (PlaceholderAPIExpansion.papi.register()){
                 Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicPrefixes] §fFinished hook!");
             }
-        }
-        if (CommonUtil.getClass("com.destroystokyo.paper.PaperConfig")) {
-            isPaper = true;
         }
         Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicPrefixes] §fPlugin is loaded. Author: PQguanfang.");
     }

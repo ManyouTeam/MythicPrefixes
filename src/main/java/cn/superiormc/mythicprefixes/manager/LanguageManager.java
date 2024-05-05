@@ -33,15 +33,18 @@ public class LanguageManager {
     }
 
     private void initLanguage() {
-        this.file = new File(MythicPrefixes.instance.getDataFolder(), "message.yml");
+        this.file = new File(MythicPrefixes.instance.getDataFolder() + "/languages/" + ConfigManager.configManager.getString("language", "en_US") + ".yml");
         if (!file.exists()){
-            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicPrefixes] §cWe can not found your message file, " +
-                    "please try restart your server!");
+            this.file = new File(MythicPrefixes.instance.getDataFolder(), "message.yml");
+            if (!file.exists()) {
+                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicPrefixes] §cWe can not found your message file, " +
+                        "please try restart your server!");
+            }
         }
         else {
             this.messageFile = YamlConfiguration.loadConfiguration(file);
         }
-        InputStream is = MythicPrefixes.instance.getResource("message.yml");
+        InputStream is = MythicPrefixes.instance.getResource("languages/en_US.yml");
         if (is == null) {
             return;
         }

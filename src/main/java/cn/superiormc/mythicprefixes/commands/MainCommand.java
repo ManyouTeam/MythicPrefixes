@@ -18,7 +18,7 @@ public class MainCommand implements CommandExecutor {
                 LanguageManager.languageManager.sendStringText("error.in-game");
                 return true;
             }
-            if (!sender.hasPermission(object.getRequiredPermission())) {
+            if (object.getRequiredPermission() != null && !sender.hasPermission(object.getRequiredPermission())) {
                 LanguageManager.languageManager.sendStringText(sender, "error.miss-permission");
                 return true;
             }

@@ -1,0 +1,25 @@
+error:
+  args: '&#98FB98[MythicPrefixes] &c错误的指令用法，请使用 /prefix help 查看帮助!'
+  in-game: '&#98FB98[MythicPrefixes] &c你必须在游戏中使用该指令!'
+  miss-permission: '&#98FB98[MythicPrefixes] &c你没有权限使用该指令!'
+  player-not-found: '&#98FB98[MythicPrefixes] &c无法找到玩家 {player}!'
+  prefix-not-found: '&#98FB98[MythicPrefixes] &c无法找到称号 {prefix}!'
+  prefix-not-using: '&#98FB98[MythicPrefixes] &c玩家 {player} 目前没有使用称号 {prefix}!'
+  prefix-is-using: '&#98FB98[MythicPrefixes] &c玩家 {player} 正在使用称号 {prefix}!'
+  prefix-is-empty: '&#98FB98[MythicPrefixes] &c玩家 {player} 目前没有使用任何称号!'
+  max-prefix-reached: "&#98FB98[MythicPrefixes] &c玩家 {player} 已达到称号使用上限!"
+  prefix-condition-not-meet: "&#98FB98[MythicPrefixes] &c玩家 {player} 为满足称号 {prefix} 的使用条件!"
+
+plugin:
+  reloaded: '&#98FB98[MythicPrefixes] &f插件已重启!'
+
+placeholderapi:
+  unknown-display-placeholder: 未知称号PAPI的ID
+  unknown-prefix: 未知称号
+
+success-add-prefix: '&#98FB98[MythicPrefixes] &f成功给玩家 {player} 添加了正在使用的称号 {prefix}!'
+success-remove-prefix: '&#98FB98[MythicPrefixes] &f成功给玩家 {player} 移除了正在使用的称号 {prefix}!'
+success-set-prefix: "&#98FB98[MythicPrefixes] &f成功设置玩家 {player} 正在使用的称号为 {prefix}!"
+view-prefix:
+  format: '&f{prefix}'
+  head: '&#98FB98[MythicPrefixes] &f你正在使用如下称号:'

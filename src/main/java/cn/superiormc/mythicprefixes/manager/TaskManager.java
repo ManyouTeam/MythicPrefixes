@@ -8,9 +8,12 @@ import org.bukkit.scheduler.BukkitTask;
 
 public class TaskManager {
 
+    public static TaskManager taskManager;
+
     private BukkitTask saveTask;
 
     public TaskManager() {
+        taskManager = this;
         if (ConfigManager.configManager.getBoolean("auto-save.enabled")) {
             initSaveTasks();
         }
@@ -21,9 +24,11 @@ public class TaskManager {
 
             @Override
             public void run() {
-                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicPrefixes] §fAuto saving data...");
-                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicPrefixes] §fIf this lead to server TPS drop, " +
-                        "you should consider disable auto save feature at config.yml!");
+                if (!ConfigManager.configManager.getBoolean("auto-save.hide-message")) {
+                    Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicPrefixes] §fAuto saving data...");
+                    Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicPrefixes] §fIf this lead to server TPS drop, " +
+                            "you should consider disable auto save feature at config.yml!");
+                }
                 for (Player player : Bukkit.getOnlinePlayers()) {
                     if (CacheManager.cacheManager.getPlayerCache(player) != null) {
                         CacheManager.cacheManager.getPlayerCache(player).shutPlayerCache(false);
@@ -34,7 +39,9 @@ public class TaskManager {
         }.runTaskTimer(MythicPrefixes.instance, 180L, ConfigManager.configManager.config.getLong("auto-save.period-tick", 600));
     }
 
-    public BukkitTask getSaveTask() {
-        return saveTask;
+    public void cancelTask() {
+        if (saveTask != null) {
+            saveTask.cancel();
+        }
     }
 }

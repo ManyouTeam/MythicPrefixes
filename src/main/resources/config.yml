@@ -4,6 +4,8 @@
 
 debug: false
 
+language: en_US
+
 # Paper only feature.
 use-component:
   menu-title: false
@@ -85,6 +87,7 @@ database:
 auto-save:
   enabled: false
   period-tick: 6000
+  hide-message: false
 
 libreforge-hook: false
 libreforge-effects:

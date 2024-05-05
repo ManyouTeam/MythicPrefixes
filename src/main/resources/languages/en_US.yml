@@ -1,0 +1,54 @@
+error:
+  args: "&#98FB98[MythicPrefixes] &cWrong command usage, if you need help, use view plugin Wiki!"
+  in-game: "&#98FB98[MythicPrefixes] &cYou have to use this command in game!"
+  miss-permission: "&#98FB98[MythicPrefixes] &cYou don't have permission to use this command!"
+  player-not-found: "&#98FB98[MythicPrefixes] &cWe can't find player {player}!"
+  prefix-not-found: "&#98FB98[MythicPrefixes] &cWe can't find prefix: {prefix}!"
+  prefix-not-using: "&#98FB98[MythicPrefixes] &cPlayer {player} is not using prefix {prefix}!"
+  prefix-is-using: "&#98FB98[MythicPrefixes] &cPlayer {player} is using prefix {prefix}!"
+  prefix-is-empty: "&#98FB98[MythicPrefixes] &cPlayer {player} do not have any prefix using!"
+  max-prefix-reached: "&#98FB98[MythicPrefixes] &cPlayer {player} has reached max amount of using prefix!"
+  prefix-condition-not-meet: "&#98FB98[MythicPrefixes] &cPlayer {player} does not meet {prefix}'s condition!"
+
+plugin:
+  reloaded: "&#98FB98[MythicPrefixes] &fPlugin reloaded!"
+
+placeholderapi:
+  unknown-display-placeholder: "Unknown Display Placeholder ID"
+  unknown-prefix: "Unknown Prefix"
+
+# All messages also support multi lines, just do it like this!
+help:
+  main: |
+    &#98FB98&lMythicPrefixes &7Made by @PQguanfang
+    &f/mythicprefixes help &7- View help.
+    &f/mythicprefixes opengui &7- Open prefix GUI.
+    &f/mythicprefixes viewusingprefix &7- View what prefixes you are using.
+  main-admin: |
+    &#98FB98&lMythicPrefixes &7Made by @PQguanfang
+    &f/mythicprefixes help &7- View help.
+    &f/mythicprefixes opengui &7- Open prefix GUI.
+    &f/mythicprefixes opengui <player> &7- Open prefix GUI for specified player.
+    &f/mythicprefixes viewusingprefix &7- View what prefixes you are using.
+    &f/mythicprefixes viewusingprefix <player> &7- View what prefixes specified player is using.
+    &f/mythicprefixes addprefix <prefix> &7- Add new prefix for self.
+    &f/mythicprefixes addprefix <player> <prefix> &7- Add new prefix for specifed player.
+    &f/mythicprefixes removeprefix <prefix> &7- Remove using prefix for self.
+    &f/mythicprefixes removeprefix <player> <prefix> &7- Remove using prefix for specifed player.
+    &f/mythicprefixes setprefix <prefixes> &7- Set your using prefixes to specifed value. Support use ;; split each prefix.
+    &f/mythicprefixes setprefix <player> <prefixes> &7- Set specified player using prefixes to specifed value. Support use ;; split each prefix.
+  main-console: |
+    &#98FB98&lMythicPrefixes &7Made by @PQguanfang
+    &f/mythicprefixes help &7- View help.
+    &f/mythicprefixes opengui <player> &7- Open prefix GUI for specified player.
+    &f/mythicprefixes viewusingprefix <player> &7- View what prefixes specified player is using.
+    &f/mythicprefixes addprefix <player> <prefix> &7- Add new prefix for specifed player.
+    &f/mythicprefixes removeprefix <player> <prefix> &7- Remove using prefix for specifed player.
+    &f/mythicprefixes setprefix <player> <prefixes> &7- Set specified player using prefixes to specifed value. Support use ;; split each prefix.
+
+success-add-prefix: "&#98FB98[MythicPrefixes] &fSuccessfully add prefix {prefix} for player {player}!"
+success-remove-prefix: "&#98FB98[MythicPrefixes] &fSuccessfully remove prefix {prefix} for player {player}!"
+success-set-prefix: "&#98FB98[MythicPrefixes] &fSuccessfully set player {player} using prefix is {prefix}!"
+view-prefix:
+  head: '&#98FB98[MythicPrefixes] &fYou are now using those prefixes:'
+  format: '&f - {prefix}'

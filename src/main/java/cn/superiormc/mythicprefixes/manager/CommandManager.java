@@ -32,6 +32,7 @@ public class CommandManager {
         registeredCommands.put("viewusingprefix", new SubViewUsingPrefix());
         registeredCommands.put("reload", new SubReload());
         registeredCommands.put("opengui", new SubOpenGUI());
+        registeredCommands.put("help", new SubHelp());
     }
 
     public Map<String, ObjectCommand> getSubCommandsMap() {
