@@ -37,6 +37,7 @@ public class ObjectAction {
         }
         for (String singleAction : actions) {
             singleAction = replacePlaceholder(singleAction, player);
+            String[] splits = singleAction.split(";;");
             if (singleAction.startsWith("none")) {
                 return;
             } else if (singleAction.startsWith("sound: ")) {
@@ -75,33 +76,28 @@ public class ObjectAction {
                 for (Player p : players) {
                     CommonUtil.sendMessage(p, singleAction.substring(14));
                 }
-            } else if (singleAction.startsWith("effect: ")) {
-                try {
-                    if (PotionEffectType.getByName(singleAction.substring(8).split(";;")[0].toUpperCase()) == null) {
-                        ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicPrefixes] §cError: Can not found potion effect: " +
-                                singleAction.split(";;")[0] + ".");
-                    }
-                    PotionEffect effect = new PotionEffect(PotionEffectType.getByName(singleAction.split(";;")[0].toUpperCase()),
-                            Integer.parseInt(singleAction.substring(8).split(";;")[2]),
-                            Integer.parseInt(singleAction.substring(8).split(";;")[1]) - 1,
-                            true,
-                            true,
-                            true);
-                    player.addPotionEffect(effect);
+            } else if (singleAction.startsWith("effect: ") && splits.length == 3) {
+                if (PotionEffectType.getByName(singleAction.substring(8).split(";;")[0].toUpperCase()) == null) {
+                    ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicPrefixes] §cError: Can not found potion effect: " +
+                            singleAction.split(";;")[0] + ".");
                 }
-                catch (ArrayIndexOutOfBoundsException e) {
-                    ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[UltimateShop] §cError: Your effect action in shop configs can not being correctly load.");
-                }
+                PotionEffect effect = new PotionEffect(PotionEffectType.getByName(singleAction.split(";;")[0].toUpperCase()),
+                        Integer.parseInt(singleAction.substring(8).split(";;")[2]),
+                        Integer.parseInt(singleAction.substring(8).split(";;")[1]) - 1,
+                        true,
+                        true,
+                        true);
+                player.addPotionEffect(effect);
             } else if (singleAction.startsWith("entity_spawn: ")) {
                 if (singleAction.split(";;").length == 1) {
                     EntityType entity = EntityType.valueOf(singleAction.substring(14).split(";;")[0].toUpperCase());
                     player.getLocation().getWorld().spawnEntity(player.getLocation(), entity);
                 } else if (singleAction.split(";;").length == 5) {
-                    World world = Bukkit.getWorld(singleAction.substring(18).split(";;")[1]);
+                    World world = Bukkit.getWorld(singleAction.substring(14).split(";;")[1]);
                     Location location = new Location(world,
-                            Double.parseDouble(singleAction.substring(18).split(";;")[2]),
-                            Double.parseDouble(singleAction.substring(18).split(";;")[3]),
-                            Double.parseDouble(singleAction.substring(18).split(";;")[4]));
+                            Double.parseDouble(singleAction.substring(14).split(";;")[2]),
+                            Double.parseDouble(singleAction.substring(14).split(";;")[3]),
+                            Double.parseDouble(singleAction.substring(14).split(";;")[4]));
                     EntityType entity = EntityType.valueOf(singleAction.substring(14).split(";;")[0].toUpperCase());
                     if (location.getWorld() == null) {
                         ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicPrefixes] §cError: Your entity_spawn action in shop configs can not being correctly load.");
@@ -109,30 +105,25 @@ public class ObjectAction {
                     location.getWorld().spawnEntity(location, entity);
                 }
             } else if (singleAction.startsWith("teleport: ")) {
-                try {
-                    if (singleAction.split(";;").length == 4) {
-                        Location loc = new Location(Bukkit.getWorld(singleAction.substring(10).split(";;")[0]),
-                                Double.parseDouble(singleAction.substring(10).split(";;")[1]),
-                                Double.parseDouble(singleAction.substring(10).split(";;")[2]),
-                                Double.parseDouble(singleAction.substring(10).split(";;")[3]),
-                                player.getLocation().getYaw(),
-                                player.getLocation().getPitch());
-                        player.teleport(loc);
-                    }
-                    else if (singleAction.split(";;").length == 6) {
-                        Location loc = new Location(Bukkit.getWorld(singleAction.split(";;")[0]),
-                                Double.parseDouble(singleAction.substring(10).split(";;")[1]),
-                                Double.parseDouble(singleAction.substring(10).split(";;")[2]),
-                                Double.parseDouble(singleAction.substring(10).split(";;")[3]),
-                                Float.parseFloat(singleAction.substring(10).split(";;")[4]),
-                                Float.parseFloat(singleAction.substring(10).split(";;")[5]));
-                        player.teleport(loc);
-                    }
-                    else {
-                        ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[UltimateShop] §cError: Your teleport action in shop configs can not being correctly load.");
-                    }
+                if (singleAction.split(";;").length == 4) {
+                    Location loc = new Location(Bukkit.getWorld(singleAction.substring(10).split(";;")[0]),
+                            Double.parseDouble(singleAction.substring(10).split(";;")[1]),
+                            Double.parseDouble(singleAction.substring(10).split(";;")[2]),
+                            Double.parseDouble(singleAction.substring(10).split(";;")[3]),
+                            player.getLocation().getYaw(),
+                            player.getLocation().getPitch());
+                    player.teleport(loc);
                 }
-                catch (ArrayIndexOutOfBoundsException e) {
+                else if (singleAction.split(";;").length == 6) {
+                    Location loc = new Location(Bukkit.getWorld(singleAction.split(";;")[0]),
+                            Double.parseDouble(singleAction.substring(10).split(";;")[1]),
+                            Double.parseDouble(singleAction.substring(10).split(";;")[2]),
+                            Double.parseDouble(singleAction.substring(10).split(";;")[3]),
+                            Float.parseFloat(singleAction.substring(10).split(";;")[4]),
+                            Float.parseFloat(singleAction.substring(10).split(";;")[5]));
+                    player.teleport(loc);
+                }
+                else {
                     ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[UltimateShop] §cError: Your teleport action in shop configs can not being correctly load.");
                 }
             } else if (singleAction.startsWith("console_command: ")) {
@@ -144,22 +135,14 @@ public class ObjectAction {
             } else if (singleAction.equals("close")) {
                 player.closeInventory();
             } else if (singleAction.startsWith("addprefix: ")) {
-                try {
-                    ObjectPrefix prefix = ConfigManager.configManager.getPrefix(singleAction.substring(11));
-                    if (prefix != null) {
-                        CacheManager.cacheManager.getPlayerCache(player).addActivePrefix(prefix);
-                    }
-                } catch (ArrayIndexOutOfBoundsException e) {
-                    ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[UltimateShop] §cError: Your buy action in shop configs can not being correctly load.");
+                ObjectPrefix prefix = ConfigManager.configManager.getPrefix(singleAction.substring(11));
+                if (prefix != null) {
+                    CacheManager.cacheManager.getPlayerCache(player).addActivePrefix(prefix);
                 }
             } else if (singleAction.startsWith("removeprefix: ")) {
-                try {
-                    ObjectPrefix prefix = ConfigManager.configManager.getPrefix(singleAction.substring(14));
-                    if (prefix != null) {
-                        CacheManager.cacheManager.getPlayerCache(player).removeActivePrefix(prefix);
-                    }
-                } catch (ArrayIndexOutOfBoundsException e) {
-                    ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[UltimateShop] §cError: Your buy action in shop configs can not being correctly load.");
+                ObjectPrefix prefix = ConfigManager.configManager.getPrefix(singleAction.substring(14));
+                if (prefix != null) {
+                    CacheManager.cacheManager.getPlayerCache(player).removeActivePrefix(prefix);
                 }
             } else if (singleAction.equals("removeall")) {
                 CacheManager.cacheManager.getPlayerCache(player).removeAllActivePrefix();
