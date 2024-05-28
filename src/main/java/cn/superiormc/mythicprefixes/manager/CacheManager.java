@@ -62,8 +62,6 @@ public class CacheManager {
     public ObjectCache getPlayerCache(Player player) {
         ObjectCache playerCache = playerCacheMap.get(player);
         if (playerCache == null) {
-            ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicPrefixes] §cError: Can not get " + player.getName() +
-                    " cache, regenerate a new cache object for the player.");
             CacheManager.cacheManager.addPlayerCache(player);
             playerCache = CacheManager.cacheManager.getPlayerCache(player);
         }
