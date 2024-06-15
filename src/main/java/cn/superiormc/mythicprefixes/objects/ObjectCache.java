@@ -4,13 +4,13 @@ import cn.superiormc.mythicprefixes.MythicPrefixes;
 import cn.superiormc.mythicprefixes.api.MythicPrefixesAPI;
 import cn.superiormc.mythicprefixes.database.SQLDatabase;
 import cn.superiormc.mythicprefixes.database.YamlDatabase;
+import cn.superiormc.mythicprefixes.manager.CacheManager;
 import cn.superiormc.mythicprefixes.manager.ConfigManager;
 import cn.superiormc.mythicprefixes.objects.buttons.ObjectPrefix;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.TreeSet;
 
 public class ObjectCache {
@@ -88,34 +88,13 @@ public class ObjectCache {
     }
 
     public Collection<ObjectPrefix> getActivePrefixes() {
-        Iterator<ObjectPrefix> iterator = prefixCaches.iterator();
-        while (iterator.hasNext()) {
-            ObjectPrefix tempVal1 = iterator.next();
-            if (tempVal1.getConditionMeet(player) == PrefixStatus.CONDITION_NOT_MEET) {
-                iterator.remove(); // 使用迭代器的 remove() 方法删除元素
-                if (ConfigManager.configManager.getBoolean("debug")) {
-                    Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicPrefixes] §fRemoved active prefix " + tempVal1.getId() + "" +
-                            " for player " + player.getName() + " because now prefix status is " + tempVal1.getConditionMeet(player) + "!");
-                }
-            }
-        }
-        return prefixCaches;
+        return new TreeSet<>(CacheManager.cacheManager.getPlayerCache(player).prefixCaches);
     }
 
     public String getActivePrefixesID() {
         int i = 0;
         StringBuilder tempVal2 = new StringBuilder();
-        Iterator<ObjectPrefix> iterator = prefixCaches.iterator();
-        while (iterator.hasNext()) {
-            ObjectPrefix tempVal1 = iterator.next();
-            if (tempVal1.getConditionMeet(player) == PrefixStatus.CONDITION_NOT_MEET) {
-                iterator.remove(); // 使用迭代器的 remove() 方法删除元素
-                if (ConfigManager.configManager.getBoolean("debug")) {
-                    Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicPrefixes] §fRemoved active prefix " + tempVal1.getId() + "" +
-                            " for player " + player.getName() + " because now prefix status is " + tempVal1.getConditionMeet(player) + "!");
-                }
-                continue;
-            }
+        for (ObjectPrefix tempVal1 : prefixCaches) {
             if (i > 0) {
                 tempVal2.append(";;");
             }
@@ -123,5 +102,13 @@ public class ObjectCache {
             i++;
         }
         return tempVal2.toString();
+    }
+
+    public void checkCondition() {
+        for (ObjectPrefix prefix : MythicPrefixesAPI.getActivedPrefixes(player)) {
+            if (!prefix.getCondition().getBoolean(player)) {
+                removeActivePrefix(prefix);
+            }
+        }
     }
 }

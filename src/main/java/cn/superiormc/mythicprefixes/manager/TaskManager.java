@@ -12,11 +12,14 @@ public class TaskManager {
 
     private BukkitTask saveTask;
 
+    private BukkitTask conditionCheckTask;
+
     public TaskManager() {
         taskManager = this;
         if (ConfigManager.configManager.getBoolean("auto-save.enabled")) {
             initSaveTasks();
         }
+        initConditionCheckTasks();
     }
 
     public void initSaveTasks() {
@@ -39,9 +42,27 @@ public class TaskManager {
         }.runTaskTimer(MythicPrefixes.instance, 180L, ConfigManager.configManager.config.getLong("auto-save.period-tick", 600));
     }
 
+    public void initConditionCheckTasks() {
+        conditionCheckTask = new BukkitRunnable() {
+
+            @Override
+            public void run() {
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    if (CacheManager.cacheManager.getPlayerCache(player) != null) {
+                        CacheManager.cacheManager.getPlayerCache(player).checkCondition();
+                    }
+                }
+            }
+
+        }.runTaskTimer(MythicPrefixes.instance, 20L, 20L);
+    }
+
     public void cancelTask() {
         if (saveTask != null) {
             saveTask.cancel();
+        }
+        if (conditionCheckTask != null) {
+            conditionCheckTask.cancel();;
         }
     }
 }

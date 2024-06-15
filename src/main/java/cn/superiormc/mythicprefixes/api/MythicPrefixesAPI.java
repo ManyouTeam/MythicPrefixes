@@ -22,7 +22,7 @@ public class MythicPrefixesAPI {
         } else if (CacheManager.cacheManager.getPlayerCache(player) == null) {
             return new TreeSet<>();
         } else {
-            return new TreeSet<>(CacheManager.cacheManager.getPlayerCache(player).prefixCaches);
+            return CacheManager.cacheManager.getPlayerCache(player).getActivePrefixes();
         }
     }
 

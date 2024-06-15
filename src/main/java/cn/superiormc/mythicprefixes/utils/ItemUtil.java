@@ -72,9 +72,10 @@ public class ItemUtil {
                     continue;
                 }
                 if (MythicPrefixes.isPaper && ConfigManager.configManager.getBoolean("use-component.item")) {
-                    veryNewLore.add(MiniMessage.miniMessage().deserialize(TextUtil.withPAPI(singleLore, player)));
+                    veryNewLore.add(MiniMessage.miniMessage().deserialize(TextUtil.withPAPI(
+                            CommonUtil.modifyString(singleLore, args), player)));
                 } else {
-                    newLore.add(TextUtil.parse(singleLore, player));
+                    newLore.add(TextUtil.parse(CommonUtil.modifyString(singleLore, args), player));
                 }
             }
             if (!newLore.isEmpty()) {

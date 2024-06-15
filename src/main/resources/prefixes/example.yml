@@ -5,7 +5,7 @@ display-item:
     name: '{display-value}'
     lore:
       - '&7Display Value: {display-value}'
-      - '&7Preview: %mythicprefixes_prefix_default_chat% %player_name%'
+      - '&7Preview: %mythicprefixes_prefix_example_chat% %player_name%'
       - '&dOp will always can use the tag, give'
       - '&dyourself &4-mythicprefixes.bypass.*'
       - '&dpermission to avoid that.'
@@ -15,7 +15,7 @@ display-item:
     name: '{display-value}'
     lore:
       - '&7Display Value: {display-value}'
-      - '&7Preview: %mythicprefixes_prefix_default_chat% %player_name%'
+      - '&7Preview: %mythicprefixes_prefix_example_chat% %player_name%'
       - '&cYou are now using this prefix!'
       - '&eClick to cancel use this prefix!'
   locked:
@@ -23,13 +23,13 @@ display-item:
     name: '&cLocked'
     lore:
       - '&7Display Value: {display-value}'
-      - '&7Preview: %mythicprefixes_prefix_default_chat% %player_name%'
+      - '&7Preview: %mythicprefixes_prefix_example_chat% %player_name%'
       - '&cKill a dragon to unlock!'
   max-reached:
     material: DRAGON_EGG
     name: '{display-value}'
     lore:
-      - '&7Preview: %mythicprefixes_prefix_default_chat% %player_name%'
+      - '&7Preview: %mythicprefixes_prefix_example_chat% %player_name%'
       - '&cYou have reached max use of prefix!'
 display-value: '&8Dragon Killer'
 weight: 15

@@ -41,14 +41,16 @@ public class YamlDatabase {
         StringBuilder tempVal3 = new StringBuilder();
         int i = 0;
         List<String> tempVal1 = config.getStringList("prefixID");
-        for (String tempVal2 : tempVal1) {
-            if (i > 0) {
-                tempVal3.append(";;");
+        if (!tempVal1.isEmpty()) {
+            for (String tempVal2 : tempVal1) {
+                if (i > 0) {
+                    tempVal3.append(";;");
+                }
+                tempVal3.append(tempVal2);
+                i++;
             }
-            tempVal3.append(tempVal2);
-            i ++;
+            cache.setActivePrefixes(tempVal3.toString());
         }
-        cache.setActivePrefixes(tempVal3.toString());
     }
 
     public static void updateData(ObjectCache cache, boolean quitServer) {

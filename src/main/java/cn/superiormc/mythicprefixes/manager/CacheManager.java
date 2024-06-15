@@ -1,6 +1,5 @@
 package cn.superiormc.mythicprefixes.manager;
 
-import cn.superiormc.mythicprefixes.MythicPrefixes;
 import cn.superiormc.mythicprefixes.objects.ObjectCache;
 import cn.superiormc.mythicprefixes.database.SQLDatabase;
 import org.bukkit.Bukkit;

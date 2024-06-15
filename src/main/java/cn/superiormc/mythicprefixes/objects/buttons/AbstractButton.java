@@ -45,4 +45,12 @@ public abstract class AbstractButton {
         return type;
     }
 
+    public ObjectAction getAction() {
+        return action;
+    }
+
+    public ObjectCondition getCondition() {
+        return condition;
+    }
+
 }
