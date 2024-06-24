@@ -1,10 +1,13 @@
 package cn.superiormc.mythicprefixes.listeners;
 
 import cn.superiormc.mythicprefixes.gui.InvGUI;
+import cn.superiormc.mythicprefixes.manager.ConfigManager;
+import cn.superiormc.mythicprefixes.manager.ErrorManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
@@ -27,7 +30,7 @@ public class GUIListener implements Listener {
         try {
             if (e.getWhoClicked().equals(player)) {
                 if (!Objects.equals(e.getClickedInventory(), gui.getInv())) {
-                    if (e.getClick().isShiftClick()) {
+                    if (e.getClick().isShiftClick() || e.getClick() == ClickType.DOUBLE_CLICK || ConfigManager.configManager.getBoolean("choose-prefix-gui.forbid-click-outside")) {
                         e.setCancelled(true);
                     }
                     return;
@@ -40,8 +43,12 @@ public class GUIListener implements Listener {
                 }
             }
         }
-        catch (Exception ep) {
-            ep.printStackTrace();
+        catch (Throwable throwable) {
+            ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicPrefixes] §cError: Your menu configs has wrong, error message: " +
+                    throwable.getMessage());
+            if (ConfigManager.configManager.getBoolean("debug")) {
+                throwable.fillInStackTrace();
+            }
             e.setCancelled(true);
         }
     }

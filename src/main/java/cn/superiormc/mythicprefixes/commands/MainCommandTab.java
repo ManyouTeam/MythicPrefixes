@@ -15,7 +15,13 @@ public class MainCommandTab implements TabCompleter {
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         List<String> tempVal1 = new ArrayList<>();
         if (args.length == 1) {
-            tempVal1.addAll(CommandManager.commandManager.getSubCommandsMap().keySet());
+            for (ObjectCommand object : CommandManager.commandManager.getSubCommandsMap().values()) {
+                if (object.getRequiredPermission() != null && !object.getRequiredPermission().isEmpty()
+                        && !sender.hasPermission(object.getRequiredPermission())) {
+                    continue;
+                }
+                tempVal1.add(object.getId());
+            }
         } else {
             ObjectCommand tempVal2 = CommandManager.commandManager.getSubCommandsMap().get(args[0]);
             if (tempVal2 != null && sender.hasPermission(tempVal2.getRequiredPermission())) {
