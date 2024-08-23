@@ -19,6 +19,7 @@ display-placeholder:
     end-symbol: '&f]'
     black-prefixes: []
     display-amount: 10
+    empty-display: ''
 
 # {status} Placeholder
 status-placeholder:

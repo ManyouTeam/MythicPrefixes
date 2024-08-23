@@ -8,7 +8,6 @@ import org.bukkit.entity.Player;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.TreeSet;
 
 public class ObjectDisplayPlaceholder {
 
@@ -24,6 +23,7 @@ public class ObjectDisplayPlaceholder {
 
     private final int displayAmount;
 
+    private final String empty;
 
     public ObjectDisplayPlaceholder(String id, ConfigurationSection section) {
         this.id = id;
@@ -32,6 +32,7 @@ public class ObjectDisplayPlaceholder {
         this.splitSymbol = TextUtil.parse(section.getString("split-symbol"));
         this.blackPrefixes = section.getStringList("black-prefixes");
         this.displayAmount = section.getInt("display-amount", -1);
+        this.empty = section.getString("empty-display", null);
     }
 
     public String getId() {
@@ -62,6 +63,9 @@ public class ObjectDisplayPlaceholder {
             }
             tempVal1.append(tempVal3.getDisplayValue(player));
             tempVal4 ++;
+        }
+        if (tempVal4 == 0 && empty != null) {
+            return empty;
         }
         tempVal1.append(endSymbol);
         return tempVal1.toString();

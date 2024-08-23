@@ -6,7 +6,7 @@
 
     <groupId>cn.superiormc</groupId>
     <artifactId>MythicPrefixes</artifactId>
-    <version>1.2.9</version>
+    <version>1.2.11</version>
     <packaging>jar</packaging>
 
     <name>MythicPrefixes</name>
@@ -113,8 +113,9 @@
         <dependency>
             <groupId>com.willfp</groupId>
             <artifactId>libreforge</artifactId>
-            <version>4.53.0</version>
-            <scope>provided</scope>
+            <version>4.65.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/libreforge-4.65.0.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.willfp</groupId>
