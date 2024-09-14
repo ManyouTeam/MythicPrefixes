@@ -4,6 +4,7 @@ import cn.superiormc.mythicprefixes.MythicPrefixes;
 import cn.superiormc.mythicprefixes.manager.ConfigManager;
 import cn.superiormc.mythicprefixes.manager.ErrorManager;
 import com.google.common.base.Enums;
+import com.google.common.collect.MultimapBuilder;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import net.kyori.adventure.text.Component;
@@ -85,7 +86,7 @@ public class ItemUtil {
                 meta.lore(veryNewLore);
             }
         }
-        if (CommonUtil.getMajorVersion() >= 14) {
+        if (CommonUtil.getMajorVersion(14)) {
             int customModelDataKey = section.getInt("custom-model-data", section.getInt("cmd", -1));
             if (customModelDataKey > 0) {
                 meta.setCustomModelData(customModelDataKey);
@@ -98,6 +99,9 @@ public class ItemUtil {
                 ItemFlag itemFlag = Enums.getIfPresent(ItemFlag.class, flag).orNull();
                 if (itemFlag != null) {
                     meta.addItemFlags(itemFlag);
+                }
+                if (CommonUtil.getMinorVersion(20, 6) && itemFlag == ItemFlag.HIDE_ATTRIBUTES && meta.getAttributeModifiers() == null) {
+                    meta.setAttributeModifiers(MultimapBuilder.hashKeys().hashSetValues().build());
                 }
             }
         }
@@ -124,7 +128,6 @@ public class ItemUtil {
                     ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicPrefixes] §cError: Can not parse skull texture in a item!");
                 }
             }
-            item.setItemMeta(skullMeta);
         }
         item.setItemMeta(meta);
         return item;

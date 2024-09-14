@@ -77,13 +77,13 @@ public class CommonUtil {
         }
     }
 
-    public static int getMajorVersion() {
-        String version = Bukkit.getVersion();
-        Matcher matcher = Pattern.compile("MC: \\d\\.(\\d+)").matcher(version);
-        if (matcher.find()) {
-            return Integer.parseInt(matcher.group(1));
-        }
-        return 20;
+    public static boolean getMajorVersion(int version) {
+        return MythicPrefixes.majorVersion >= version;
+    }
+
+    public static boolean getMinorVersion(int majorVersion, int minorVersion) {
+        return MythicPrefixes.majorVersion > majorVersion || (MythicPrefixes.majorVersion == majorVersion &&
+                MythicPrefixes.miniorVersion >= minorVersion);
     }
 
     public static void mkDir(File dir) {
