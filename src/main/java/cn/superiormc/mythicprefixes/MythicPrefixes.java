@@ -18,6 +18,8 @@ public final class MythicPrefixes extends JavaPlugin {
 
     public static int miniorVersion;
 
+    public static boolean newSkullMethod;
+
     @Override
     public void onEnable() {
         instance = this;
@@ -46,6 +48,10 @@ public final class MythicPrefixes extends JavaPlugin {
             if (PlaceholderAPIExpansion.papi.register()){
                 Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicPrefixes] §fFinished hook!");
             }
+        }
+        if (!CommonUtil.checkClass("com.mojang.authlib.properties.Property", "getValue") && CommonUtil.getMinorVersion(21, 1)) {
+            newSkullMethod = true;
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicPrefixes] §fNew AuthLib found, enabled new skull get method!");
         }
         Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicPrefixes] §fYour Minecraft version is: 1." + majorVersion + "." + miniorVersion + "!");
         Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicPrefixes] §fPlugin is loaded. Author: PQguanfang.");

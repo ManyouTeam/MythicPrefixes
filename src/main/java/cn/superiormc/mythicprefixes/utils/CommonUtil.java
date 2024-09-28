@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -74,6 +75,23 @@ public class CommonUtil {
             } else {
                 player.sendMessage(TextUtil.parse(text, player));
             }
+        }
+    }
+
+    public static boolean checkClass(String className, String methodName) {
+        try {
+            Class<?> targetClass = Class.forName(className);
+            Method[] methods = targetClass.getDeclaredMethods();
+
+            for (Method method : methods) {
+                if (method.getName().equals(methodName)) {
+                    return true;
+                }
+            }
+
+            return false;
+        } catch (ClassNotFoundException e) {
+            return false;
         }
     }
 

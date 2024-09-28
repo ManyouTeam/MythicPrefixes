@@ -11,6 +11,7 @@ use-component:
   menu-title: false
   message: false
   item: false
+  skull: false
 
 display-placeholder:
   chat:
