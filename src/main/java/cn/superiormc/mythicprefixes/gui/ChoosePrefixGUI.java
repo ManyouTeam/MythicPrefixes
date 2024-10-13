@@ -2,14 +2,11 @@ package cn.superiormc.mythicprefixes.gui;
 
 import cn.superiormc.mythicprefixes.MythicPrefixes;
 import cn.superiormc.mythicprefixes.manager.ConfigManager;
+import cn.superiormc.mythicprefixes.objects.PrefixStatus;
 import cn.superiormc.mythicprefixes.objects.buttons.AbstractButton;
 import cn.superiormc.mythicprefixes.objects.buttons.ObjectPrefix;
-import cn.superiormc.mythicprefixes.utils.CommonUtil;
 import cn.superiormc.mythicprefixes.utils.ItemUtil;
 import cn.superiormc.mythicprefixes.utils.TextUtil;
-import net.kyori.adventure.key.Key;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
@@ -28,6 +25,8 @@ public class ChoosePrefixGUI extends InvGUI {
 
     private List<Integer> slotCache;
 
+    private Filter filter = Filter.ALL;
+
     private int needPages = 1;
 
     private int nowPage = 1;
@@ -35,6 +34,8 @@ public class ChoosePrefixGUI extends InvGUI {
     private int nextPageSlot = -1;
 
     private int previousPageSlot = -1;
+
+    private int filterSlot = -1;
 
     public ChoosePrefixGUI(Player player) {
         super(player);
@@ -45,9 +46,14 @@ public class ChoosePrefixGUI extends InvGUI {
     @Override
     protected void constructGUI() {
         int i = 0;
+        prefixCache.clear();
         for (ObjectPrefix prefix : ConfigManager.configManager.getPrefixesWithoutHide()) {
-            prefixCache.put(i, prefix);
-            i ++;
+            if (filter == Filter.ALL || (filter == Filter.USING && prefix.getConditionMeet(player) == PrefixStatus.USING) || (
+                    filter == Filter.CAN_USE && prefix.getConditionMeet(player) == PrefixStatus.CAN_USE
+                    )) {
+                prefixCache.put(i, prefix);
+                i++;
+            }
         }
         if (prefixCache.size() >= slotCache.size()) {
             needPages = (int) (Math.ceil((double) prefixCache.size() / slotCache.size()));
@@ -56,7 +62,7 @@ public class ChoosePrefixGUI extends InvGUI {
             int size = ConfigManager.configManager.getInt("choose-prefix-gui.size", 54);
             String title = ConfigManager.configManager.getString("choose-prefix-gui." +
                             "title", "Tag GUI");
-            if (MythicPrefixes.isPaper && ConfigManager.configManager.getBoolean("use-component.menu-title")) {
+            if (MythicPrefixes.isPaper && ConfigManager.configManager.getBoolean("paper-api.use-component.menu-title")) {
                 inv = Bukkit.createInventory(player, size, MiniMessage.miniMessage().deserialize(TextUtil.withPAPI(title, player)));
             } else {
                 inv = Bukkit.createInventory(player, size, TextUtil.parse(title, player));
@@ -104,6 +110,20 @@ public class ChoosePrefixGUI extends InvGUI {
                 inv.clear(previousPageSlot);
             }
         }
+        ConfigurationSection filterSection = ConfigManager.configManager.getSection().
+                getConfigurationSection("choose-prefix-gui.filter-item");
+        if (filterSection != null) {
+            String filterPlaceholder = filterSection.getString("placeholder.all");
+            if (filter == Filter.USING) {
+                filterPlaceholder = filterSection.getString("placeholder.using");
+            } else if (filter == Filter.CAN_USE) {
+                filterPlaceholder = filterSection.getString("placeholder.can-use");
+            }
+            ItemStack filterItem = ItemUtil.buildItemStack(player, filterSection,
+                    "filter", filterPlaceholder);
+            filterSlot = filterSection.getInt("slot", 47);
+            inv.setItem(filterSlot, filterItem);
+        }
     }
 
     @Override
@@ -112,13 +132,19 @@ public class ChoosePrefixGUI extends InvGUI {
             if (nowPage < needPages) {
                 nowPage++;
             }
-        }
-        else if (slot == previousPageSlot) {
+        } else if (slot == previousPageSlot) {
             if (nowPage > 0) {
                 nowPage--;
             }
-        }
-        else {
+        } else if (slot == filterSlot) {
+            if (filter == Filter.ALL) {
+                filter = Filter.USING;
+            } else if (filter == Filter.USING) {
+                filter = Filter.CAN_USE;
+            } else if (filter == Filter.CAN_USE) {
+                filter = Filter.ALL;
+            }
+        } else {
             AbstractButton prefix = prefixCache.get((nowPage - 1)  * slotCache.size() + slotCache.indexOf(slot));
             if (prefix != null) {
                 prefix.clickEvent(type, player);

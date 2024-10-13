@@ -63,7 +63,7 @@ public class CommonUtil {
     }
 
     public static void sendMessage(Player player, String text) {
-        if (MythicPrefixes.isPaper && ConfigManager.configManager.getBoolean("use-component.message")) {
+        if (MythicPrefixes.isPaper && ConfigManager.configManager.getBoolean("paper-api.use-component.message")) {
             if (player == null) {
                 Bukkit.getConsoleSender().sendMessage(MiniMessage.miniMessage().deserialize(text));
             } else {

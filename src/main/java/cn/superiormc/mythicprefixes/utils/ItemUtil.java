@@ -56,7 +56,7 @@ public class ItemUtil {
         }
         String displayNameKey = section.getString("name");
         if (displayNameKey != null) {
-            if (MythicPrefixes.isPaper && ConfigManager.configManager.getBoolean("use-component.item")) {
+            if (MythicPrefixes.isPaper && ConfigManager.configManager.getBoolean("paper-api.use-component.item")) {
                 meta.displayName(MiniMessage.miniMessage().deserialize(TextUtil.withPAPI(
                         CommonUtil.modifyString(displayNameKey, args), player)));
             } else {
@@ -69,14 +69,14 @@ public class ItemUtil {
             List<Component> veryNewLore = new ArrayList<>();
             for (String singleLore : section.getStringList("lore")) {
                 if (singleLore.isEmpty()) {
-                    if (MythicPrefixes.isPaper && ConfigManager.configManager.getBoolean("use-component.item")) {
+                    if (MythicPrefixes.isPaper && ConfigManager.configManager.getBoolean("paper-api.use-component.item")) {
                         veryNewLore.add(Component.space());
                     } else {
                         newLore.add(" ");
                     }
                     continue;
                 }
-                if (MythicPrefixes.isPaper && ConfigManager.configManager.getBoolean("use-component.item")) {
+                if (MythicPrefixes.isPaper && ConfigManager.configManager.getBoolean("paper-api.use-component.item")) {
                     veryNewLore.add(MiniMessage.miniMessage().deserialize(TextUtil.withPAPI(
                             CommonUtil.modifyString(singleLore, args), player)));
                 } else {
@@ -122,7 +122,7 @@ public class ItemUtil {
             SkullMeta skullMeta = (SkullMeta) meta;
             String skullTextureNameKey = section.getString("skull-meta", section.getString("skull"));
             if (skullTextureNameKey != null) {
-                if (MythicPrefixes.isPaper && ConfigManager.configManager.getBoolean("use-component.skull")) {
+                if (MythicPrefixes.isPaper && ConfigManager.configManager.getBoolean("paper-api.use-component.skull")) {
                     PlayerProfile profile = Bukkit.createProfile(UUID.randomUUID(), "");
                     profile.setProperty(new ProfileProperty("textures", skullTextureNameKey));
                     skullMeta.setPlayerProfile(profile);

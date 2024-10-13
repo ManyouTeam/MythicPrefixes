@@ -7,11 +7,12 @@ debug: false
 language: en_US
 
 # Paper only feature.
-use-component:
-  menu-title: false
-  message: false
-  item: false
-  skull: false
+paper-api:
+  use-component:
+    menu-title: false
+    message: false
+    item: false
+  skull: true
 
 display-placeholder:
   chat:
@@ -47,6 +48,17 @@ choose-prefix-gui:
   prefix-item-slot: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,
                      16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,
                      31,32,33,34,35,36,37,38,39,40,41,42,43,44]
+  # Remove this section if you do not want this item.
+  filter-item:
+    slot: 47
+    material: ANVIL
+    name: '&bFilter'
+    lore:
+      - '&7Filter: {filter}'
+    placeholder:
+      all: '&aALL'
+      using: '&cUSING'
+      can-use: '&dCan Use'
   # Remove this section if you do not want this item.
   next-page-item:
     slot: 52
