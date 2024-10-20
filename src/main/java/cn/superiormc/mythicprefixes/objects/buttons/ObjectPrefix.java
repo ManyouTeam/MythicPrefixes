@@ -131,20 +131,21 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
         if (MythicPrefixesAPI.getActivedPrefixes(player).contains(this)) {
             return PrefixStatus.USING;
         }
+        if (!condition.getBoolean(player) && !CommonUtil.checkPermission(player, "mythicprefixes.bypass." + getId())) {
+            return PrefixStatus.CONDITION_NOT_MEET;
+        }
         if (MythicPrefixesAPI.getMaxPrefixesAmount(player) == MythicPrefixesAPI.getActivedPrefixes(player).size()) {
             return PrefixStatus.MAX_LIMIT_REACHED;
-        }
-        if (CommonUtil.checkPermission(player, "mythicprefixes.bypass." + getId())) {
-            return PrefixStatus.CAN_USE;
-        }
-        if (!condition.getBoolean(player)) {
-            return PrefixStatus.CONDITION_NOT_MEET;
         }
         return PrefixStatus.CAN_USE;
     }
 
     public boolean getDisplayInGUI() {
         return config.contains("display-item", true);
+    }
+
+    public boolean shouldHideInGUI(Player player) {
+        return !config.getBoolean("auto-hide", false) || condition.getBoolean(player);
     }
 
     @Override

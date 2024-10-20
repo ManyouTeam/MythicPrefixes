@@ -33,6 +33,7 @@ display-item:
       - '&cYou have reached max use of prefix!'
 display-value: '&8Dragon Killer'
 weight: 15
+auto-hide: false
 effects:
   libreforge: false
   MythicLib: false

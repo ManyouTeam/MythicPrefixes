@@ -157,6 +157,13 @@ public class ConfigManager {
         return s.replace("{plugin_folder}", String.valueOf(MythicPrefixes.instance.getDataFolder()));
     }
 
+    public ConfigurationSection getConfigurationSection(String path) {
+        if (!config.contains(path)) {
+            return null;
+        }
+        return config.getConfigurationSection(path);
+    }
+
     public FileConfiguration getSection() {
         return config;
     }

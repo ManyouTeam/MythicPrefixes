@@ -53,6 +53,7 @@ public class ObjectCondition {
                         String value = conditionString[2];
                         if (conditionValue.equals("==")) {
                             placeholder = PlaceholderAPI.setPlaceholders(player, placeholder);
+                            value = PlaceholderAPI.setPlaceholders(player, value);
                             if (!placeholder.equals(value)) {
                                 conditionTrueOrFasle = false;
                                 break;
@@ -60,6 +61,7 @@ public class ObjectCondition {
                         }
                         if (conditionValue.equals("!=")) {
                             placeholder = PlaceholderAPI.setPlaceholders(player, placeholder);
+                            value = PlaceholderAPI.setPlaceholders(player, value);
                             if (placeholder.equals(value)) {
                                 conditionTrueOrFasle = false;
                                 break;
@@ -67,6 +69,7 @@ public class ObjectCondition {
                         }
                         if (conditionValue.equals("*=")) {
                             placeholder = PlaceholderAPI.setPlaceholders(player, placeholder);
+                            value = PlaceholderAPI.setPlaceholders(player, value);
                             if (!placeholder.contains(value)) {
                                 conditionTrueOrFasle = false;
                                 break;
@@ -74,6 +77,7 @@ public class ObjectCondition {
                         }
                         if (conditionValue.equals("!*=")) {
                             placeholder = PlaceholderAPI.setPlaceholders(player, placeholder);
+                            value = PlaceholderAPI.setPlaceholders(player, value);
                             if (placeholder.contains(value)) {
                                 conditionTrueOrFasle = false;
                                 break;
@@ -81,6 +85,7 @@ public class ObjectCondition {
                         }
                         if (conditionValue.equals(">=")) {
                             placeholder = PlaceholderAPI.setPlaceholders(player, placeholder);
+                            value = PlaceholderAPI.setPlaceholders(player, value);
                             if (!(Double.parseDouble(placeholder) >= Double.parseDouble(value))) {
                                 conditionTrueOrFasle = false;
                                 break;
@@ -88,6 +93,7 @@ public class ObjectCondition {
                         }
                         if (conditionValue.equals(">")) {
                             placeholder = PlaceholderAPI.setPlaceholders(player, placeholder);
+                            value = PlaceholderAPI.setPlaceholders(player, value);
                             if (!(Double.parseDouble(placeholder) > Double.parseDouble(value))) {
                                 conditionTrueOrFasle = false;
                                 break;
@@ -95,6 +101,7 @@ public class ObjectCondition {
                         }
                         if (conditionValue.equals("<=")) {
                             placeholder = PlaceholderAPI.setPlaceholders(player, placeholder);
+                            value = PlaceholderAPI.setPlaceholders(player, value);
                             if (!(Double.parseDouble(placeholder) <= Double.parseDouble(value))) {
                                 conditionTrueOrFasle = false;
                                 break;
@@ -102,6 +109,7 @@ public class ObjectCondition {
                         }
                         if (conditionValue.equals("<")) {
                             placeholder = PlaceholderAPI.setPlaceholders(player, placeholder);
+                            value = PlaceholderAPI.setPlaceholders(player, value);
                             if (!(Double.parseDouble(placeholder) < Double.parseDouble(value))) {
                                 conditionTrueOrFasle = false;
                                 break;
@@ -109,6 +117,7 @@ public class ObjectCondition {
                         }
                         if (conditionValue.equals("=")) {
                             placeholder = PlaceholderAPI.setPlaceholders(player, placeholder);
+                            value = PlaceholderAPI.setPlaceholders(player, value);
                             if (!(Double.parseDouble(placeholder) == Double.parseDouble(value))) {
                                 conditionTrueOrFasle = false;
                                 break;

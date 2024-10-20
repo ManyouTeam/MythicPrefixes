@@ -46,17 +46,19 @@ public class ChoosePrefixGUI extends InvGUI {
     @Override
     protected void constructGUI() {
         int i = 0;
-        prefixCache.clear();
-        for (ObjectPrefix prefix : ConfigManager.configManager.getPrefixesWithoutHide()) {
-            if (filter == Filter.ALL || (filter == Filter.USING && prefix.getConditionMeet(player) == PrefixStatus.USING) || (
-                    filter == Filter.CAN_USE && prefix.getConditionMeet(player) == PrefixStatus.CAN_USE
-                    )) {
-                prefixCache.put(i, prefix);
-                i++;
+        if (prefixCache.isEmpty()) {
+            for (ObjectPrefix prefix : ConfigManager.configManager.getPrefixesWithoutHide()) {
+                PrefixStatus status = prefix.getConditionMeet(player);
+                if ((filter == Filter.ALL || (filter == Filter.USING && status == PrefixStatus.USING) || (
+                        filter == Filter.CAN_USE && status == PrefixStatus.CAN_USE))
+                        && prefix.shouldHideInGUI(player)) {
+                    prefixCache.put(i, prefix);
+                    i++;
+                }
             }
-        }
-        if (prefixCache.size() >= slotCache.size()) {
-            needPages = (int) (Math.ceil((double) prefixCache.size() / slotCache.size()));
+            if (prefixCache.size() >= slotCache.size()) {
+                needPages = (int) (Math.ceil((double) prefixCache.size() / slotCache.size()));
+            }
         }
         if (Objects.isNull(inv)) {
             int size = ConfigManager.configManager.getInt("choose-prefix-gui.size", 54);
@@ -76,42 +78,45 @@ public class ChoosePrefixGUI extends InvGUI {
             }
             inv.setItem(slotCache.get(c), prefix.getDisplayItem(player));
         }
-        for (int slot : ConfigManager.configManager.getButtons().keySet()) {
-            AbstractButton button = ConfigManager.configManager.getButtons().get(slot);
-            if (button == null) {
-                continue;
+        if (buttonCache.isEmpty()) {
+            for (int slot : ConfigManager.configManager.getButtons().keySet()) {
+                AbstractButton button = ConfigManager.configManager.getButtons().get(slot);
+                if (button == null) {
+                    continue;
+                }
+                buttonCache.put(slot, button);
+                inv.setItem(slot, button.getDisplayItem(player));
             }
-            buttonCache.put(slot, button);
-            inv.setItem(slot, button.getDisplayItem(player));
         }
-        ConfigurationSection nextPageSection = ConfigManager.configManager.getSection().
-                getConfigurationSection("choose-prefix-gui.next-page-item");
+        ConfigurationSection nextPageSection = ConfigManager.configManager.getConfigurationSection("choose-prefix-gui.next-page-item");
         if (nowPage < needPages && nextPageSection != null) {
             ItemStack nextPageItem = ItemUtil.buildItemStack(player, nextPageSection,
                     "max", String.valueOf(needPages),
                     "now", String.valueOf(nowPage));
             nextPageSlot = nextPageSection.getInt("slot", 52);
-            inv.setItem(nextPageSlot, nextPageItem);
+            if (nextPageSlot >= 0) {
+                inv.setItem(nextPageSlot, nextPageItem);
+            }
         } else {
             if (nextPageSlot >= 0 && nextPageSlot < 54) {
                 inv.clear(nextPageSlot);
             }
         }
-        ConfigurationSection previousPageSection = ConfigManager.configManager.getSection().
-                getConfigurationSection("choose-prefix-gui.previous-page-item");
+        ConfigurationSection previousPageSection = ConfigManager.configManager.getConfigurationSection("choose-prefix-gui.previous-page-item");
         if (nowPage > 1 && previousPageSection != null) {
             ItemStack previousPageItem = ItemUtil.buildItemStack(player, previousPageSection,
                     "max", String.valueOf(needPages),
                     "now", String.valueOf(nowPage));
             previousPageSlot = previousPageSection.getInt("slot", 46);
-            inv.setItem(previousPageSlot, previousPageItem);
+            if (previousPageSlot >= 0) {
+                inv.setItem(previousPageSlot, previousPageItem);
+            }
         } else {
             if (previousPageSlot >= 0 && previousPageSlot < 54) {
                 inv.clear(previousPageSlot);
             }
         }
-        ConfigurationSection filterSection = ConfigManager.configManager.getSection().
-                getConfigurationSection("choose-prefix-gui.filter-item");
+        ConfigurationSection filterSection = ConfigManager.configManager.getConfigurationSection("choose-prefix-gui.filter-item");
         if (filterSection != null) {
             String filterPlaceholder = filterSection.getString("placeholder.all");
             if (filter == Filter.USING) {
@@ -122,7 +127,9 @@ public class ChoosePrefixGUI extends InvGUI {
             ItemStack filterItem = ItemUtil.buildItemStack(player, filterSection,
                     "filter", filterPlaceholder);
             filterSlot = filterSection.getInt("slot", 47);
-            inv.setItem(filterSlot, filterItem);
+            if (filterSlot >= 0) {
+                inv.setItem(filterSlot, filterItem);
+            }
         }
     }
 
@@ -144,6 +151,7 @@ public class ChoosePrefixGUI extends InvGUI {
             } else if (filter == Filter.CAN_USE) {
                 filter = Filter.ALL;
             }
+            prefixCache.clear();
         } else {
             AbstractButton prefix = prefixCache.get((nowPage - 1)  * slotCache.size() + slotCache.indexOf(slot));
             if (prefix != null) {
