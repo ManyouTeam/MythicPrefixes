@@ -117,7 +117,7 @@ public class ChoosePrefixGUI extends InvGUI {
             }
         }
         ConfigurationSection filterSection = ConfigManager.configManager.getConfigurationSection("choose-prefix-gui.filter-item");
-        if (filterSection != null) {
+        if (filterSection != null && !MythicPrefixes.freeVersion) {
             String filterPlaceholder = filterSection.getString("placeholder.all");
             if (filter == Filter.USING) {
                 filterPlaceholder = filterSection.getString("placeholder.using");

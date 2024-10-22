@@ -19,18 +19,18 @@ public class ObjectButton extends AbstractButton {
     }
 
     private void initButton() {
-        this.action = new ObjectAction(config.getStringList("actions"));
-        this.condition = new ObjectCondition(config.getStringList("conditions"));
+        this.action = new ObjectAction(config.getConfigurationSection("actions"));
+        this.condition = new ObjectCondition(config.getConfigurationSection("conditions"));
 
     }
 
     @Override
     public void clickEvent(ClickType type, Player player) {
-        if (condition != null && !condition.getBoolean(player)) {
+        if (condition != null && !condition.getAllBoolean(player)) {
             return;
         }
         if (action != null) {
-            action.doAction(player);
+            action.runAllActions(player);
         }
     }
 

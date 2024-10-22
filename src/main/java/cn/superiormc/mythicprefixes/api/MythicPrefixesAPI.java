@@ -40,8 +40,8 @@ public class MythicPrefixesAPI {
         Set<String> groupNameSet = conditionSection.getKeys(false);
         List<Integer> result = new ArrayList<>();
         for (String groupName : groupNameSet) {
-            ObjectCondition condition = new ObjectCondition(conditionSection.getStringList(groupName));
-            if (section.getInt(groupName, 0) > 0 && condition.getBoolean(player)) {
+            ObjectCondition condition = new ObjectCondition(conditionSection.getConfigurationSection(groupName));
+            if (section.getInt(groupName, 0) > 0 && condition.getAllBoolean(player)) {
                 result.add(section.getInt(groupName));
             }
             else {

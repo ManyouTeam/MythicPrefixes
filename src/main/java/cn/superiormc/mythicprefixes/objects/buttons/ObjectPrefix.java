@@ -39,7 +39,7 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
 
     private final Map<Player, Collection<ObjectMMOEffect>> mmoEffects = new HashMap<>();
 
-    private Map<Player, BukkitTask> taskCache = new HashMap<>();
+    private final Map<Player, BukkitTask> taskCache = new HashMap<>();
 
     private boolean useMMOEffect;
 
@@ -48,10 +48,10 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
         super(config);
         this.id = id;
         this.type = ButtonType.PREFIX;
-        this.condition = new ObjectCondition(config.getStringList("conditions"));
-        this.startAction = new ObjectAction(config.getStringList("equip-actions"));
-        this.endAction = new ObjectAction(config.getStringList("unequip-actions"));
-        this.circleAction = new ObjectAction(config.getStringList("circle-actions"));
+        this.condition = new ObjectCondition(config.getConfigurationSection("conditions"));
+        this.startAction = new ObjectAction(config.getConfigurationSection("equip-actions"));
+        this.endAction = new ObjectAction(config.getConfigurationSection("unequip-actions"));
+        this.circleAction = new ObjectAction(config.getConfigurationSection("circle-actions"));
         initEffects();
     }
 
@@ -70,10 +70,10 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
         if (useMMOEffect) {
             startMMOEffect(player);
         }
-        startAction.doAction(player);
+        startAction.runAllActions(player);
         if (!circleAction.isEmpty()) {
             BukkitTask task = Bukkit.getScheduler().runTaskTimer(MythicPrefixes.instance, () ->
-                    circleAction.doAction(player), 0L, ConfigManager.configManager.getLong("circle-actions.period-tick", 20L));
+                    circleAction.runAllActions(player), 0L, ConfigManager.configManager.getLong("circle-actions.period-tick", 20L));
             taskCache.put(player, task);
         }
     }
@@ -82,7 +82,7 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
         if (useMMOEffect) {
             endMMOEffect(player);
         }
-        endAction.doAction(player);
+        endAction.runAllActions(player);
         if (taskCache.get(player) != null) {
             taskCache.get(player).cancel();
         }
@@ -131,7 +131,7 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
         if (MythicPrefixesAPI.getActivedPrefixes(player).contains(this)) {
             return PrefixStatus.USING;
         }
-        if (!condition.getBoolean(player) && !CommonUtil.checkPermission(player, "mythicprefixes.bypass." + getId())) {
+        if (!condition.getAllBoolean(player) && !CommonUtil.checkPermission(player, "mythicprefixes.bypass." + getId())) {
             return PrefixStatus.CONDITION_NOT_MEET;
         }
         if (MythicPrefixesAPI.getMaxPrefixesAmount(player) == MythicPrefixesAPI.getActivedPrefixes(player).size()) {
@@ -145,7 +145,7 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
     }
 
     public boolean shouldHideInGUI(Player player) {
-        return !config.getBoolean("auto-hide", false) || condition.getBoolean(player);
+        return !config.getBoolean("auto-hide", false) || condition.getAllBoolean(player);
     }
 
     @Override

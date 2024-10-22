@@ -12,6 +12,8 @@ public final class MythicPrefixes extends JavaPlugin {
 
     public static JavaPlugin instance;
 
+    public static final boolean freeVersion = true;
+
     public static boolean isPaper;
 
     public static int majorVersion;

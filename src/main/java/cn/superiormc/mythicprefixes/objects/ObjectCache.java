@@ -106,7 +106,7 @@ public class ObjectCache {
 
     public void checkCondition() {
         for (ObjectPrefix prefix : MythicPrefixesAPI.getActivedPrefixes(player)) {
-            if (!prefix.getCondition().getBoolean(player)) {
+            if (!prefix.getCondition().getAllBoolean(player)) {
                 removeActivePrefix(prefix);
             }
         }

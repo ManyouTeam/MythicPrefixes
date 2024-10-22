@@ -5,14 +5,13 @@ import cn.superiormc.mythicprefixes.manager.ConfigManager;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.luckperms.api.LuckPermsProvider;
 import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class CommonUtil {
 
@@ -144,5 +143,13 @@ public class CommonUtil {
             resultList.add(TextUtil.parse(s));
         }
         return resultList;
+    }
+
+    public static NamespacedKey parseNamespacedKey(String key) {
+        String[] keySplit = key.split(":");
+        if (keySplit.length == 1) {
+            return NamespacedKey.minecraft(key.toLowerCase());
+        }
+        return NamespacedKey.fromString(key);
     }
 }

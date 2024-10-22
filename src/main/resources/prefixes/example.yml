@@ -42,10 +42,18 @@ MythicLib-effects:
     stat: MAX_HEALTH
     value: 1
 equip-actions:
-  - 'message: Start equip the tag!'
+  1:
+    type: message
+    message: 'Start equip the tag!'
 unequip-actions:
-  - 'message: Not equip the tag!'
+  1:
+    type: message
+    message: 'Not equip the tag!'
 circle-actions:
-  - 'console_command: say This is default message. Default prefix has equipped so prefix effect also actived!'
+  1:
+    type: console_command
+    command: 'say This is default message. Default prefix has equipped so prefix effect also actived!'
 conditions:
-  - 'permission: killed.dragon'
+  1:
+    type: permission
+    permission: 'killed.dragon'
