@@ -20,7 +20,6 @@ public class ObjectSingleAction extends AbstractSingleRun {
         ActionManager.actionManager.doAction(this, player);
     }
 
-
     public ObjectAction getAction() {
         return action;
     }

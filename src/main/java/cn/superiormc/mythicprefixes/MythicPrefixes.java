@@ -34,6 +34,8 @@ public final class MythicPrefixes extends JavaPlugin {
         }
         new ErrorManager();
         new InitManager();
+        new ActionManager();
+        new ConditionManager();
         new ConfigManager();
         if (CommonUtil.getClass("com.destroystokyo.paper.PaperConfig")) {
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicPrefixes] §fPaper is found, enabled Paper only feature!");

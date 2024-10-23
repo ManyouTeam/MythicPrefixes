@@ -1,6 +1,6 @@
 package cn.superiormc.mythicprefixes.commands;
 
-import cn.superiormc.mythicprefixes.objects.ObjectCommand;
+import cn.superiormc.mythicprefixes.objects.AbstractCommand;
 import cn.superiormc.mythicprefixes.manager.CommandManager;
 import cn.superiormc.mythicprefixes.manager.LanguageManager;
 import org.bukkit.command.Command;
@@ -13,7 +13,7 @@ public class MainCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length > 0 &&
                 CommandManager.commandManager.getSubCommandsMap().get(args[0]) != null) {
-            ObjectCommand object = CommandManager.commandManager.getSubCommandsMap().get(args[0]);
+            AbstractCommand object = CommandManager.commandManager.getSubCommandsMap().get(args[0]);
             if (object.getOnlyInGame() && !(sender instanceof Player)) {
                 LanguageManager.languageManager.sendStringText("error.in-game");
                 return true;

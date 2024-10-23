@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class ObjectCommand {
+public abstract class AbstractCommand {
 
     protected String id;
 
@@ -16,7 +16,7 @@ public abstract class ObjectCommand {
 
     protected Integer[] requiredArgLength;
 
-    public ObjectCommand() {
+    public AbstractCommand() {
         // EMPTY
     }
 

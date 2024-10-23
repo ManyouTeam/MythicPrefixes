@@ -5,10 +5,10 @@ import cn.superiormc.mythicprefixes.manager.CacheManager;
 import cn.superiormc.mythicprefixes.manager.ConfigManager;
 import cn.superiormc.mythicprefixes.manager.LanguageManager;
 import cn.superiormc.mythicprefixes.manager.TaskManager;
-import cn.superiormc.mythicprefixes.objects.ObjectCommand;
+import cn.superiormc.mythicprefixes.objects.AbstractCommand;
 import org.bukkit.entity.Player;
 
-public class SubReload extends ObjectCommand {
+public class SubReload extends AbstractCommand {
 
 
     public SubReload() {

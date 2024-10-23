@@ -4,7 +4,7 @@ import cn.superiormc.mythicprefixes.manager.CacheManager;
 import cn.superiormc.mythicprefixes.manager.ConfigManager;
 import cn.superiormc.mythicprefixes.manager.LanguageManager;
 import cn.superiormc.mythicprefixes.objects.ObjectCache;
-import cn.superiormc.mythicprefixes.objects.ObjectCommand;
+import cn.superiormc.mythicprefixes.objects.AbstractCommand;
 import cn.superiormc.mythicprefixes.objects.buttons.ObjectPrefix;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SubRemovePrefix extends ObjectCommand {
+public class SubRemovePrefix extends AbstractCommand {
 
 
     public SubRemovePrefix() {

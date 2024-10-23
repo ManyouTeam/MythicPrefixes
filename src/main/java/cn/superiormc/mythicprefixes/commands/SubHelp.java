@@ -1,10 +1,10 @@
 package cn.superiormc.mythicprefixes.commands;
 
 import cn.superiormc.mythicprefixes.manager.LanguageManager;
-import cn.superiormc.mythicprefixes.objects.ObjectCommand;
+import cn.superiormc.mythicprefixes.objects.AbstractCommand;
 import org.bukkit.entity.Player;
 
-public class SubHelp extends ObjectCommand {
+public class SubHelp extends AbstractCommand {
 
     public SubHelp() {
         this.id = "help";

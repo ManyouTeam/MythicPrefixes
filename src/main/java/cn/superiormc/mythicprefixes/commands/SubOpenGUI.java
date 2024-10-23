@@ -2,11 +2,11 @@ package cn.superiormc.mythicprefixes.commands;
 
 import cn.superiormc.mythicprefixes.gui.ChoosePrefixGUI;
 import cn.superiormc.mythicprefixes.manager.LanguageManager;
-import cn.superiormc.mythicprefixes.objects.ObjectCommand;
+import cn.superiormc.mythicprefixes.objects.AbstractCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-public class SubOpenGUI extends ObjectCommand {
+public class SubOpenGUI extends AbstractCommand {
 
 
     public SubOpenGUI() {

@@ -19,10 +19,12 @@ public abstract class AbstractRunAction {
     }
 
     public void runAction(ObjectSingleAction singleAction, Player player) {
-        for (String arg : requiredArgs) {
-            if (!singleAction.getSection().contains(arg)) {
-                ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicPrefixes] §cError: Your action missing required arg: " + arg + ".");
-                return;
+        if (requiredArgs != null) {
+            for (String arg : requiredArgs) {
+                if (!singleAction.getSection().contains(arg)) {
+                    ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicPrefixes] §cError: Your action missing required arg: " + arg + ".");
+                    return;
+                }
             }
         }
         onDoAction(singleAction, player);

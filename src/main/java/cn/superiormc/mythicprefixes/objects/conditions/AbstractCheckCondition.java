@@ -18,10 +18,12 @@ public abstract class AbstractCheckCondition {
     }
 
     public boolean checkCondition(ObjectSingleCondition singleCondition, Player player) {
-        for (String arg : requiredArgs) {
-            if (!singleCondition.getSection().contains(arg)) {
-                ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicPrefixes] §cError: Your condition missing required arg: " + arg + ".");
-                return true;
+        if (requiredArgs != null) {
+            for (String arg : requiredArgs) {
+                if (!singleCondition.getSection().contains(arg)) {
+                    ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicPrefixes] §cError: Your condition missing required arg: " + arg + ".");
+                    return true;
+                }
             }
         }
         return onCheckCondition(singleCondition, player);

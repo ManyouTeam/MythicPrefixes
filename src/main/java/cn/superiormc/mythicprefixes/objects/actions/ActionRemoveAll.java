@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 public class ActionRemoveAll extends AbstractRunAction {
 
     public ActionRemoveAll() {
-        super("removeprefix");
+        super("removeall");
     }
 
     @Override

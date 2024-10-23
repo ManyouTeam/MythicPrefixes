@@ -1,7 +1,7 @@
 package cn.superiormc.mythicprefixes.manager;
 
 import cn.superiormc.mythicprefixes.commands.*;
-import cn.superiormc.mythicprefixes.objects.ObjectCommand;
+import cn.superiormc.mythicprefixes.objects.AbstractCommand;
 import org.bukkit.Bukkit;
 
 import java.util.HashMap;
@@ -12,7 +12,7 @@ public class CommandManager {
 
     public static CommandManager commandManager;
 
-    private Map<String, ObjectCommand> registeredCommands = new HashMap<>();
+    private Map<String, AbstractCommand> registeredCommands = new HashMap<>();
 
     public CommandManager(){
         commandManager = this;
@@ -35,7 +35,7 @@ public class CommandManager {
         registeredCommands.put("help", new SubHelp());
     }
 
-    public Map<String, ObjectCommand> getSubCommandsMap() {
+    public Map<String, AbstractCommand> getSubCommandsMap() {
         return registeredCommands;
     }
 }
