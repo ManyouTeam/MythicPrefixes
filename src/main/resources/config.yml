@@ -14,6 +14,12 @@ paper-api:
     item: false
   skull: true
 
+cache:
+  # If you are facing issue when plugin load cache, try set this option to JOIN.
+  load-mode: LOGIN
+  # Bypass condition check when player still joining the server.
+  bypass-condition-when-loading: true
+
 display-placeholder:
   chat:
     start-symbol: '&f['

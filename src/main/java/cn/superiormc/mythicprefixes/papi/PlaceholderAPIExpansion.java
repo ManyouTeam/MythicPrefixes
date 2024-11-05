@@ -5,6 +5,7 @@ import cn.superiormc.mythicprefixes.api.MythicPrefixesAPI;
 import cn.superiormc.mythicprefixes.manager.CacheManager;
 import cn.superiormc.mythicprefixes.manager.ConfigManager;
 import cn.superiormc.mythicprefixes.manager.LanguageManager;
+import cn.superiormc.mythicprefixes.objects.ObjectCache;
 import cn.superiormc.mythicprefixes.objects.ObjectDisplayPlaceholder;
 import cn.superiormc.mythicprefixes.objects.buttons.ObjectPrefix;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
@@ -54,6 +55,10 @@ public class PlaceholderAPIExpansion extends PlaceholderExpansion {
         if (player == null) {
             return null;
         }
+        ObjectCache cache = CacheManager.cacheManager.getPlayerCache(player);
+        if (cache == null) {
+            return null;
+        }
         String[] args = params.split("_");
         if (args.length == 0) {
             return null;
@@ -66,7 +71,7 @@ public class PlaceholderAPIExpansion extends PlaceholderExpansion {
             if (prefix == null) {
                 return LanguageManager.languageManager.getStringText("placeholderapi.unknown-prefix");
             }
-            return String.valueOf(prefix.getConditionMeet(player));
+            return String.valueOf(prefix.getConditionMeet(cache));
         }
         else if (args[0].equals("prefix") && args.length > 2) {
             ObjectPrefix prefix = ConfigManager.configManager.getPrefix(args[1]);
@@ -77,7 +82,7 @@ public class PlaceholderAPIExpansion extends PlaceholderExpansion {
             if (displayPlaceholder == null) {
                 return LanguageManager.languageManager.getStringText("placeholderapi.unknown-display-placeholder");
             }
-            return displayPlaceholder.getDisplayText(player, prefix);
+            return displayPlaceholder.getDisplayText(cache, prefix);
         }
         else if (args[0].equals("max")) {
             return String.valueOf(MythicPrefixesAPI.getMaxPrefixesAmount(player));
@@ -86,6 +91,6 @@ public class PlaceholderAPIExpansion extends PlaceholderExpansion {
         if (displayPlaceholder == null) {
             return LanguageManager.languageManager.getStringText("placeholderapi.unknown-display-placeholder");
         }
-        return displayPlaceholder.getDisplayText(player);
+        return displayPlaceholder.getDisplayText(cache);
     }
 }

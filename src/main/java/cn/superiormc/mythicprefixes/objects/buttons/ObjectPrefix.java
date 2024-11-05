@@ -5,10 +5,7 @@ import cn.superiormc.mythicprefixes.api.MythicPrefixesAPI;
 import cn.superiormc.mythicprefixes.libreforge.LibreforgeEffects;
 import cn.superiormc.mythicprefixes.manager.CacheManager;
 import cn.superiormc.mythicprefixes.manager.ConfigManager;
-import cn.superiormc.mythicprefixes.objects.ObjectAction;
-import cn.superiormc.mythicprefixes.objects.ObjectCondition;
-import cn.superiormc.mythicprefixes.objects.ObjectMMOEffect;
-import cn.superiormc.mythicprefixes.objects.PrefixStatus;
+import cn.superiormc.mythicprefixes.objects.*;
 import cn.superiormc.mythicprefixes.utils.CommonUtil;
 import cn.superiormc.mythicprefixes.utils.ItemUtil;
 import cn.superiormc.mythicprefixes.utils.TextUtil;
@@ -127,11 +124,15 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
         return config.getInt("weight");
     }
 
-    public PrefixStatus getConditionMeet(Player player) {
-        if (MythicPrefixesAPI.getActivedPrefixes(player).contains(this)) {
+    public PrefixStatus getConditionMeet(ObjectCache cache) {
+        if (cache == null) {
+            return PrefixStatus.CONDITION_NOT_MEET;
+        }
+        if (cache.getActivePrefixes().contains(this)) {
             return PrefixStatus.USING;
         }
-        if (!condition.getAllBoolean(player) && !CommonUtil.checkPermission(player, "mythicprefixes.bypass." + getId())) {
+        Player player = cache.getPlayer();
+        if (cache.isFinishLoad() && !condition.getAllBoolean(player) && !CommonUtil.checkPermission(player, "mythicprefixes.bypass." + getId())) {
             return PrefixStatus.CONDITION_NOT_MEET;
         }
         if (MythicPrefixesAPI.getMaxPrefixesAmount(player) == MythicPrefixesAPI.getActivedPrefixes(player).size()) {
@@ -150,7 +151,8 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
 
     @Override
     public void clickEvent(ClickType type, Player player) {
-        switch (getConditionMeet(player)) {
+        ObjectCache cache = CacheManager.cacheManager.getPlayerCache(player);
+        switch (getConditionMeet(cache)) {
             case CAN_USE:
                 CacheManager.cacheManager.getPlayerCache(player).addActivePrefix(this);
                 break;
@@ -163,7 +165,8 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
     @Override
     public ItemStack getDisplayItem(Player player) {
         ConfigurationSection section = null;
-        PrefixStatus status = getConditionMeet(player);
+        ObjectCache cache = CacheManager.cacheManager.getPlayerCache(player);
+        PrefixStatus status = getConditionMeet(cache);
         if (status == PrefixStatus.CAN_USE) {
             section = config.getConfigurationSection("display-item.unlocked");
         } else if (status == PrefixStatus.CONDITION_NOT_MEET) {
@@ -177,13 +180,13 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
             if (config.getConfigurationSection("display-item") != null) {
                 return ItemUtil.buildItemStack(player, config.getConfigurationSection("display-item"),
                         "display-value", getDisplayValue(player),
-                        "status", MythicPrefixesAPI.getStatusPlaceholder(this, player));
+                        "status", MythicPrefixesAPI.getStatusPlaceholder(this, cache));
             }
             return new ItemStack(Material.STONE);
         }
         return ItemUtil.buildItemStack(player, section,
                 "display-value", getDisplayValue(player),
-                "status", MythicPrefixesAPI.getStatusPlaceholder(this, player));
+                "status", MythicPrefixesAPI.getStatusPlaceholder(this, cache));
     }
 
     @Override

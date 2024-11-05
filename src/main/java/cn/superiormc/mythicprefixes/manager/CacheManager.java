@@ -33,8 +33,12 @@ public class CacheManager {
 
     public void addPlayerCache(Player player) {
         playerCacheMap.put(player, new ObjectCache(player));
-        playerCacheMap.get(player).removeAllActivePrefix();
-        playerCacheMap.get(player).initPlayerCache();
+    }
+
+    public void loadPlayerCache(Player player) {
+        ObjectCache cache = getPlayerCache(player);
+        cache.removeAllActivePrefix();
+        cache.initPlayerCache();
     }
 
     public void removePlayerCache(Player player) {

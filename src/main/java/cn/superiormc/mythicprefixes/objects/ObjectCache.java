@@ -19,6 +19,8 @@ public class ObjectCache {
 
     public Collection<ObjectPrefix> prefixCaches = new TreeSet<>();
 
+    private boolean finishLoad;
+
     public ObjectCache(Player player) {
         this.player = player;
     }
@@ -69,7 +71,7 @@ public class ObjectCache {
     }
 
     public void addActivePrefix(ObjectPrefix prefix) {
-        if (prefix.getConditionMeet(player) != PrefixStatus.CAN_USE) {
+        if (prefix.getConditionMeet(this) != PrefixStatus.CAN_USE) {
             return;
         }
         prefix.runStartAction(player);
@@ -105,10 +107,24 @@ public class ObjectCache {
     }
 
     public void checkCondition() {
+        if (!isFinishLoad()) {
+            return;
+        }
         for (ObjectPrefix prefix : MythicPrefixesAPI.getActivedPrefixes(player)) {
             if (!prefix.getCondition().getAllBoolean(player)) {
                 removeActivePrefix(prefix);
             }
         }
+    }
+
+    public void setAsFinished() {
+        finishLoad = true;
+    }
+
+    public boolean isFinishLoad() {
+        if (!ConfigManager.configManager.getBoolean("cache.bypass-condition-when-loading")) {
+            return true;
+        }
+        return finishLoad;
     }
 }

@@ -39,15 +39,14 @@ public class ObjectDisplayPlaceholder {
         return id;
     }
 
-    public String getDisplayText(Player player) {
-        return getDisplayText(player, null);
+    public String getDisplayText(ObjectCache cache) {
+        return getDisplayText(cache, null);
     }
 
-    public String getDisplayText(Player player, ObjectPrefix prefix) {
+    public String getDisplayText(ObjectCache cache, ObjectPrefix prefix) {
         StringBuilder tempVal1 = new StringBuilder(startSymbol);
         int tempVal4 = 0;
-        ObjectCache tempVal2 = CacheManager.cacheManager.getPlayerCache(player);
-        Collection<ObjectPrefix> tempVal5 = tempVal2.getActivePrefixes();
+        Collection<ObjectPrefix> tempVal5 = cache.getActivePrefixes();
         if (prefix != null) {
             tempVal5.add(prefix);
         }
@@ -61,7 +60,7 @@ public class ObjectDisplayPlaceholder {
             if (!tempVal1.toString().equals(startSymbol)) {
                 tempVal1.append(splitSymbol);
             }
-            tempVal1.append(tempVal3.getDisplayValue(player));
+            tempVal1.append(tempVal3.getDisplayValue(cache.getPlayer()));
             tempVal4 ++;
         }
         if (tempVal4 == 0 && empty != null) {

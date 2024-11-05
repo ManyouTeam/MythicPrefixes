@@ -1,7 +1,9 @@
 package cn.superiormc.mythicprefixes.gui;
 
 import cn.superiormc.mythicprefixes.MythicPrefixes;
+import cn.superiormc.mythicprefixes.manager.CacheManager;
 import cn.superiormc.mythicprefixes.manager.ConfigManager;
+import cn.superiormc.mythicprefixes.objects.ObjectCache;
 import cn.superiormc.mythicprefixes.objects.PrefixStatus;
 import cn.superiormc.mythicprefixes.objects.buttons.AbstractButton;
 import cn.superiormc.mythicprefixes.objects.buttons.ObjectPrefix;
@@ -19,11 +21,11 @@ import java.util.*;
 
 public class ChoosePrefixGUI extends InvGUI {
 
-    private Map<Integer, AbstractButton> prefixCache = new HashMap<>();
+    private final Map<Integer, AbstractButton> prefixCache = new HashMap<>();
 
-    private Map<Integer, AbstractButton> buttonCache = new HashMap<>();
+    private final Map<Integer, AbstractButton> buttonCache = new HashMap<>();
 
-    private List<Integer> slotCache;
+    private final List<Integer> slotCache;
 
     private Filter filter = Filter.ALL;
 
@@ -46,9 +48,10 @@ public class ChoosePrefixGUI extends InvGUI {
     @Override
     protected void constructGUI() {
         int i = 0;
+        ObjectCache cache = CacheManager.cacheManager.getPlayerCache(player);
         if (prefixCache.isEmpty()) {
             for (ObjectPrefix prefix : ConfigManager.configManager.getPrefixesWithoutHide()) {
-                PrefixStatus status = prefix.getConditionMeet(player);
+                PrefixStatus status = prefix.getConditionMeet(cache);
                 if ((filter == Filter.ALL || (filter == Filter.USING && status == PrefixStatus.USING) || (
                         filter == Filter.CAN_USE && status == PrefixStatus.CAN_USE))
                         && prefix.shouldHideInGUI(player)) {

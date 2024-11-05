@@ -3,6 +3,7 @@ package cn.superiormc.mythicprefixes.api;
 import cn.superiormc.mythicprefixes.MythicPrefixes;
 import cn.superiormc.mythicprefixes.manager.ConfigManager;
 import cn.superiormc.mythicprefixes.manager.ErrorManager;
+import cn.superiormc.mythicprefixes.objects.ObjectCache;
 import cn.superiormc.mythicprefixes.objects.ObjectCondition;
 import cn.superiormc.mythicprefixes.objects.buttons.ObjectPrefix;
 import cn.superiormc.mythicprefixes.manager.CacheManager;
@@ -56,8 +57,8 @@ public class MythicPrefixesAPI {
         return Collections.max(result);
     }
 
-    public static String getStatusPlaceholder(ObjectPrefix prefix, Player player) {
-        switch (prefix.getConditionMeet(player)) {
+    public static String getStatusPlaceholder(ObjectPrefix prefix, ObjectCache cache) {
+        switch (prefix.getConditionMeet(cache)) {
             case USING:
                 return TextUtil.parse(ConfigManager.configManager.getString("status-placeholder.using"));
             case CAN_USE:
