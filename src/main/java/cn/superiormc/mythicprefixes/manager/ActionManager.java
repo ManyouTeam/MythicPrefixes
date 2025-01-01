@@ -36,6 +36,7 @@ public class ActionManager {
         registerNewAction("addprefix", new ActionAddPrefix());
         registerNewAction("removeprefix", new ActionRemovePrefix());
         registerNewAction("removeall", new ActionRemoveAll());
+        registerNewAction("conditional", new ActionConditional());
     }
 
     public void registerNewAction(String actionID,

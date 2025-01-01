@@ -28,6 +28,9 @@ display-placeholder:
     black-prefixes: []
     display-amount: 10
     empty-display: ''
+    # Premium version only
+    default-prefixes:
+      - 'default'
 
 # {status} Placeholder
 status-placeholder:
@@ -125,7 +128,3 @@ libreforge-effects:
         triggers:
           - melee_attack
     conditions: []
-
-check-class:
-  enabled: true
-  classes: []

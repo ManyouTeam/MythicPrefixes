@@ -49,9 +49,6 @@ public class CommonUtil {
     }
 
     public static boolean getClass(String className) {
-        if (!ConfigManager.configManager.getBoolean("check-class.enabled")) {
-            return ConfigManager.configManager.config.getStringList("check-class.classes").contains(className);
-        }
         try {
             Class.forName(className);
             return true;
@@ -100,7 +97,7 @@ public class CommonUtil {
 
     public static boolean getMinorVersion(int majorVersion, int minorVersion) {
         return MythicPrefixes.majorVersion > majorVersion || (MythicPrefixes.majorVersion == majorVersion &&
-                MythicPrefixes.miniorVersion >= minorVersion);
+                MythicPrefixes.minorVersion >= minorVersion);
     }
 
     public static void mkDir(File dir) {

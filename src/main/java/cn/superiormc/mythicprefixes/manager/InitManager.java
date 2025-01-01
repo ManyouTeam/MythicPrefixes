@@ -24,6 +24,7 @@ public class InitManager {
         resourceOutput("languages/en_US.yml", true);
         resourceOutput("languages/zh_CN.yml", true);
         resourceOutput("prefixes/example.yml", false);
+        resourceOutput("prefixes/default.yml", false);
     }
     private void resourceOutput(String fileName, boolean fix) {
         File tempVal1 = new File(MythicPrefixes.instance.getDataFolder(), fileName);

@@ -14,11 +14,16 @@ import org.bukkit.entity.Player;
 import java.util.*;
 
 public class MythicPrefixesAPI {
-    
+
     public static Collection<ObjectPrefix> getActivedPrefixes(Player player) {
+        return getActivedPrefixes(player, true);
+    }
+    
+    public static Collection<ObjectPrefix> getActivedPrefixes(Player player, boolean autoAddDefaultPrefix) {
         if (CacheManager.cacheManager == null) {
             ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicPrefixes] §cError: Can not get cache object in plugin, " +
                     "please try restart the server.");
+
             return new TreeSet<>();
         } else if (CacheManager.cacheManager.getPlayerCache(player) == null) {
             return new TreeSet<>();
@@ -58,7 +63,7 @@ public class MythicPrefixesAPI {
     }
 
     public static String getStatusPlaceholder(ObjectPrefix prefix, ObjectCache cache) {
-        switch (prefix.getConditionMeet(cache)) {
+        switch (prefix.getPrefixStatus(cache)) {
             case USING:
                 return TextUtil.parse(ConfigManager.configManager.getString("status-placeholder.using"));
             case CAN_USE:

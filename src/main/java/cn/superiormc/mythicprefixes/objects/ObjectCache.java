@@ -7,6 +7,7 @@ import cn.superiormc.mythicprefixes.database.YamlDatabase;
 import cn.superiormc.mythicprefixes.manager.CacheManager;
 import cn.superiormc.mythicprefixes.manager.ConfigManager;
 import cn.superiormc.mythicprefixes.objects.buttons.ObjectPrefix;
+import cn.superiormc.mythicprefixes.utils.SchedulerUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -26,7 +27,7 @@ public class ObjectCache {
     }
 
     public void initPlayerCache() {
-        Bukkit.getScheduler().runTaskAsynchronously(MythicPrefixes.instance, () -> {
+        SchedulerUtil.runTaskAsynchronously(() -> {
             if (ConfigManager.configManager.getBoolean("database.enabled")) {
                 SQLDatabase.checkData(this);
             }
@@ -37,7 +38,7 @@ public class ObjectCache {
     }
 
     public void shutPlayerCache(boolean quitServer) {
-        Bukkit.getScheduler().runTaskAsynchronously(MythicPrefixes.instance, () -> {
+        SchedulerUtil.runTaskAsynchronously(() -> {
             if (ConfigManager.configManager.getBoolean("database.enabled")) {
                 SQLDatabase.updateData(this, quitServer);
             }
@@ -71,7 +72,7 @@ public class ObjectCache {
     }
 
     public void addActivePrefix(ObjectPrefix prefix) {
-        if (prefix.getConditionMeet(this) != PrefixStatus.CAN_USE) {
+        if (prefix.getPrefixStatus(this) != PrefixStatus.CAN_USE) {
             return;
         }
         prefix.runStartAction(player);

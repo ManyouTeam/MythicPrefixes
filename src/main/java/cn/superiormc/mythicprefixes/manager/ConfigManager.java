@@ -32,8 +32,8 @@ public class ConfigManager {
         MythicPrefixes.instance.saveDefaultConfig();
         this.config = MythicPrefixes.instance.getConfig();
         initLibreforgeHook();
-        initDisplayPlaceholderConfigs();
         initPrefixesConfigs();
+        initDisplayPlaceholderConfigs();
         initButtonConfigs();
     }
 
@@ -166,6 +166,10 @@ public class ConfigManager {
 
     public FileConfiguration getSection() {
         return config;
+    }
+
+    public List<String> getStringList(String path) {
+        return config.getStringList(path);
     }
 
 }

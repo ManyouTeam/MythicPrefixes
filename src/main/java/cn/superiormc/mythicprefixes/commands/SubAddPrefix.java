@@ -47,19 +47,19 @@ public class SubAddPrefix extends AbstractCommand {
             return;
         }
         ObjectCache playerCache = CacheManager.cacheManager.getPlayerCache(whoWillAdd);
-        if (whatPrefix.getConditionMeet(playerCache) == PrefixStatus.USING) {
+        if (whatPrefix.getPrefixStatus(playerCache) == PrefixStatus.USING) {
             LanguageManager.languageManager.sendStringText(player, "error.prefix-is-using",
                     "player", whoWillAdd.getName(),
                     "prefix", args[args.length - 1]);
             return;
         }
-        if (whatPrefix.getConditionMeet(playerCache) == PrefixStatus.MAX_LIMIT_REACHED) {
+        if (whatPrefix.getPrefixStatus(playerCache) == PrefixStatus.MAX_LIMIT_REACHED) {
             LanguageManager.languageManager.sendStringText(player, "error.max-prefix-reached",
                     "player", whoWillAdd.getName(),
                     "prefix", args[args.length - 1]);
             return;
         }
-        if (whatPrefix.getConditionMeet(playerCache) == PrefixStatus.CONDITION_NOT_MEET) {
+        if (whatPrefix.getPrefixStatus(playerCache) == PrefixStatus.CONDITION_NOT_MEET) {
             LanguageManager.languageManager.sendStringText(player, "error.prefix-condition-not-meet",
                     "player", whoWillAdd.getName(),
                     "prefix", args[args.length - 1]);

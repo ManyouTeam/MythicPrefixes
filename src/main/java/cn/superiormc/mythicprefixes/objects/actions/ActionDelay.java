@@ -2,6 +2,7 @@ package cn.superiormc.mythicprefixes.objects.actions;
 
 import cn.superiormc.mythicprefixes.MythicPrefixes;
 import cn.superiormc.mythicprefixes.objects.ObjectAction;
+import cn.superiormc.mythicprefixes.utils.SchedulerUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -24,6 +25,6 @@ public class ActionDelay extends AbstractRunAction {
         }
         long time = singleAction.getSection().getLong("time");
         ObjectAction action = new ObjectAction(chanceSection);
-        Bukkit.getScheduler().runTaskLater(MythicPrefixes.instance, () -> action.runAllActions(player), time);
+        SchedulerUtil.runTaskLater(() -> action.runAllActions(player), time);
     }
 }

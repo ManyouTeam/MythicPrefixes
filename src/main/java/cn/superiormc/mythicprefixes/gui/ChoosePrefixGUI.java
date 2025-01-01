@@ -51,7 +51,7 @@ public class ChoosePrefixGUI extends InvGUI {
         ObjectCache cache = CacheManager.cacheManager.getPlayerCache(player);
         if (prefixCache.isEmpty()) {
             for (ObjectPrefix prefix : ConfigManager.configManager.getPrefixesWithoutHide()) {
-                PrefixStatus status = prefix.getConditionMeet(cache);
+                PrefixStatus status = prefix.getPrefixStatus(cache);
                 if ((filter == Filter.ALL || (filter == Filter.USING && status == PrefixStatus.USING) || (
                         filter == Filter.CAN_USE && status == PrefixStatus.CAN_USE))
                         && prefix.shouldHideInGUI(player)) {
