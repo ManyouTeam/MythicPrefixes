@@ -10,13 +10,15 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public final class MythicPrefixes extends JavaPlugin {
 
-    public static JavaPlugin instance;
+    public static MythicPrefixes instance;
 
     public static final boolean freeVersion = true;
 
     public static boolean isPaper = false;
 
     public static boolean isFolia = false;
+
+    public static boolean useGeyser = false;
 
     public static int majorVersion;
 
@@ -49,18 +51,12 @@ public final class MythicPrefixes extends JavaPlugin {
         new ActionManager();
         new ConditionManager();
         new ConfigManager();
+        new HookManager();
         new LanguageManager();
         new CacheManager();
         new CommandManager();
         new ListenerManager();
         new TaskManager();
-        if (CommonUtil.checkPluginLoad("PlaceholderAPI")) {
-            PlaceholderAPIExpansion.papi = new PlaceholderAPIExpansion(this);
-            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicPrefixes] §fHooking into PlaceholderAPI...");
-            if (PlaceholderAPIExpansion.papi.register()){
-                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicPrefixes] §fFinished hook!");
-            }
-        }
         if (!CommonUtil.checkClass("com.mojang.authlib.properties.Property", "getValue") && CommonUtil.getMinorVersion(21, 1)) {
             newSkullMethod = true;
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicPrefixes] §fNew AuthLib found, enabled new skull get method!");

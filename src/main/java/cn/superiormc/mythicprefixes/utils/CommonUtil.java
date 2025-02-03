@@ -7,6 +7,7 @@ import net.luckperms.api.LuckPermsProvider;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
+import org.geysermc.floodgate.api.FloodgateApi;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -148,5 +149,16 @@ public class CommonUtil {
             return NamespacedKey.minecraft(key.toLowerCase());
         }
         return NamespacedKey.fromString(key);
+    }
+
+    public static boolean isBedrockPlayer(Player player) {
+        if (!MythicPrefixes.useGeyser || !ConfigManager.configManager.getBoolean("choose-prefix-gui.bedrock.enabled")) {
+            return false;
+        }
+        if (ConfigManager.configManager.getString("choose-prefix-gui.bedrock.check-method", "FLOODGATE").equalsIgnoreCase("FLOODGATE")) {
+            return FloodgateApi.getInstance().getPlayer(player.getUniqueId()) != null;
+        } else {
+            return player.getUniqueId().toString().startsWith("00000000-0000-0000-000");
+        }
     }
 }

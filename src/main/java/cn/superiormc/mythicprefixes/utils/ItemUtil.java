@@ -163,4 +163,22 @@ public class ItemUtil {
         return item;
     }
 
+    public static String getItemNameWithoutVanilla(ItemStack displayItem) {
+        if (displayItem == null || displayItem.getItemMeta() == null) {
+            return "";
+        }
+        if (displayItem.getItemMeta().hasDisplayName()) {
+            return displayItem.getItemMeta().getDisplayName();
+        }
+        StringBuilder result = new StringBuilder();
+        for (String word : displayItem.getType().name().toLowerCase().split("_")) {
+            if (!word.isEmpty()) {
+                char firstChar = Character.toUpperCase(word.charAt(0));
+                String restOfWord = word.substring(1);
+                result.append(firstChar).append(restOfWord).append(" ");
+            }
+        }
+        result.deleteCharAt(result.length() - 1);
+        return result.toString();
+    }
 }

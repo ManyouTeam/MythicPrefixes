@@ -1,6 +1,5 @@
 package cn.superiormc.mythicprefixes.objects.buttons;
 
-import cn.superiormc.mythicprefixes.manager.ErrorManager;
 import cn.superiormc.mythicprefixes.objects.ObjectAction;
 import cn.superiormc.mythicprefixes.objects.ObjectCondition;
 import cn.superiormc.mythicprefixes.utils.ItemUtil;

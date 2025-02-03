@@ -1,12 +1,16 @@
-package cn.superiormc.mythicprefixes.gui;
+package cn.superiormc.mythicprefixes.gui.inv;
 
 import cn.superiormc.mythicprefixes.MythicPrefixes;
+import cn.superiormc.mythicprefixes.gui.Filter;
+import cn.superiormc.mythicprefixes.gui.InvGUI;
+import cn.superiormc.mythicprefixes.gui.form.FormChoosePrefixGUI;
 import cn.superiormc.mythicprefixes.manager.CacheManager;
 import cn.superiormc.mythicprefixes.manager.ConfigManager;
 import cn.superiormc.mythicprefixes.objects.ObjectCache;
 import cn.superiormc.mythicprefixes.objects.PrefixStatus;
 import cn.superiormc.mythicprefixes.objects.buttons.AbstractButton;
 import cn.superiormc.mythicprefixes.objects.buttons.ObjectPrefix;
+import cn.superiormc.mythicprefixes.utils.CommonUtil;
 import cn.superiormc.mythicprefixes.utils.ItemUtil;
 import cn.superiormc.mythicprefixes.utils.TextUtil;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -39,7 +43,7 @@ public class ChoosePrefixGUI extends InvGUI {
 
     private int filterSlot = -1;
 
-    public ChoosePrefixGUI(Player player) {
+    private ChoosePrefixGUI(Player player) {
         super(player);
         slotCache = ConfigManager.configManager.getIntList("choose-prefix-gui.prefix-item-slot");
         constructGUI();
@@ -120,7 +124,7 @@ public class ChoosePrefixGUI extends InvGUI {
             }
         }
         ConfigurationSection filterSection = ConfigManager.configManager.getConfigurationSection("choose-prefix-gui.filter-item");
-        if (filterSection != null) {
+        if (filterSection != null && !MythicPrefixes.freeVersion) {
             String filterPlaceholder = filterSection.getString("placeholder.all");
             if (filter == Filter.USING) {
                 filterPlaceholder = filterSection.getString("placeholder.using");
@@ -146,7 +150,7 @@ public class ChoosePrefixGUI extends InvGUI {
             if (nowPage > 0) {
                 nowPage--;
             }
-        } else if (slot == filterSlot) {
+        } else if (slot == filterSlot && !MythicPrefixes.freeVersion) {
             if (filter == Filter.ALL) {
                 filter = Filter.USING;
             } else if (filter == Filter.USING) {
@@ -168,5 +172,15 @@ public class ChoosePrefixGUI extends InvGUI {
         }
         constructGUI();
         return true;
+    }
+
+    public static void openGUI(Player player) {
+        if (CommonUtil.isBedrockPlayer(player)) {
+            FormChoosePrefixGUI gui = new FormChoosePrefixGUI(player);
+            gui.openGUI();
+            return;
+        }
+        ChoosePrefixGUI gui = new ChoosePrefixGUI(player);
+        gui.openGUI();
     }
 }

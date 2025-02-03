@@ -8,7 +8,6 @@ import cn.superiormc.mythicprefixes.manager.CacheManager;
 import cn.superiormc.mythicprefixes.manager.ConfigManager;
 import cn.superiormc.mythicprefixes.objects.buttons.ObjectPrefix;
 import cn.superiormc.mythicprefixes.utils.SchedulerUtil;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.Collection;

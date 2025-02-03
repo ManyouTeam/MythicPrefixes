@@ -31,9 +31,15 @@ display-item:
     lore:
       - '&7Preview: %mythicprefixes_prefix_example_chat% %player_name%'
       - '&cYou have reached max use of prefix!'
+
+bedrock:
+  extra-line: '&f{status}'
+
 display-value: '&8Dragon Killer'
 weight: 15
 auto-hide: false
+
+
 effects:
   libreforge: false
   MythicLib: false
@@ -45,14 +51,14 @@ equip-actions:
   1:
     type: message
     message: 'Start equip the tag!'
-unequip-actions:
+unequipped-actions:
   1:
     type: message
     message: 'Not equip the tag!'
 circle-actions:
   1:
-    type: console_command
-    command: 'say This is default message. Default prefix has equipped so prefix effect also actived!'
+    type: message
+    message: 'This is default message. Default prefix has equipped so prefix effect also activated!'
 conditions:
   1:
     type: permission

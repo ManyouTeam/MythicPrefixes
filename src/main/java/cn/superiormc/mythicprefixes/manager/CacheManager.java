@@ -28,6 +28,8 @@ public class CacheManager {
         }
         for (Player player : Bukkit.getOnlinePlayers()) {
             CacheManager.cacheManager.addPlayerCache(player);
+            CacheManager.cacheManager.getPlayerCache(player).setAsFinished();
+            CacheManager.cacheManager.loadPlayerCache(player);
         }
     }
 

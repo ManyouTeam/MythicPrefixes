@@ -18,6 +18,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
+import org.geysermc.cumulus.component.ButtonComponent;
+import org.geysermc.cumulus.util.FormImage;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
@@ -145,7 +147,10 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
 
     public boolean getConditionBoolean(ObjectCache cache) {
         Player player = cache.getPlayer();
-        return cache.isFinishLoad() && !condition.getAllBoolean(player) && !CommonUtil.checkPermission(player, "mythicprefixes.bypass." + getId());
+        if (!cache.isFinishLoad()) {
+            return false;
+        }
+        return !condition.getAllBoolean(player) && !CommonUtil.checkPermission(player, "mythicprefixes.bypass." + getId());
     }
 
     public boolean getDisplayInGUI() {
