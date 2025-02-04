@@ -53,14 +53,35 @@ public class ConfigManager {
     }
 
     private void initDisplayPlaceholderConfigs() {
-        ConfigurationSection tempVal1 = config.getConfigurationSection("display-placeholder");
-        if (tempVal1 == null) {
+        File dir = new File(MythicPrefixes.instance.getDataFolder(), "display_placeholders");
+        if (!dir.exists()) {
+            dir.mkdir();
+        }
+        File[] files = dir.listFiles();
+        if (!Objects.nonNull(files) && files.length != 0) {
             return;
         }
-        for (String id : tempVal1.getKeys(false)) {
-            placeholderConfigs.put(id, new ObjectDisplayPlaceholder(id, tempVal1.getConfigurationSection(id)));
-            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicPrefixes] §fLoaded display placeholder: " +
-                    id + "!");
+        for (File file : files) {
+            String fileName = file.getName();
+            if (fileName.endsWith(".yml")) {
+                String substring = fileName.substring(0, fileName.length() - 4);
+                placeholderConfigs.put(substring, new ObjectDisplayPlaceholder(substring, YamlConfiguration.loadConfiguration(file)));
+                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicPrefixes] §fLoaded display placeholder: " +
+                        fileName + "!");
+            }
+        }
+
+        // Legacy Support
+        if (placeholderConfigs.isEmpty()) {
+            ConfigurationSection tempVal1 = config.getConfigurationSection("display-placeholder");
+            if (tempVal1 == null) {
+                return;
+            }
+            for (String id : tempVal1.getKeys(false)) {
+                placeholderConfigs.put(id, new ObjectDisplayPlaceholder(id, tempVal1.getConfigurationSection(id)));
+                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicPrefixes] §fLoaded display placeholder: " +
+                        id + "!");
+            }
         }
     }
 

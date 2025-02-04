@@ -17,9 +17,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitTask;
-import org.geysermc.cumulus.component.ButtonComponent;
-import org.geysermc.cumulus.util.FormImage;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;

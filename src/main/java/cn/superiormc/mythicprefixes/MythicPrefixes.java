@@ -2,7 +2,6 @@ package cn.superiormc.mythicprefixes;
 
 import cn.superiormc.mythicprefixes.database.SQLDatabase;
 import cn.superiormc.mythicprefixes.manager.*;
-import cn.superiormc.mythicprefixes.papi.PlaceholderAPIExpansion;
 import cn.superiormc.mythicprefixes.utils.CommonUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

@@ -1,0 +1,9 @@
+start-symbol: '&f['
+split-symbol: '&f, '
+end-symbol: '&f]'
+black-prefixes: []
+display-amount: 10
+empty-display: ''
+# Premium version only
+default-prefixes:
+  - 'default'

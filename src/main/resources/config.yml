@@ -20,18 +20,6 @@ cache:
   # Bypass condition check when player still joining the server.
   bypass-condition-when-loading: true
 
-display-placeholder:
-  chat:
-    start-symbol: '&f['
-    split-symbol: '&f, '
-    end-symbol: '&f]'
-    black-prefixes: []
-    display-amount: 10
-    empty-display: ''
-    # Premium version only
-    default-prefixes:
-      - 'default'
-
 # {status} Placeholder
 status-placeholder:
   unlocked: '&eClick to use'
