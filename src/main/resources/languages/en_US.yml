@@ -4,6 +4,7 @@ error:
   miss-permission: "&#98FB98[MythicPrefixes] &cYou don't have permission to use this command!"
   player-not-found: "&#98FB98[MythicPrefixes] &cWe can't find player {player}!"
   prefix-not-found: "&#98FB98[MythicPrefixes] &cWe can't find prefix: {prefix}!"
+  placeholder-not-found: "&#98FB98[MythicPrefixes] &cWe can't find placeholder: {placeholder}!"
   prefix-not-using: "&#98FB98[MythicPrefixes] &cPlayer {player} is not using prefix {prefix}!"
   prefix-is-using: "&#98FB98[MythicPrefixes] &cPlayer {player} is using prefix {prefix}!"
   prefix-is-empty: "&#98FB98[MythicPrefixes] &cPlayer {player} do not have any prefix using!"
@@ -37,6 +38,7 @@ help:
     &f/mythicprefixes removeprefix <player> <prefix> &7- Remove using prefix for specifed player.
     &f/mythicprefixes setprefix <prefixes> &7- Set your using prefixes to specifed value. Support use ;; split each prefix.
     &f/mythicprefixes setprefix <player> <prefixes> &7- Set specified player using prefixes to specifed value. Support use ;; split each prefix.
+    &f/mythicprefixes parseplaceholder <placeholder> &7- Parse display placeholder.
   main-console: |
     &#98FB98&lMythicPrefixes &7Made by @PQguanfang
     &f/mythicprefixes help &7- View help.
@@ -52,3 +54,4 @@ success-set-prefix: "&#98FB98[MythicPrefixes] &fSuccessfully set player {player}
 view-prefix:
   head: '&#98FB98[MythicPrefixes] &fYou are now using those prefixes:'
   format: '&f - {prefix}'
+parse-placeholder: "&#98FB98[MythicPrefixes] &fDisplay prefix {placeholder} now value: {value}!"

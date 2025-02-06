@@ -33,6 +33,7 @@ public class CommandManager {
         registeredCommands.put("reload", new SubReload());
         registeredCommands.put("opengui", new SubOpenGUI());
         registeredCommands.put("help", new SubHelp());
+        registeredCommands.put("parseplaceholder", new SubParsePlaceholder());
     }
 
     public Map<String, AbstractCommand> getSubCommandsMap() {

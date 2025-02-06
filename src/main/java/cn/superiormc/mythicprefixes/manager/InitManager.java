@@ -24,6 +24,7 @@ public class InitManager {
         resourceOutput("languages/en_US.yml", true);
         resourceOutput("languages/zh_CN.yml", true);
         resourceOutput("display_placeholders/chat.yml", false);
+        resourceOutput("display_placeholders/group_example.yml", false);
         resourceOutput("prefixes/example.yml", false);
         resourceOutput("prefixes/default.yml", false);
     }

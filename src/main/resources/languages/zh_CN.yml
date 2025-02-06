@@ -4,6 +4,7 @@ error:
   miss-permission: '&#98FB98[MythicPrefixes] &c你没有权限使用该指令!'
   player-not-found: '&#98FB98[MythicPrefixes] &c无法找到玩家 {player}!'
   prefix-not-found: '&#98FB98[MythicPrefixes] &c无法找到称号 {prefix}!'
+  placeholder-not-found: "&#98FB98[MythicPrefixes] &c无法找到显示变量符 {placeholder}!"
   prefix-not-using: '&#98FB98[MythicPrefixes] &c玩家 {player} 目前没有使用称号 {prefix}!'
   prefix-is-using: '&#98FB98[MythicPrefixes] &c玩家 {player} 正在使用称号 {prefix}!'
   prefix-is-empty: '&#98FB98[MythicPrefixes] &c玩家 {player} 目前没有使用任何称号!'
@@ -23,3 +24,4 @@ success-set-prefix: "&#98FB98[MythicPrefixes] &f成功设置玩家 {player} 正�
 view-prefix:
   format: '&f{prefix}'
   head: '&#98FB98[MythicPrefixes] &f你正在使用如下称号:'
+parse-placeholder: "&#98FB98[MythicPrefixes] &fDisplay prefix {placeholder} now value: {value}!"

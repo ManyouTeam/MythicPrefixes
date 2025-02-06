@@ -19,10 +19,7 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.*;
 
 public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPrefix> {
 
@@ -42,6 +39,8 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
 
     private boolean isDefaultPrefix;
 
+    private final List<String> groups;
+
     public ObjectPrefix(String id, YamlConfiguration config) {
         super(config);
         this.id = id;
@@ -50,6 +49,12 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
         this.startAction = new ObjectAction(config.getConfigurationSection("equip-actions"));
         this.endAction = new ObjectAction(config.getConfigurationSection("unequip-actions"));
         this.circleAction = new ObjectAction(config.getConfigurationSection("circle-actions"));
+        if (!MythicPrefixes.freeVersion) {
+            this.groups = config.getStringList("groups");
+        } else {
+            this.groups = new ArrayList<>();
+        }
+        ObjectDisplayPlaceholder.groupNames.addAll(groups);
         initEffects();
     }
 
@@ -204,6 +209,10 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
 
     public void setDefaultPrefix(boolean b) {
         isDefaultPrefix = b;
+    }
+
+    public List<String> getGroups() {
+        return groups;
     }
 
     @Override

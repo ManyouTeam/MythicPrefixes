@@ -39,6 +39,10 @@ display-value: '&8Dragon Killer'
 weight: 15
 auto-hide: false
 
+# Premium version only
+groups:
+  - chat
+  - example
 
 effects:
   libreforge: false
@@ -51,7 +55,7 @@ equip-actions:
   1:
     type: message
     message: 'Start equip the tag!'
-unequipped-actions:
+unequip-actions:
   1:
     type: message
     message: 'Not equip the tag!'

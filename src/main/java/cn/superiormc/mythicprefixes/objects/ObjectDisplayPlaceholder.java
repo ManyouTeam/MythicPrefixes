@@ -7,10 +7,7 @@ import cn.superiormc.mythicprefixes.utils.TextUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.TreeSet;
+import java.util.*;
 
 public class ObjectDisplayPlaceholder {
 
@@ -22,20 +19,31 @@ public class ObjectDisplayPlaceholder {
 
     private final String splitSymbol;
 
-    private final List<String> blackPrefixes;
+    private List<String> prefixes;
+
+    private final List<String> groups;
 
     private final int displayAmount;
 
     private final String empty;
 
+    private final String mode;
+
     public Collection<ObjectPrefix> defaultPrefixCaches = new TreeSet<>();
+
+    public static Collection<String> groupNames = new ArrayList<>();
 
     public ObjectDisplayPlaceholder(String id, ConfigurationSection section) {
         this.id = id;
         this.startSymbol = TextUtil.parse(section.getString("start-symbol"));
         this.endSymbol = TextUtil.parse(section.getString("end-symbol"));
         this.splitSymbol = TextUtil.parse(section.getString("split-symbol"));
-        this.blackPrefixes = section.getStringList("black-prefixes");
+        this.prefixes = section.getStringList("display-prefixes.prefixes");
+        if (this.prefixes.isEmpty()) {
+            this.prefixes = section.getStringList("black-prefixes");
+        }
+        this.groups = section.getStringList("display-prefixes.groups");
+        this.mode = section.getString("display-prefixes.mode", "BLACK");
         this.displayAmount = section.getInt("display-amount", -1);
         this.empty = section.getString("empty-display", null);
         for (String prefix : section.getStringList("default-prefixes")) {
@@ -58,6 +66,9 @@ public class ObjectDisplayPlaceholder {
     }
 
     public String getDisplayText(ObjectCache cache, ObjectPrefix prefix) {
+        if (cache == null) {
+            return "ERROR: Cache not load";
+        }
         StringBuilder tempVal1 = new StringBuilder(startSymbol);
         int tempVal4 = 0;
         Collection<ObjectPrefix> tempVal5 = new ArrayList<>();
@@ -69,8 +80,22 @@ public class ObjectDisplayPlaceholder {
             if (displayAmount > 0 && tempVal4 >= displayAmount) {
                 continue;
             }
-            if (blackPrefixes.contains(tempVal3.getId())) {
-                continue;
+            if (mode.equals("BLACK") || MythicPrefixes.freeVersion) {
+                if (!prefixes.isEmpty() && prefixes.contains(tempVal3.getId())) {
+                    continue;
+                }
+                if (!tempVal3.getGroups().isEmpty() && !groups.isEmpty() &&
+                        new HashSet<>(tempVal3.getGroups()).containsAll(groups)) {
+                    continue;
+                }
+            } else {
+                if (!prefixes.isEmpty() && !prefixes.contains(tempVal3.getId())) {
+                    continue;
+                }
+                if (!tempVal3.getGroups().isEmpty() && !groups.isEmpty() &&
+                        !new HashSet<>(tempVal3.getGroups()).containsAll(groups)) {
+                    continue;
+                }
             }
             tempVal5.add(tempVal3);
             tempVal4 ++;

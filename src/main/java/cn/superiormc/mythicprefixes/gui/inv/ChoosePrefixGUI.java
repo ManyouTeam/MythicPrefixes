@@ -43,8 +43,11 @@ public class ChoosePrefixGUI extends InvGUI {
 
     private int filterSlot = -1;
 
-    private ChoosePrefixGUI(Player player) {
+    private final String selectedGroup;
+
+    private ChoosePrefixGUI(Player player, String group) {
         super(player);
+        selectedGroup = group;
         slotCache = ConfigManager.configManager.getIntList("choose-prefix-gui.prefix-item-slot");
         constructGUI();
     }
@@ -55,6 +58,9 @@ public class ChoosePrefixGUI extends InvGUI {
         ObjectCache cache = CacheManager.cacheManager.getPlayerCache(player);
         if (prefixCache.isEmpty()) {
             for (ObjectPrefix prefix : ConfigManager.configManager.getPrefixesWithoutHide()) {
+                if (!selectedGroup.equals("all") && !prefix.getGroups().contains(selectedGroup)) {
+                    continue;
+                }
                 PrefixStatus status = prefix.getPrefixStatus(cache);
                 if ((filter == Filter.ALL || (filter == Filter.USING && status == PrefixStatus.USING) || (
                         filter == Filter.CAN_USE && status == PrefixStatus.CAN_USE))
@@ -174,13 +180,13 @@ public class ChoosePrefixGUI extends InvGUI {
         return true;
     }
 
-    public static void openGUI(Player player) {
+    public static void openGUI(Player player, String group) {
         if (CommonUtil.isBedrockPlayer(player)) {
             FormChoosePrefixGUI gui = new FormChoosePrefixGUI(player);
             gui.openGUI();
             return;
         }
-        ChoosePrefixGUI gui = new ChoosePrefixGUI(player);
+        ChoosePrefixGUI gui = new ChoosePrefixGUI(player, group);
         gui.openGUI();
     }
 }
