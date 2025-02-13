@@ -20,8 +20,6 @@ public abstract class AbstractButton {
 
     protected ConfigurationSection config;
 
-    protected ObjectAction action;
-
     protected ObjectCondition condition;
 
     protected ButtonType type;
@@ -49,14 +47,6 @@ public abstract class AbstractButton {
 
     public ButtonType getType() {
         return type;
-    }
-
-    public ObjectAction getAction() {
-        return action;
-    }
-
-    public ObjectCondition getCondition() {
-        return condition;
     }
 
     public ButtonComponent parseToBedrockButton(ObjectCache cache) {

@@ -48,6 +48,9 @@ public class SchedulerUtil {
     // 延迟执行任务
     public static SchedulerUtil runTaskLater(Runnable task, long delayTicks) {
         if (MythicPrefixes.isFolia) {
+            if (delayTicks <= 0) {
+                delayTicks = 1;
+            }
             return new SchedulerUtil(Bukkit.getGlobalRegionScheduler().runDelayed(MythicPrefixes.instance,
                     scheduledTask -> task.run(), delayTicks));
         } else {

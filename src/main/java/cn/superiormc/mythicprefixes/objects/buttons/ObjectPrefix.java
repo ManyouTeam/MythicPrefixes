@@ -31,6 +31,10 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
 
     private final ObjectAction circleAction;
 
+    private final ObjectAction clickActionCDM;
+
+    private final ObjectAction clickActionMXR;
+
     private final Map<Player, Collection<ObjectMMOEffect>> mmoEffects = new HashMap<>();
 
     private final Map<Player, SchedulerUtil> taskCache = new HashMap<>();
@@ -49,6 +53,8 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
         this.startAction = new ObjectAction(config.getConfigurationSection("equip-actions"));
         this.endAction = new ObjectAction(config.getConfigurationSection("unequip-actions"));
         this.circleAction = new ObjectAction(config.getConfigurationSection("circle-actions"));
+        this.clickActionCDM = new ObjectAction(config.getConfigurationSection("click-actions.condition-not-meet"));
+        this.clickActionMXR = new ObjectAction(config.getConfigurationSection("click-actions.max-limit-reached"));
         if (!MythicPrefixes.freeVersion) {
             this.groups = config.getStringList("groups");
         } else {
@@ -138,7 +144,7 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
             return PrefixStatus.USING;
         }
         Player player = cache.getPlayer();
-        if (getConditionBoolean(cache)) {
+        if (isConditionNotMeet(cache)) {
             return PrefixStatus.CONDITION_NOT_MEET;
         }
         if (MythicPrefixesAPI.getMaxPrefixesAmount(player) == MythicPrefixesAPI.getActivedPrefixes(player, !isDefaultPrefix).size()) {
@@ -147,7 +153,7 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
         return PrefixStatus.CAN_USE;
     }
 
-    public boolean getConditionBoolean(ObjectCache cache) {
+    public boolean isConditionNotMeet(ObjectCache cache) {
         Player player = cache.getPlayer();
         if (!cache.isFinishLoad()) {
             return false;
@@ -172,6 +178,16 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
                 break;
             case USING:
                 CacheManager.cacheManager.getPlayerCache(player).removeActivePrefix(this);
+                break;
+            case CONDITION_NOT_MEET:
+                if (!MythicPrefixes.freeVersion) {
+                    clickActionCDM.runAllActions(player);
+                }
+                break;
+            case MAX_LIMIT_REACHED:
+                if (!MythicPrefixes.freeVersion) {
+                    clickActionMXR.runAllActions(player);
+                }
                 break;
         }
     }

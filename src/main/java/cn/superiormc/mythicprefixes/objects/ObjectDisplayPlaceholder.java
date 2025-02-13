@@ -71,8 +71,8 @@ public class ObjectDisplayPlaceholder {
         }
         StringBuilder tempVal1 = new StringBuilder(startSymbol);
         int tempVal4 = 0;
-        Collection<ObjectPrefix> tempVal5 = new ArrayList<>();
-        if (prefix != null) {
+        Collection<ObjectPrefix> tempVal5 = new TreeSet<>();
+        if (prefix != null && !cache.getActivePrefixes().contains(prefix)) {
             tempVal5.add(prefix);
             tempVal4 ++;
         }

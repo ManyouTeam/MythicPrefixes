@@ -10,6 +10,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class ObjectButton extends AbstractButton {
 
+    private ObjectAction action;
 
     public ObjectButton(ConfigurationSection config) {
         super(config);

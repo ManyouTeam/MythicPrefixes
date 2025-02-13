@@ -1,6 +1,5 @@
 package cn.superiormc.mythicprefixes.objects;
 
-import cn.superiormc.mythicprefixes.MythicPrefixes;
 import cn.superiormc.mythicprefixes.api.MythicPrefixesAPI;
 import cn.superiormc.mythicprefixes.database.SQLDatabase;
 import cn.superiormc.mythicprefixes.database.YamlDatabase;
@@ -111,7 +110,7 @@ public class ObjectCache {
             return;
         }
         for (ObjectPrefix prefix : MythicPrefixesAPI.getActivedPrefixes(player)) {
-            if (!prefix.getCondition().getAllBoolean(player)) {
+            if (prefix.isConditionNotMeet(this)) {
                 removeActivePrefix(prefix);
             }
         }

@@ -51,6 +51,7 @@ MythicLib-effects:
   1:
     stat: MAX_HEALTH
     value: 1
+
 equip-actions:
   1:
     type: message
@@ -63,6 +64,17 @@ circle-actions:
   1:
     type: message
     message: 'This is default message. Default prefix has equipped so prefix effect also activated!'
+# Premium version only
+click-actions:
+  condition-not-meet:
+    1:
+      type: message
+      message: 'You did not unlock this prefix!'
+  max-limit-reached:
+    1:
+      type: message
+      message: 'You reached the limit of max prefix using!'
+
 conditions:
   1:
     type: permission
