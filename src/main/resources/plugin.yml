@@ -6,6 +6,8 @@ folia-supported: true
 softdepend:
   - PlaceholderAPI
   - MythicLib
+  - MythicMobs
+  - floodgate
 commands:
   mythicprefixes:
     aliases:

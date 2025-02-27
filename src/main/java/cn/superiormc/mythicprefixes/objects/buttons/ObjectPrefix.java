@@ -6,6 +6,7 @@ import cn.superiormc.mythicprefixes.libreforge.LibreforgeEffects;
 import cn.superiormc.mythicprefixes.manager.CacheManager;
 import cn.superiormc.mythicprefixes.manager.ConfigManager;
 import cn.superiormc.mythicprefixes.objects.*;
+import cn.superiormc.mythicprefixes.objects.effect.AbstractEffect;
 import cn.superiormc.mythicprefixes.utils.CommonUtil;
 import cn.superiormc.mythicprefixes.utils.ItemUtil;
 import cn.superiormc.mythicprefixes.utils.SchedulerUtil;
@@ -35,11 +36,11 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
 
     private final ObjectAction clickActionMXR;
 
-    private final Map<Player, Collection<ObjectMMOEffect>> mmoEffects = new HashMap<>();
+    private final Map<Player, Collection<AbstractEffect>> mmoEffects = new HashMap<>();
 
     private final Map<Player, SchedulerUtil> taskCache = new HashMap<>();
 
-    private boolean useMMOEffect;
+    private boolean useEffect;
 
     private boolean isDefaultPrefix;
 
@@ -61,23 +62,22 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
             this.groups = new ArrayList<>();
         }
         ObjectDisplayPlaceholder.groupNames.addAll(groups);
-        initEffects();
     }
 
-    private void initEffects() {
-        if (ConfigManager.configManager.getBoolean("libreforge-hook") &&
-                config.getBoolean("effects.libreforge", false)) {
-            LibreforgeEffects.libreforgeEffects.registerLibreforgeEffect(id);
-        }
-        if (CommonUtil.checkPluginLoad("MythicLib") &&
-                config.getBoolean("effects.MythicLib", false)) {
-            useMMOEffect = true;
+    public void initEffects() {
+        if (config.getBoolean("effects.enabled", false)) {
+            if (ConfigManager.configManager.getBoolean("libreforge-hook") &&
+                    config.getBoolean("effects.enabled", false)) {
+                LibreforgeEffects.libreforgeEffects.registerLibreforgeEffect(id);
+            }
+            useEffect = true;
         }
     }
 
     public void runStartAction(Player player) {
-        if (useMMOEffect) {
-            startMMOEffect(player);
+        if (useEffect) {
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicPrefixes] §fStarted effect for player " + player.getName());
+            mmoEffects.put(player, MythicPrefixesAPI.startEffect(this, player));
         }
         startAction.runAllActions(player);
         if (!circleAction.isEmpty()) {
@@ -88,40 +88,19 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
     }
 
     public void runEndAction(Player player) {
-        if (useMMOEffect) {
-            endMMOEffect(player);
+        if (useEffect) {
+            if (mmoEffects.get(player) != null) {
+                for (AbstractEffect tempVal1 : mmoEffects.get(player)) {
+                    tempVal1.removePlayerStat();
+                }
+                mmoEffects.remove(player);
+            }
         }
         endAction.runAllActions(player);
         if (taskCache.get(player) != null) {
             taskCache.get(player).cancel();
         }
         taskCache.remove(player);
-    }
-
-    private void startMMOEffect(Player player) {
-        ConfigurationSection section = config.getConfigurationSection("MythicLib-effects");
-        Collection<ObjectMMOEffect> mmoResult = new HashSet<>();
-        if (section != null) {
-            for (String tempVal1 : section.getKeys(false)) {
-                ObjectMMOEffect tempVal2 = new ObjectMMOEffect(id + tempVal1,
-                        player,
-                        section.getConfigurationSection(tempVal1).getString("stat", ""),
-                        section.getConfigurationSection(tempVal1).getDouble("value", 0));
-                tempVal2.addPlayerStat();
-                mmoResult.add(tempVal2);
-            }
-        }
-        Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicPrefixes] §fStarted MMO effect for player " + player.getName());
-        mmoEffects.put(player, mmoResult);
-    }
-
-    private void endMMOEffect(Player player) {
-        if (mmoEffects.get(player) != null) {
-            for (ObjectMMOEffect tempVal1 : mmoEffects.get(player)) {
-                tempVal1.removePlayerStat();
-            }
-            mmoEffects.remove(player);
-        }
     }
 
     public String getId() {

@@ -45,11 +45,15 @@ groups:
   - example
 
 effects:
-  libreforge: false
-  MythicLib: false
-MythicLib-effects:
+  enabled: false
   1:
+    type: MythicLib
     stat: MAX_HEALTH
+    value: 1
+  2:
+    # Premium version only
+    type: MythicMobs
+    stat: ATTACK_DAMAGE
     value: 1
 
 equip-actions:

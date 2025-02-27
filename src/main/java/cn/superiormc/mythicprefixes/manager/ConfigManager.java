@@ -111,6 +111,7 @@ public class ConfigManager {
             if (fileName.endsWith(".yml")) {
                 String substring = fileName.substring(0, fileName.length() - 4);
                 ObjectPrefix prefix = new ObjectPrefix(substring, YamlConfiguration.loadConfiguration(file));
+                prefix.initEffects();
                 prefixConfigs.put(substring, prefix);
                 prefixCaches.add(prefix);
                 Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicPrefixes] §fLoaded prefix: " +

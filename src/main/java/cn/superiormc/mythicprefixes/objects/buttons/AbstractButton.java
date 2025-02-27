@@ -49,6 +49,10 @@ public abstract class AbstractButton {
         return type;
     }
 
+    public ConfigurationSection getConfig() {
+        return config;
+    }
+
     public ButtonComponent parseToBedrockButton(ObjectCache cache) {
         Player player = cache.getPlayer();
         String icon = config.getString("bedrock.icon", config.getString("bedrock-icon"));

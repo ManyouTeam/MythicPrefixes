@@ -1,4 +1,4 @@
-package cn.superiormc.mythicprefixes.objects;
+package cn.superiormc.mythicprefixes.objects.effect;
 
 import cn.superiormc.mythicprefixes.manager.ErrorManager;
 import cn.superiormc.mythicprefixes.utils.SchedulerUtil;
@@ -7,26 +7,20 @@ import io.lumine.mythic.lib.api.stat.StatMap;
 import io.lumine.mythic.lib.api.stat.modifier.StatModifier;
 import io.lumine.mythic.lib.player.modifier.ModifierType;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 
-public class ObjectMMOEffect {
+public class ObjectMMOEffect extends AbstractEffect {
 
     private StatModifier modifier = null;
 
-    private final String id;
-
-    private final OfflinePlayer player;
-
     private final String stat;
 
-    private int retryTimes = 0;
-
-    private SchedulerUtil retryTask;
-
-    public ObjectMMOEffect(String id, OfflinePlayer player, String stat, double value) {
-        this.id = id;
+    public ObjectMMOEffect(String id, Player player, ConfigurationSection section) {
+        super(id, player, section);
         this.player = player;
-        this.stat = stat;
-        this.modifier = new StatModifier("MythicPrefixes_" + id, stat, value, ModifierType.FLAT);
+        this.stat = section.getString("stat", "");
+        this.modifier = new StatModifier("MythicPrefixes_" + id, stat, section.getDouble("value", 0), ModifierType.FLAT);
     }
 
     public void addPlayerStat() {

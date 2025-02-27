@@ -181,4 +181,8 @@ public class ItemUtil {
         result.deleteCharAt(result.length() - 1);
         return result.toString();
     }
+
+    public static boolean isValid(ItemStack item) {
+        return item != null && !item.getType().isAir();
+    }
 }

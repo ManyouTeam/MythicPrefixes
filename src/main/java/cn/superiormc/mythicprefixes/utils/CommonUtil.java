@@ -25,8 +25,7 @@ public class CommonUtil {
             return LuckPermsProvider.get().getPlayerAdapter(Player.class).
                     getPermissionData(player).
                     checkPermission(permission).asBoolean();
-        }
-        else {
+        } else {
             return player.hasPermission(permission);
         }
     }

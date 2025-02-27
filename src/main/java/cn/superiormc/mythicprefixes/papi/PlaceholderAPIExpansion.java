@@ -65,15 +65,13 @@ public class PlaceholderAPIExpansion extends PlaceholderExpansion {
         }
         if (args[0].equals("amount")) {
             return String.valueOf(CacheManager.cacheManager.getPlayerCache(player).getActivePrefixes().size());
-        }
-        else if (args[0].equals("status") && args.length > 1) {
+        } else if (args[0].equals("status") && args.length > 1) {
             ObjectPrefix prefix = ConfigManager.configManager.getPrefix(args[1]);
             if (prefix == null) {
                 return LanguageManager.languageManager.getStringText("placeholderapi.unknown-prefix");
             }
             return String.valueOf(prefix.getPrefixStatus(cache));
-        }
-        else if (args[0].equals("prefix") && args.length > 2) {
+        } else if (args[0].equals("prefix") && args.length > 2) {
             ObjectPrefix prefix = ConfigManager.configManager.getPrefix(args[1]);
             if (prefix == null) {
                 return LanguageManager.languageManager.getStringText("placeholderapi.unknown-prefix");
@@ -83,8 +81,7 @@ public class PlaceholderAPIExpansion extends PlaceholderExpansion {
                 return LanguageManager.languageManager.getStringText("placeholderapi.unknown-display-placeholder");
             }
             return displayPlaceholder.getDisplayText(cache, prefix);
-        }
-        else if (args[0].equals("max")) {
+        } else if (args[0].equals("max")) {
             return String.valueOf(MythicPrefixesAPI.getMaxPrefixesAmount(player));
         }
         ObjectDisplayPlaceholder displayPlaceholder = ConfigManager.configManager.getDisplayPlaceholder(args[0]);
