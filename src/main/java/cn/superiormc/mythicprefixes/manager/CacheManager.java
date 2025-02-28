@@ -2,6 +2,8 @@ package cn.superiormc.mythicprefixes.manager;
 
 import cn.superiormc.mythicprefixes.objects.ObjectCache;
 import cn.superiormc.mythicprefixes.database.SQLDatabase;
+import cn.superiormc.mythicprefixes.objects.effect.ObjectAuraSkillsEffect;
+import cn.superiormc.mythicprefixes.utils.CommonUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -12,7 +14,7 @@ public class CacheManager {
 
     public static CacheManager cacheManager;
 
-    private Map<Player, ObjectCache> playerCacheMap = new HashMap<>();
+    private final Map<Player, ObjectCache> playerCacheMap = new HashMap<>();
 
     public CacheManager() {
         cacheManager = this;
@@ -22,24 +24,18 @@ public class CacheManager {
         }
     }
 
-    public void reload() {
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            CacheManager.cacheManager.savePlayerCacheOnDisable(player);
-        }
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            CacheManager.cacheManager.addPlayerCache(player);
-            CacheManager.cacheManager.getPlayerCache(player).setAsFinished();
-            CacheManager.cacheManager.loadPlayerCache(player);
-        }
-    }
-
     public void addPlayerCache(Player player) {
-        playerCacheMap.put(player, new ObjectCache(player));
+        if (!playerCacheMap.containsKey(player)) {
+            playerCacheMap.put(player, new ObjectCache(player));
+        }
     }
 
     public void loadPlayerCache(Player player) {
         ObjectCache cache = getPlayerCache(player);
         cache.removeAllActivePrefix();
+        if (CommonUtil.checkPluginLoad("AuraSkills")) {
+            ObjectAuraSkillsEffect.removePlayerStat(player, 1);
+        }
         cache.initPlayerCache();
     }
 
@@ -48,7 +44,7 @@ public class CacheManager {
         playerCacheMap.remove(player);
     }
 
-    public void savePlayerCache(Player player) {
+    public void savePlayerCacheOnExit(Player player) {
         if (playerCacheMap.get(player) == null) {
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicPrefixes] §cError: Can not save player data: " + player.getName() + "!");
             return;

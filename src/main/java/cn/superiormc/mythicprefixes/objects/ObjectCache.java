@@ -3,20 +3,24 @@ package cn.superiormc.mythicprefixes.objects;
 import cn.superiormc.mythicprefixes.api.MythicPrefixesAPI;
 import cn.superiormc.mythicprefixes.database.SQLDatabase;
 import cn.superiormc.mythicprefixes.database.YamlDatabase;
-import cn.superiormc.mythicprefixes.manager.CacheManager;
 import cn.superiormc.mythicprefixes.manager.ConfigManager;
 import cn.superiormc.mythicprefixes.objects.buttons.ObjectPrefix;
 import cn.superiormc.mythicprefixes.utils.SchedulerUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.TreeSet;
 
 public class ObjectCache {
 
     private final Player player;
 
-    public Collection<ObjectPrefix> prefixCaches = new TreeSet<>();
+    private final Collection<ObjectPrefix> prefixCaches = new TreeSet<>();
+
+    private final Map<ObjectPrefix, SchedulerUtil> taskCache = new HashMap<>();
 
     private boolean finishLoad;
 
@@ -73,13 +77,19 @@ public class ObjectCache {
         if (prefix.getPrefixStatus(this) != PrefixStatus.CAN_USE) {
             return;
         }
-        prefix.runStartAction(player);
+        prefix.runStartAction(this);
         prefixCaches.add(prefix);
+        if (ConfigManager.configManager.getBoolean("debug")) {
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicPrefixes] §fEnabled prefix " + prefix + " for player " + player.getName() + "!");
+        }
     }
 
     public void removeActivePrefix(ObjectPrefix prefix) {
-        prefix.runEndAction(player);
+        prefix.runEndAction(this);
         prefixCaches.remove(prefix);
+        if (ConfigManager.configManager.getBoolean("debug")) {
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicPrefixes] §fDisabled prefix " + prefix + " for player " + player.getName() + "!");
+        }
     }
 
     public void removeAllActivePrefix() {
@@ -89,13 +99,13 @@ public class ObjectCache {
     }
 
     public Collection<ObjectPrefix> getActivePrefixes() {
-        return new TreeSet<>(CacheManager.cacheManager.getPlayerCache(player).prefixCaches);
+        return new TreeSet<>(prefixCaches);
     }
 
     public String getActivePrefixesID() {
         int i = 0;
         StringBuilder tempVal2 = new StringBuilder();
-        for (ObjectPrefix tempVal1 : prefixCaches) {
+        for (ObjectPrefix tempVal1 : getActivePrefixes()) {
             if (i > 0) {
                 tempVal2.append(";;");
             }
@@ -125,5 +135,17 @@ public class ObjectCache {
             return true;
         }
         return finishLoad;
+    }
+
+    public void addCircleTask(ObjectPrefix prefix, SchedulerUtil schedulerUtil) {
+        taskCache.put(prefix, schedulerUtil);
+    }
+
+    public void cancelCircleTask(ObjectPrefix prefix) {
+        SchedulerUtil schedulerUtil = taskCache.get(prefix);
+        if (schedulerUtil != null) {
+            schedulerUtil.cancel();
+        }
+        taskCache.remove(prefix);
     }
 }

@@ -8,6 +8,7 @@ import cn.superiormc.mythicprefixes.objects.ObjectCondition;
 import cn.superiormc.mythicprefixes.objects.buttons.ObjectPrefix;
 import cn.superiormc.mythicprefixes.manager.CacheManager;
 import cn.superiormc.mythicprefixes.objects.effect.AbstractEffect;
+import cn.superiormc.mythicprefixes.objects.effect.ObjectAuraSkillsEffect;
 import cn.superiormc.mythicprefixes.objects.effect.ObjectMMEffect;
 import cn.superiormc.mythicprefixes.objects.effect.ObjectMMOEffect;
 import cn.superiormc.mythicprefixes.utils.CommonUtil;
@@ -42,11 +43,18 @@ public class MythicPrefixesAPI {
                         break;
                     case "MythicMobs":
                         if (CommonUtil.checkPluginLoad("MythicMobs") && !MythicPrefixes.freeVersion) {
-                            tempVal2 = new ObjectMMEffect(prefix.getId(),
+                            tempVal2 = new ObjectMMEffect(prefix.getId() + tempVal1,
                                     player,
                                     tempVal3);
-                            break;
                         }
+                        break;
+                    case "AuraSkills":
+                        if (CommonUtil.checkPluginLoad("AuraSkills") && !MythicPrefixes.freeVersion) {
+                            tempVal2 = new ObjectAuraSkillsEffect(prefix.getId() + tempVal1,
+                                    player,
+                                    tempVal3);
+                        }
+                        break;
                 }
                 if (tempVal2 != null) {
                     tempVal2.addPlayerStat();
@@ -56,12 +64,8 @@ public class MythicPrefixesAPI {
         }
         return mmoResult;
     }
-
-    public static Collection<ObjectPrefix> getActivedPrefixes(Player player) {
-        return getActivedPrefixes(player, true);
-    }
     
-    public static Collection<ObjectPrefix> getActivedPrefixes(Player player, boolean autoAddDefaultPrefix) {
+    public static Collection<ObjectPrefix> getActivedPrefixes(Player player) {
         if (CacheManager.cacheManager == null) {
             ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicPrefixes] §cError: Can not get cache object in plugin, " +
                     "please try restart the server.");

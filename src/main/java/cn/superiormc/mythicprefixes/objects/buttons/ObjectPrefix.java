@@ -38,8 +38,6 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
 
     private final Map<Player, Collection<AbstractEffect>> mmoEffects = new HashMap<>();
 
-    private final Map<Player, SchedulerUtil> taskCache = new HashMap<>();
-
     private boolean useEffect;
 
     private boolean isDefaultPrefix;
@@ -74,7 +72,8 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
         }
     }
 
-    public void runStartAction(Player player) {
+    public void runStartAction(ObjectCache cache) {
+        Player player = cache.getPlayer();
         if (useEffect) {
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicPrefixes] §fStarted effect for player " + player.getName());
             mmoEffects.put(player, MythicPrefixesAPI.startEffect(this, player));
@@ -83,11 +82,12 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
         if (!circleAction.isEmpty()) {
             SchedulerUtil task = SchedulerUtil.runTaskTimer(() ->
                     circleAction.runAllActions(player), 0L, ConfigManager.configManager.getLong("circle-actions.period-tick", 20L));
-            taskCache.put(player, task);
+            cache.addCircleTask(this, task);
         }
     }
 
-    public void runEndAction(Player player) {
+    public void runEndAction(ObjectCache cache) {
+        Player player = cache.getPlayer();
         if (useEffect) {
             if (mmoEffects.get(player) != null) {
                 for (AbstractEffect tempVal1 : mmoEffects.get(player)) {
@@ -97,10 +97,7 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
             }
         }
         endAction.runAllActions(player);
-        if (taskCache.get(player) != null) {
-            taskCache.get(player).cancel();
-        }
-        taskCache.remove(player);
+        cache.cancelCircleTask(this);
     }
 
     public String getId() {
@@ -126,7 +123,7 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
         if (isConditionNotMeet(cache)) {
             return PrefixStatus.CONDITION_NOT_MEET;
         }
-        if (MythicPrefixesAPI.getMaxPrefixesAmount(player) == MythicPrefixesAPI.getActivedPrefixes(player, !isDefaultPrefix).size()) {
+        if (MythicPrefixesAPI.getMaxPrefixesAmount(player) == MythicPrefixesAPI.getActivedPrefixes(player).size()) {
             return PrefixStatus.MAX_LIMIT_REACHED;
         }
         return PrefixStatus.CAN_USE;
@@ -141,7 +138,7 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
     }
 
     public boolean getDisplayInGUI() {
-        return config.contains("display-item", true) && !isDefaultPrefix;
+        return config.contains("display-item", true) && !isDefaultPrefix();
     }
 
     public boolean shouldHideInGUI(Player player) {

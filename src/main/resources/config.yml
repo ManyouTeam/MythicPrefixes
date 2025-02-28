@@ -111,7 +111,7 @@ auto-save:
 
 libreforge-hook: false
 libreforge-effects:
-  - id: default
+  - id: example
     effects:
       - id: bonus_health
         args:

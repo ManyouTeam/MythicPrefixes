@@ -1,6 +1,5 @@
 display-value: '&fPlayer'
 weight: 1
 auto-hide: false
-effects:
-  libreforge: false
-  MythicLib: false
+
+conditions: []
