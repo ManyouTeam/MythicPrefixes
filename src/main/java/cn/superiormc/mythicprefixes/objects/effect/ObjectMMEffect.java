@@ -13,9 +13,11 @@ import org.bukkit.entity.Player;
 
 import java.util.Optional;
 
-public class ObjectMMEffect extends AbstractEffect implements StatSource {
+public class ObjectMMEffect extends AbstractEffect {
 
     private final StatModifierType modifier;
+
+    private final ObjectMMEffectSource source;
 
     private StatType statType;
 
@@ -23,6 +25,7 @@ public class ObjectMMEffect extends AbstractEffect implements StatSource {
         super(id, player, section);
         this.player = player;
         this.modifier = StatModifierType.get(section.getString("modifier-type", "ADD").toUpperCase());
+        this.source = new ObjectMMEffectSource(this);
         Optional<StatType> statTypeOptional = MythicBukkit.inst().getStatManager().getStat(section.getString("stat", ""));
         statTypeOptional.ifPresent(type -> this.statType = type);
     }
@@ -48,7 +51,7 @@ public class ObjectMMEffect extends AbstractEffect implements StatSource {
             return;
         }
         StatRegistry stats = profile.getStatRegistry();
-        stats.putValue(statType, this, modifier, section.getDouble("value", 0));
+        stats.putValue(statType, source, modifier, section.getDouble("value", 0));
         stats.refresh();
     }
 
@@ -57,7 +60,20 @@ public class ObjectMMEffect extends AbstractEffect implements StatSource {
         PlayerData profile = MythicBukkit.inst().getPlayerManager().getProfile(player);
         if (profile != null) {
             StatRegistry stats = profile.getStatRegistry();
-            stats.removeValue(statType, this);
+            stats.removeValue(statType, source);
         }
+    }
+}
+
+class ObjectMMEffectSource implements StatSource {
+
+    private ObjectMMEffect mmEffect;
+
+    public ObjectMMEffectSource(ObjectMMEffect mmEffect) {
+        this.mmEffect = mmEffect;
+    }
+
+    public ObjectMMEffect getMmEffect() {
+        return mmEffect;
     }
 }
