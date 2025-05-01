@@ -1,27 +1,58 @@
 error:
-  args: '&#98FB98[MythicPrefixes] &c错误的指令用法，请使用 /prefix help 查看帮助!'
-  in-game: '&#98FB98[MythicPrefixes] &c你必须在游戏中使用该指令!'
-  miss-permission: '&#98FB98[MythicPrefixes] &c你没有权限使用该指令!'
-  player-not-found: '&#98FB98[MythicPrefixes] &c无法找到玩家 {player}!'
-  prefix-not-found: '&#98FB98[MythicPrefixes] &c无法找到称号 {prefix}!'
-  placeholder-not-found: "&#98FB98[MythicPrefixes] &c无法找到显示变量符 {placeholder}!"
-  prefix-not-using: '&#98FB98[MythicPrefixes] &c玩家 {player} 目前没有使用称号 {prefix}!'
-  prefix-is-using: '&#98FB98[MythicPrefixes] &c玩家 {player} 正在使用称号 {prefix}!'
-  prefix-is-empty: '&#98FB98[MythicPrefixes] &c玩家 {player} 目前没有使用任何称号!'
-  max-prefix-reached: "&#98FB98[MythicPrefixes] &c玩家 {player} 已达到称号使用上限!"
-  prefix-condition-not-meet: "&#98FB98[MythicPrefixes] &c玩家 {player} 为满足称号 {prefix} 的使用条件!"
+  args: "&#98FB98[MythicPrefixes] &c命令使用错误，如果需要帮助，请使用查看插件 Wiki！"
+  in-game: "&#98FB98[MythicPrefixes] &c你必须在游戏中使用这个命令！"
+  miss-permission: "&#98FB98[MythicPrefixes] &c您没有使用此命令的权限！"
+  player-not-found: "&#98FB98[MythicPrefixes] &c我们找不到玩家 {player}！"
+  prefix-not-found: "&#98FB98[MythicPrefixes] &c找不到前缀：{prefix}！"
+  placeholder-not-found: "&#98FB98[MythicPrefixes] &c找不到占位符：{placeholder}！"
+  prefix-not-using: "&#98FB98[MythicPrefixes] &c玩家 {Player} 未使用前缀 {prefix}！"
+  prefix-is-using: "&#98FB98[MythicPrefixes] &c玩家 {Player} 正在使用前缀 {prefix}！"
+  prefix-is-empty: "&#98FB98[MythicPrefixes] &c玩家 {Player} 没有使用任何前缀！"
+  max-prefix-reached: "&#98FB98[MythicPrefixes] &c玩家 {Player} 已达到使用前缀的最大数量！"
+  prefix-condition-not-meet: "&#98FB98[MythicPrefixes] &c玩家 {Player} 不符合 {prefix} 的条件！"
 
 plugin:
-  reloaded: '&#98FB98[MythicPrefixes] &f插件已重启!'
+  reloaded: "&#98FB98[MythicPrefixes] &f插件已重启！"
 
 placeholderapi:
-  unknown-display-placeholder: 未知称号PAPI的ID
-  unknown-prefix: 未知称号
+  unknown-display-placeholder: "未知占位符ID"
+  unknown-prefix: "未知称号"
 
-success-add-prefix: '&#98FB98[MythicPrefixes] &f成功给玩家 {player} 添加了正在使用的称号 {prefix}!'
-success-remove-prefix: '&#98FB98[MythicPrefixes] &f成功给玩家 {player} 移除了正在使用的称号 {prefix}!'
-success-set-prefix: "&#98FB98[MythicPrefixes] &f成功设置玩家 {player} 正在使用的称号为 {prefix}!"
+# All messages also support multi lines, just do it like this!
+help:
+  main: |
+    &#98FB98&lMythicPrefixes &7Made by @PQguanfang
+    &f汉化 by Missing_Love
+    &f/mythicprefixes help &7- 查看帮助
+    &f/mythicprefixes opengui &7- 打开前缀 GUI
+    &f/mythicprefixes viewusingprefix &7- 查看您正在使用的前缀。
+  main-admin: |
+    &#98FB98&lMythicPrefixes &7Made by @PQguanfang
+    &f/mythicprefixes help &7- 查看帮助
+    &f/mythicprefixes opengui &7- 打开前缀 GUI
+    &f/mythicprefixes opengui <player> &7- 打开指定玩家打开前缀 GUI
+    &f/mythicprefixes viewusingprefix &7- 查看您正在使用的前缀
+    &f/mythicprefixes viewusingprefix <player> &7- 查看指定玩家正在使用的前缀
+    &f/mythicprefixes addprefix <prefix> &7- 为自己添加前缀
+    &f/mythicprefixes addprefix <player> <prefix> &7- 为指定的玩家添加新的前缀
+    &f/mythicprefixes removeprefix <prefix> &7- 为自己删除前缀
+    &f/mythicprefixes removeprefix <player> <prefix> &7- 为指定的玩家删除前缀
+    &f/mythicprefixes setprefix <prefixes> &7- 将使用前缀设置为指定值。支持使用；；拆分每个前缀。
+    &f/mythicprefixes setprefix <player> <prefixes> &7- 将指定玩家使用的命令前缀设置为指定值，支持使用 ;; 分隔每个前缀。
+    &f/mythicprefixes parseplaceholder <placeholder> &7- 解析显示占位符
+  main-console: |
+    &#98FB98&lMythicPrefixes &7Made by @PQguanfang
+    &f/mythicprefixes help &7- 查看帮助
+    &f/mythicprefixes opengui <player> &7- 打开指定玩家打开前缀 GUI
+    &f/mythicprefixes viewusingprefix <player> &7- 查看指定玩家正在使用的前缀
+    &f/mythicprefixes addprefix <player> <prefix> &7- 为指定的玩家添加新的前缀
+    &f/mythicprefixes removeprefix <player> <prefix> &7- 为指定的玩家删除前缀
+    &f/mythicprefixes setprefix <player> <prefixes> &7- 将指定玩家使用的命令前缀设置为指定值，支持使用 ;; 分隔每个前缀。
+
+success-add-prefix: "&#98FB98[MythicPrefixes] &f已成功为玩家 {player} 添加前缀 {prefix}！"
+success-remove-prefix: "&#98FB98[MythicPrefixes] &f已成功删除玩家 {player} 的前缀 {prefix}！"
+success-set-prefix: "&#98FB98[MythicPrefixes] &f使用前缀 {prefix} 成功设置玩家 {player}！"
 view-prefix:
-  format: '&f{prefix}'
-  head: '&#98FB98[MythicPrefixes] &f你正在使用如下称号:'
-parse-placeholder: "&#98FB98[MythicPrefixes] &fDisplay prefix {placeholder} now value: {value}!"
+  head: '&#98FB98[MythicPrefixes] &f您现在正在使用这些前缀：'
+  format: '&f - {prefix}'
+parse-placeholder: "&#98FB98[MythicPrefixes] &f显示前缀 {placeholder} 的当前值： {value}！"
