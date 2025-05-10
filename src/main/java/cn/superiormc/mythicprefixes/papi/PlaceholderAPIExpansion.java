@@ -82,7 +82,7 @@ public class PlaceholderAPIExpansion extends PlaceholderExpansion {
             }
             return displayPlaceholder.getDisplayText(cache, prefix);
         } else if (args[0].equals("max")) {
-            return String.valueOf(MythicPrefixesAPI.getMaxPrefixesAmount(player));
+            return String.valueOf(MythicPrefixesAPI.getMaxPrefixesAmount(player, null));
         }
         ObjectDisplayPlaceholder displayPlaceholder = ConfigManager.configManager.getDisplayPlaceholder(args[0]);
         if (displayPlaceholder == null) {

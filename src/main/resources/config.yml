@@ -31,8 +31,13 @@ circle-actions:
   period-tick: 20
 
 max-prefixes-amount:
-  default: 1
-  vip: 2
+  default:
+    default: 1
+    vip: 2
+  # Group ID
+  # chat:
+  #   default: 1
+  #   vip: 1
 
 max-prefixes-amount-conditions:
   vip:

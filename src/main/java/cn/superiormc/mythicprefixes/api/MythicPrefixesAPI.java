@@ -78,14 +78,23 @@ public class MythicPrefixesAPI {
         }
     }
 
-    public static int getMaxPrefixesAmount(Player player) {
-        ConfigurationSection section = MythicPrefixes.instance.getConfig().
-                getConfigurationSection("max-prefixes-amount");
-        if (section == null) {
-            return 1;
+    public static int getMaxPrefixesAmount(Player player, String groupID) {
+        ConfigurationSection section;
+        if (groupID == null) {
+            section = ConfigManager.configManager.getConfigurationSection("max-prefixes-amount.default");
+            if (section == null) {
+                section = ConfigManager.configManager.getConfigurationSection("max-prefixes-amount");
+                if (section == null) {
+                    return 1;
+                }
+            }
+        } else {
+            section = ConfigManager.configManager.getConfigurationSection("max-prefixes-amount." + groupID);
+            if (section == null) {
+                return Integer.MAX_VALUE;
+            }
         }
-        ConfigurationSection conditionSection = MythicPrefixes.instance.getConfig().
-                getConfigurationSection("max-prefixes-amount-conditions");
+        ConfigurationSection conditionSection = ConfigManager.configManager.getConfigurationSection("max-prefixes-amount-conditions");
         if (conditionSection == null) {
             return section.getInt("default", 1);
         }

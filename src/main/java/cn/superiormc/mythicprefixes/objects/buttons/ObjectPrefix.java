@@ -123,8 +123,22 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
         if (isConditionNotMeet(cache)) {
             return PrefixStatus.CONDITION_NOT_MEET;
         }
-        if (MythicPrefixesAPI.getMaxPrefixesAmount(player) == MythicPrefixesAPI.getActivedPrefixes(player).size()) {
+        Collection<ObjectPrefix> nowPrefixes = MythicPrefixesAPI.getActivedPrefixes(player);
+        if (nowPrefixes.size() >= MythicPrefixesAPI.getMaxPrefixesAmount(player, null)) {
             return PrefixStatus.MAX_LIMIT_REACHED;
+        }
+        if (!MythicPrefixes.freeVersion && !groups.isEmpty()) {
+            for (String groupID : groups) {
+                int groupNowAmount = 0;
+                for (ObjectPrefix prefix : nowPrefixes) {
+                    if (prefix.getGroups().contains(groupID)) {
+                        groupNowAmount++;
+                    }
+                }
+                if (groupNowAmount >= MythicPrefixesAPI.getMaxPrefixesAmount(player, groupID)) {
+                    return PrefixStatus.MAX_LIMIT_REACHED;
+                }
+            }
         }
         return PrefixStatus.CAN_USE;
     }
