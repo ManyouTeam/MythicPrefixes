@@ -19,6 +19,8 @@ cache:
   load-mode: LOGIN
   # Bypass condition check when player still joining the server.
   bypass-condition-when-loading: true
+  # Cache remove will delay 3 seconds after player left the server, set -1 to disable.
+  remove-delay: -1
 
 # {status} Placeholder
 status-placeholder:

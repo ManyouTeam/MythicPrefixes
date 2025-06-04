@@ -35,7 +35,7 @@ public class ItemUtil {
     public static ItemStack buildItemStack(@NotNull Player player, @Nullable ConfigurationSection section, String... args) {
         ItemStack item = new ItemStack(Material.STONE);
         if (section == null) {
-            ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicPrefixes] §cError: Can not parse item because the " +
+            ErrorManager.errorManager.sendErrorMessage("§cError: Can not parse item because the " +
                     "config section is null.");
             return item;
         }

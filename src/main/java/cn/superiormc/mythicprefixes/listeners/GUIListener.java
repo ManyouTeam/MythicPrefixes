@@ -3,6 +3,7 @@ package cn.superiormc.mythicprefixes.listeners;
 import cn.superiormc.mythicprefixes.gui.InvGUI;
 import cn.superiormc.mythicprefixes.manager.ConfigManager;
 import cn.superiormc.mythicprefixes.manager.ErrorManager;
+import cn.superiormc.mythicprefixes.utils.TextUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
@@ -44,7 +45,7 @@ public class GUIListener implements Listener {
             }
         }
         catch (Throwable throwable) {
-            ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicPrefixes] §cError: Your menu configs has wrong, error message: " +
+            ErrorManager.errorManager.sendErrorMessage("§cError: Your menu configs has wrong, error message: " +
                     throwable.getMessage());
             throwable.printStackTrace();
             e.setCancelled(true);

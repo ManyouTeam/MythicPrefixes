@@ -5,6 +5,7 @@ import cn.superiormc.mythicprefixes.objects.ObjectCache;
 import cn.superiormc.mythicprefixes.manager.CacheManager;
 import cn.superiormc.mythicprefixes.manager.ErrorManager;
 import cn.superiormc.mythicprefixes.objects.buttons.ObjectPrefix;
+import cn.superiormc.mythicprefixes.utils.TextUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -33,8 +34,7 @@ public class YamlDatabase {
                 }
                 config.save(file);
             } catch (IOException e) {
-                ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicPrefixes] §cError: " +
-                        "Can not create new data file: " + cache.getPlayer().getUniqueId() + ".yml!");
+                ErrorManager.errorManager.sendErrorMessage("§cError: Can not create new data file: " + cache.getPlayer().getUniqueId() + ".yml!");
             }
         }
         YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
@@ -73,17 +73,16 @@ public class YamlDatabase {
         for (String key : data.keySet()) {
             config.set(key, data.get(key));
         }
-        if (quitServer) {
-            CacheManager.cacheManager.removePlayerCache(cache.getPlayer());
-        }
         try {
             if (file.exists()) {
                 file.delete();
             }
             config.save(file);
+            if (quitServer) {
+                CacheManager.cacheManager.removePlayerCache(cache.getPlayer());
+            }
         } catch (IOException e) {
-            ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicPrefixes] §cError: " +
-                    "Can not save data file: " + file.getName() + "!");
+            ErrorManager.errorManager.sendErrorMessage("§cError: Can not save data file: " + file.getName() + "!");
         }
     }
 

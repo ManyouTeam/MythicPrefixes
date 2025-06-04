@@ -1,6 +1,7 @@
 package cn.superiormc.mythicprefixes.manager;
 
 import cn.superiormc.mythicprefixes.MythicPrefixes;
+import cn.superiormc.mythicprefixes.utils.TextUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -18,7 +19,7 @@ public class ErrorManager {
 
     public void sendErrorMessage(String message){
         if (!getError || !message.equals(lastErrorMessage)) {
-            Bukkit.getConsoleSender().sendMessage(message);
+            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " " + message);
             lastErrorMessage = message;
             getError = true;
             try {

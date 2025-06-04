@@ -5,6 +5,7 @@ import cn.superiormc.mythicprefixes.libreforge.LibreforgeEffects;
 import cn.superiormc.mythicprefixes.objects.ObjectDisplayPlaceholder;
 import cn.superiormc.mythicprefixes.objects.buttons.ObjectButton;
 import cn.superiormc.mythicprefixes.objects.buttons.ObjectPrefix;
+import cn.superiormc.mythicprefixes.utils.TextUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -39,7 +40,7 @@ public class ConfigManager {
 
     private void initLibreforgeHook() {
         if (ConfigManager.configManager.getBoolean("libreforge-hook")) {
-            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicPrefixes] §fHooking into libreforge...");
+            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §fHooking into libreforge...");
             try {
                 if (LibreforgeEffects.libreforgeEffects == null) {
                     new LibreforgeEffects();
@@ -47,7 +48,7 @@ public class ConfigManager {
                     LibreforgeEffects.libreforgeEffects.cleanMap();
                 }
             } catch (Exception ignored) {
-                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicPrefixes] §cFailed to hook into.");
+                Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §cFailed to hook into.");
             }
         }
     }
@@ -66,7 +67,7 @@ public class ConfigManager {
             if (fileName.endsWith(".yml")) {
                 String substring = fileName.substring(0, fileName.length() - 4);
                 placeholderConfigs.put(substring, new ObjectDisplayPlaceholder(substring, YamlConfiguration.loadConfiguration(file)));
-                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicPrefixes] §fLoaded display placeholder: " +
+                Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §fLoaded display placeholder: " +
                         fileName + "!");
             }
         }
@@ -79,7 +80,7 @@ public class ConfigManager {
             }
             for (String id : tempVal1.getKeys(false)) {
                 placeholderConfigs.put(id, new ObjectDisplayPlaceholder(id, tempVal1.getConfigurationSection(id)));
-                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicPrefixes] §fLoaded display placeholder: " +
+                Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §fLoaded display placeholder: " +
                         id + "!");
             }
         }
@@ -92,7 +93,7 @@ public class ConfigManager {
         }
         for (String id : tempVal1.getKeys(false)) {
             buttonConfigs.put(Integer.parseInt(id), new ObjectButton(tempVal1.getConfigurationSection(id)));
-            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicPrefixes] §fLoaded custom button: " +
+            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §fLoaded custom button: " +
                     id + "!");
         }
     }
@@ -114,7 +115,7 @@ public class ConfigManager {
                 prefix.initEffects();
                 prefixConfigs.put(substring, prefix);
                 prefixCaches.add(prefix);
-                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicPrefixes] §fLoaded prefix: " +
+                Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §fLoaded prefix: " +
                         fileName + "!");
             }
         }

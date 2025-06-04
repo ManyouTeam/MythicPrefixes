@@ -6,6 +6,7 @@ import cn.superiormc.mythicprefixes.database.YamlDatabase;
 import cn.superiormc.mythicprefixes.manager.ConfigManager;
 import cn.superiormc.mythicprefixes.objects.buttons.ObjectPrefix;
 import cn.superiormc.mythicprefixes.utils.SchedulerUtil;
+import cn.superiormc.mythicprefixes.utils.TextUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -80,7 +81,7 @@ public class ObjectCache {
         prefix.runStartAction(this);
         prefixCaches.add(prefix);
         if (ConfigManager.configManager.getBoolean("debug")) {
-            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicPrefixes] §fEnabled prefix " + prefix + " for player " + player.getName() + "!");
+            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §fEnabled prefix " + prefix + " for player " + player.getName() + "!");
         }
     }
 
@@ -88,7 +89,7 @@ public class ObjectCache {
         prefix.runEndAction(this);
         prefixCaches.remove(prefix);
         if (ConfigManager.configManager.getBoolean("debug")) {
-            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicPrefixes] §fDisabled prefix " + prefix + " for player " + player.getName() + "!");
+            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §fDisabled prefix " + prefix + " for player " + player.getName() + "!");
         }
     }
 

@@ -3,6 +3,7 @@ package cn.superiormc.mythicprefixes.libreforge;
 import cn.superiormc.mythicprefixes.MythicPrefixes;
 import cn.superiormc.mythicprefixes.objects.buttons.ObjectPrefix;
 import cn.superiormc.mythicprefixes.api.MythicPrefixesAPI;
+import cn.superiormc.mythicprefixes.utils.TextUtil;
 import com.willfp.eco.core.config.ConfigType;
 import com.willfp.eco.core.config.Configs;
 import com.willfp.eco.core.config.interfaces.Config;
@@ -61,7 +62,7 @@ public class LibreforgeEffects {
         for (Config tempVal1 : config.getSubsections("libreforge-effects")) {
             String tempVal2 = tempVal1.getString("id");
             if (id.equals(tempVal2)) {
-                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicPrefixes] §fSuccessfully added " + id + " " +
+                Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §fSuccessfully added " + id + " " +
                         "effects to libreforge!");
                 libreforgeEffectMap.put(id,
                 new LibreforgeEffect(id, tempVal1));

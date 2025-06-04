@@ -13,6 +13,8 @@ public class ObjectDisplayPlaceholder {
 
     private final String id;
 
+    private final boolean alwaysDisplayDefaultPrefix;
+
     private final String startSymbol;
 
     private final String endSymbol;
@@ -35,6 +37,7 @@ public class ObjectDisplayPlaceholder {
 
     public ObjectDisplayPlaceholder(String id, ConfigurationSection section) {
         this.id = id;
+        this.alwaysDisplayDefaultPrefix = section.getBoolean("always-display-default-prefixes", false);
         this.startSymbol = TextUtil.parse(section.getString("start-symbol"));
         this.endSymbol = TextUtil.parse(section.getString("end-symbol"));
         this.splitSymbol = TextUtil.parse(section.getString("split-symbol"));
@@ -49,7 +52,7 @@ public class ObjectDisplayPlaceholder {
         for (String prefix : section.getStringList("default-prefixes")) {
             ObjectPrefix objectPrefix = ConfigManager.configManager.getPrefix(prefix);
             if (objectPrefix != null && !MythicPrefixes.freeVersion) {
-                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicPrefixes] §fSet prefix " + prefix + " as default prefix, " +
+                Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §fSet prefix " + prefix + " as default prefix, " +
                         "it will no longer display in tag GUI!");
                 defaultPrefixCaches.add(objectPrefix);
                 objectPrefix.setDefaultPrefix(true);
@@ -100,7 +103,7 @@ public class ObjectDisplayPlaceholder {
             tempVal5.add(tempVal3);
             tempVal4 ++;
         }
-        if (tempVal5.isEmpty()) {
+        if (tempVal5.isEmpty() || alwaysDisplayDefaultPrefix) {
             for (ObjectPrefix defaultPrefix : defaultPrefixCaches) {
                 if (defaultPrefix.getPrefixStatus(cache).equals(PrefixStatus.CAN_USE)) {
                     tempVal5.add(defaultPrefix);

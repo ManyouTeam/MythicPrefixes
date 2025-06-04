@@ -26,7 +26,7 @@ public abstract class AbstractButton {
 
     public AbstractButton(ConfigurationSection config) {
         if (config == null) {
-            ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicPrefixes] §cError: " +
+            ErrorManager.errorManager.sendErrorMessage("§cError: " +
                     "Can not found config for button, there is something wrong in your menu configs!");
             return;
         }

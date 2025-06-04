@@ -67,7 +67,7 @@ public class MythicPrefixesAPI {
     
     public static Collection<ObjectPrefix> getActivedPrefixes(Player player) {
         if (CacheManager.cacheManager == null) {
-            ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicPrefixes] §cError: Can not get cache object in plugin, " +
+            ErrorManager.errorManager.sendErrorMessage("§cError: Can not get cache object in plugin, " +
                     "please try restart the server.");
 
             return new TreeSet<>();

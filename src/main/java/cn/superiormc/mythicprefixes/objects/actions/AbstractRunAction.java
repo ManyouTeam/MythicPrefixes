@@ -2,6 +2,7 @@ package cn.superiormc.mythicprefixes.objects.actions;
 
 
 import cn.superiormc.mythicprefixes.manager.ErrorManager;
+import cn.superiormc.mythicprefixes.utils.TextUtil;
 import org.bukkit.entity.Player;
 
 public abstract class AbstractRunAction {
@@ -22,7 +23,7 @@ public abstract class AbstractRunAction {
         if (requiredArgs != null) {
             for (String arg : requiredArgs) {
                 if (!singleAction.getSection().contains(arg)) {
-                    ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicPrefixes] §cError: Your action missing required arg: " + arg + ".");
+                    ErrorManager.errorManager.sendErrorMessage("§cError: Your action missing required arg: " + arg + ".");
                     return;
                 }
             }

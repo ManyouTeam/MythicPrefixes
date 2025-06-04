@@ -2,6 +2,7 @@ package cn.superiormc.mythicprefixes.objects.effect;
 
 import cn.superiormc.mythicprefixes.manager.ErrorManager;
 import cn.superiormc.mythicprefixes.utils.SchedulerUtil;
+import cn.superiormc.mythicprefixes.utils.TextUtil;
 import dev.aurelium.auraskills.api.AuraSkillsApi;
 import dev.aurelium.auraskills.api.registry.NamespacedId;
 import dev.aurelium.auraskills.api.stat.Stat;
@@ -25,11 +26,11 @@ public class ObjectAuraSkillsEffect extends AbstractEffect {
         if (user == null) {
             retryTimes ++;
             if (retryTimes < 3) {
-                ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicPrefixes] §6Warning: Failed to add AuraSkills effect for player " + player.getName() + "," +
+                ErrorManager.errorManager.sendErrorMessage("§6Warning: Failed to add AuraSkills effect for player " + player.getName() + "," +
                         " don't worry, we will retry later. Retry Times: " + retryTimes + ".");
                 SchedulerUtil.runTaskLater(this::addPlayerStat, 20L);
             } else {
-                ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicPrefixes] §cError: Failed to add MythicMobs effect for player " + player.getName() + "," +
+                ErrorManager.errorManager.sendErrorMessage("§cError: Failed to add MythicMobs effect for player " + player.getName() + "," +
                         " if this always happen, try change cache.load-mode option to JOIN in config.yml file, if it only happens sometimes, just ignore this and ask" +
                         " this player equip the prefix again! This because effect plugin load data is slower than MythicPrefixes this times.");
             }
@@ -37,7 +38,7 @@ public class ObjectAuraSkillsEffect extends AbstractEffect {
         }
         Stat stat = auraSkills.getGlobalRegistry().getStat(NamespacedId.fromDefault(section.getString("stat", "")));
         if (stat == null) {
-            ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicPrefixes] §6Warning: Failed to add AuraSkills effect for player. Reason: Config Error");
+            ErrorManager.errorManager.sendErrorMessage("§6Warning: Failed to add AuraSkills effect for player. Reason: Config Error");
             return;
         }
         user.addStatModifier(new StatModifier("MythicPrefixes_" + id, stat, section.getDouble("value", 0)));

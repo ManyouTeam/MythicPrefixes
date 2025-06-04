@@ -1,6 +1,7 @@
 package cn.superiormc.mythicprefixes.objects.conditions;
 
 import cn.superiormc.mythicprefixes.manager.ErrorManager;
+import cn.superiormc.mythicprefixes.utils.TextUtil;
 import org.bukkit.entity.Player;
 
 public class ConditionPlaceholder extends AbstractCheckCondition {
@@ -38,7 +39,7 @@ public class ConditionPlaceholder extends AbstractCheckCondition {
             case "!=*":
                 return !value.contains(placeholder);
             default:
-                ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicPrefixes] §cError: Your placeholder condition can not being correctly load.");
+                ErrorManager.errorManager.sendErrorMessage("§cError: Your placeholder condition can not being correctly load.");
                 return true;
         }
     }

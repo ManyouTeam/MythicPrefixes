@@ -10,3 +10,4 @@ empty-display: ''
 # Premium version only
 default-prefixes:
   - 'default'
+always-display-default-prefixes: false

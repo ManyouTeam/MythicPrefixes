@@ -7,6 +7,7 @@ import cc.carm.lib.easysql.hikari.HikariConfig;
 import cn.superiormc.mythicprefixes.manager.CacheManager;
 import cn.superiormc.mythicprefixes.objects.ObjectCache;
 import cn.superiormc.mythicprefixes.manager.ConfigManager;
+import cn.superiormc.mythicprefixes.utils.TextUtil;
 import org.bukkit.Bukkit;
 
 import java.sql.SQLException;
@@ -16,7 +17,7 @@ public class SQLDatabase {
     public static SQLManager sqlManager;
 
     public static void initSQL() {
-        Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicPrefixes] §fTrying connect to SQL database...");
+        Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §fTrying connect to SQL database...");
         HikariConfig config = new HikariConfig();
         config.setDriverClassName(ConfigManager.configManager.getString("database.jdbc-class"));
         config.setJdbcUrl(ConfigManager.configManager.getString("database.jdbc-url"));
@@ -27,7 +28,7 @@ public class SQLDatabase {
         sqlManager = EasySQL.createManager(config);
         try {
             if (!sqlManager.getConnection().isValid(5)) {
-                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicPrefixes] §cFailed connect to SQL database!");
+                Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §cFailed connect to SQL database!");
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -68,8 +69,7 @@ public class SQLDatabase {
         sqlManager.createReplace("mythicprefixes")
                 .setColumnNames("playerUUID",
                         "prefixID")
-                .setParams(playerUUID,
-                        cache.getActivePrefixesID())
+                .setParams(playerUUID, cache.getActivePrefixesID())
                 .executeAsync();
         if (quitServer) {
             CacheManager.cacheManager.removePlayerCache(cache.getPlayer());
@@ -82,8 +82,7 @@ public class SQLDatabase {
             sqlManager.createReplace("mythicprefixes")
                     .setColumnNames("playerUUID",
                             "prefixID")
-                    .setParams(playerUUID,
-                            cache.getActivePrefixesID())
+                    .setParams(playerUUID, cache.getActivePrefixesID())
                     .execute();
             CacheManager.cacheManager.removePlayerCache(cache.getPlayer());
         } catch (SQLException e) {
