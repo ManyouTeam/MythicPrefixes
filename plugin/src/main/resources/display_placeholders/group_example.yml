@@ -1,0 +1,15 @@
+start-symbol: '&f['
+split-symbol: '&f, '
+end-symbol: '&f]'
+display-prefixes:
+  mode: WHITE
+  prefixes: []
+  groups:
+    - example
+display-amount: 5
+parse-color: true
+empty-display: ''
+# Premium version only
+default-prefixes:
+  - 'default'
+always-display-default-prefixes: false
