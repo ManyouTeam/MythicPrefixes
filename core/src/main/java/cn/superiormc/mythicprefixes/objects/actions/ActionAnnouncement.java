@@ -1,5 +1,6 @@
 package cn.superiormc.mythicprefixes.objects.actions;
 
+import cn.superiormc.mythicprefixes.MythicPrefixes;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -16,7 +17,7 @@ public class ActionAnnouncement extends AbstractRunAction {
     protected void onDoAction(ObjectSingleAction singleAction, Player player) {
         Collection<? extends Player> players = Bukkit.getOnlinePlayers();
         for (Player p : players) {
-            p.sendMessage(singleAction.getString("message", player));
+            MythicPrefixes.methodUtil.sendMessage(p, singleAction.getString("message", player));
         }
     }
 }

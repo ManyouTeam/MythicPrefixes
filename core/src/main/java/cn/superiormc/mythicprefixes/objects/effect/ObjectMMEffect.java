@@ -51,6 +51,19 @@ public class ObjectMMEffect extends AbstractEffect {
             return;
         }
         StatRegistry stats = profile.getStatRegistry();
+        if (stats == null) {
+            retryTimes ++;
+            if (retryTimes < 3) {
+                ErrorManager.errorManager.sendErrorMessage("§6Warning: Failed to add MythicMobs effect for player " + player.getName() + "," +
+                        " don't worry, we will retry later. Retry Times: " + retryTimes + ".");
+                SchedulerUtil.runTaskLater(this::addPlayerStat, 20L);
+            } else {
+                ErrorManager.errorManager.sendErrorMessage("§cError: Failed to add MythicMobs effect for player " + player.getName() + "," +
+                        " if this always happen, try change cache.load-mode option to JOIN in config.yml file, if it only happens sometimes, just ignore this and ask" +
+                        " this player equip the prefix again! This because effect plugin load data is slower than MythicPrefixes this times.");
+            }
+            return;
+        }
         stats.putValue(statType, source, modifier, section.getDouble("value", 0));
         stats.refresh();
     }

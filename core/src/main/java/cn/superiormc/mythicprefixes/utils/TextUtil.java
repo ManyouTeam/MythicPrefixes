@@ -183,8 +183,7 @@ public class TextUtil {
     public static String withPAPI(String text, Player player) {
         if (CommonUtil.checkPluginLoad("PlaceholderAPI")) {
             return PlaceholderAPI.setPlaceholders(player, text);
-        }
-        else {
+        } else {
             return text;
         }
     }

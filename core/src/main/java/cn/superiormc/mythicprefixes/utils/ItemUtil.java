@@ -99,7 +99,7 @@ public class ItemUtil {
             return MythicPrefixes.methodUtil.getItemName(displayItem.getItemMeta());
         }
         if (MythicPrefixes.methodUtil.methodID().equals("paper") && ConfigManager.configManager.getBoolean("choose-prefix-gui.auto-translate-item-name")) {
-            return "<lang:item.minecraft." + displayItem.getType().name().toLowerCase() + ">";
+            return "<lang:" + displayItem.translationKey() + ">";
         }
         StringBuilder result = new StringBuilder();
         for (String word : displayItem.getType().name().toLowerCase().split("_")) {

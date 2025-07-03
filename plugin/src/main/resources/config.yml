@@ -4,7 +4,9 @@
 
 debug: false
 
-language: en_US
+config-files:
+  language: en_US
+  force-parse-mini-message: true
 
 cache:
   # If you are facing issue when plugin load cache, try set this option to JOIN.
