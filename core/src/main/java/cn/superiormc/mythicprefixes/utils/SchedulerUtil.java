@@ -27,6 +27,27 @@ public class SchedulerUtil {
         }
     }
 
+    /**
+     * delay at least 1 ticks for Folia
+     */
+    private static long ensureValidDelay(long delayTicks) {
+        return delayTicks <= 0 ? 1 : delayTicks;
+    }
+
+    /**
+     * SchedulerUtil instance for Folia
+     */
+    private static SchedulerUtil createFoliaScheduler(ScheduledTask task) {
+        return new SchedulerUtil(task);
+    }
+
+    /**
+     * SchedulerUtil instance for Bukkit
+     */
+    private static SchedulerUtil createBukkitScheduler(BukkitTask task) {
+        return new SchedulerUtil(task);
+    }
+
     // 在主线程上运行任务
     public static void runSync(Runnable task) {
         if (MythicPrefixes.isFolia) {
@@ -48,34 +69,36 @@ public class SchedulerUtil {
     // 延迟执行任务
     public static SchedulerUtil runTaskLater(Runnable task, long delayTicks) {
         if (MythicPrefixes.isFolia) {
-            if (delayTicks <= 0) {
-                delayTicks = 1;
-            }
-            return new SchedulerUtil(Bukkit.getGlobalRegionScheduler().runDelayed(MythicPrefixes.instance,
-                    scheduledTask -> task.run(), delayTicks));
+            long validDelay = ensureValidDelay(delayTicks);
+            return createFoliaScheduler(Bukkit.getGlobalRegionScheduler().runDelayed(
+                MythicPrefixes.instance, scheduledTask -> task.run(), validDelay));
         } else {
-            return new SchedulerUtil(Bukkit.getScheduler().runTaskLater(MythicPrefixes.instance, task, delayTicks));
+            return createBukkitScheduler(Bukkit.getScheduler().runTaskLater(
+                MythicPrefixes.instance, task, delayTicks));
         }
     }
 
     // 定时循环任务
     public static SchedulerUtil runTaskTimer(Runnable task, long delayTicks, long periodTicks) {
         if (MythicPrefixes.isFolia) {
-            return new SchedulerUtil(Bukkit.getGlobalRegionScheduler().runAtFixedRate(MythicPrefixes.instance,
-                    scheduledTask -> task.run(), delayTicks, periodTicks));
+            long validDelay = ensureValidDelay(delayTicks);
+            return createFoliaScheduler(Bukkit.getGlobalRegionScheduler().runAtFixedRate(
+                MythicPrefixes.instance, scheduledTask -> task.run(), validDelay, periodTicks));
         } else {
-            return new SchedulerUtil(Bukkit.getScheduler().runTaskTimer(MythicPrefixes.instance, task, delayTicks, periodTicks));
+            return createBukkitScheduler(Bukkit.getScheduler().runTaskTimer(
+                MythicPrefixes.instance, task, delayTicks, periodTicks));
         }
     }
 
     // 延迟执行任务
     public static SchedulerUtil runTaskLaterAsynchronously(Runnable task, long delayTicks) {
         if (MythicPrefixes.isFolia) {
-            return new SchedulerUtil(Bukkit.getGlobalRegionScheduler().runDelayed(MythicPrefixes.instance,
-                    scheduledTask -> task.run(), delayTicks));
+            long validDelay = ensureValidDelay(delayTicks);
+            return createFoliaScheduler(Bukkit.getGlobalRegionScheduler().runDelayed(
+                MythicPrefixes.instance, scheduledTask -> task.run(), validDelay));
         } else {
-            return new SchedulerUtil(Bukkit.getScheduler().runTaskLaterAsynchronously(MythicPrefixes.instance, task, delayTicks));
+            return createBukkitScheduler(Bukkit.getScheduler().runTaskLaterAsynchronously(
+                MythicPrefixes.instance, task, delayTicks));
         }
     }
-
 }
