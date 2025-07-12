@@ -122,11 +122,19 @@ public class ConfigManager {
     }
 
     public ObjectPrefix getPrefix(String id) {
-        return prefixConfigs.get(id);
+        ObjectPrefix prefix = prefixConfigs.get(id);
+        if (prefix == null) {
+            return prefixConfigs.get(id.replace('-', '_'));
+        }
+        return prefix;
     }
 
     public ObjectDisplayPlaceholder getDisplayPlaceholder(String id) {
-        return placeholderConfigs.get(id);
+        ObjectDisplayPlaceholder placeholder = placeholderConfigs.get(id);
+        if (placeholder == null) {
+            return placeholderConfigs.get(id.replace('-', '_'));
+        }
+        return placeholder;
     }
 
     public Collection<ObjectPrefix> getPrefixesWithoutHide() {

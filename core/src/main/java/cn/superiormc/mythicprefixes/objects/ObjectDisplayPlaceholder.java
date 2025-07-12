@@ -31,7 +31,7 @@ public class ObjectDisplayPlaceholder {
 
     private final String mode;
 
-    private boolean parseColor;
+    private final boolean parseColor;
 
     public Collection<ObjectPrefix> defaultPrefixCaches = new TreeSet<>();
 
@@ -65,6 +65,24 @@ public class ObjectDisplayPlaceholder {
 
     public String getId() {
         return id;
+    }
+
+    public String getNoPrefixDisplayText(ObjectCache cache, int no) {
+        Collection<ObjectPrefix> tempVal1 = cache.getActivePrefixes();
+        if (tempVal1.size() > no) {
+            return "";
+        }
+        int index = 1;
+        for (ObjectPrefix prefix : tempVal1) {
+            if (index == no) {
+                if (parseColor) {
+                    return TextUtil.parse(prefix.getDisplayValue(cache.getPlayer()));
+                }
+                return prefix.getDisplayValue(cache.getPlayer());
+            }
+            index ++;
+        }
+        return "";
     }
 
     public String getDisplayText(ObjectCache cache) {

@@ -73,31 +73,35 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
     }
 
     public void runStartAction(ObjectCache cache) {
-        Player player = cache.getPlayer();
-        if (useEffect) {
-            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §fStarted effect for player " + player.getName());
-            mmoEffects.put(player, MythicPrefixesAPI.startEffect(this, player));
-        }
-        startAction.runAllActions(player);
-        if (!circleAction.isEmpty()) {
-            SchedulerUtil task = SchedulerUtil.runTaskTimer(() ->
-                    circleAction.runAllActions(player), 0L, ConfigManager.configManager.getLong("circle-actions.period-tick", 20L));
-            cache.addCircleTask(this, task);
-        }
+        SchedulerUtil.runSync(() -> {
+            Player player = cache.getPlayer();
+            if (useEffect) {
+                Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §fStarted effect for player " + player.getName());
+                mmoEffects.put(player, MythicPrefixesAPI.startEffect(this, player));
+            }
+            startAction.runAllActions(player);
+            if (!circleAction.isEmpty()) {
+                SchedulerUtil task = SchedulerUtil.runTaskTimer(() ->
+                        circleAction.runAllActions(player), 1L, ConfigManager.configManager.getLong("circle-actions.period-tick", 20L));
+                cache.addCircleTask(this, task);
+            }
+        });
     }
 
     public void runEndAction(ObjectCache cache) {
-        Player player = cache.getPlayer();
-        if (useEffect) {
-            if (mmoEffects.get(player) != null) {
-                for (AbstractEffect tempVal1 : mmoEffects.get(player)) {
-                    tempVal1.removePlayerStat();
+        SchedulerUtil.runSync(() -> {
+            Player player = cache.getPlayer();
+            if (useEffect) {
+                if (mmoEffects.get(player) != null) {
+                    for (AbstractEffect tempVal1 : mmoEffects.get(player)) {
+                        tempVal1.removePlayerStat();
+                    }
+                    mmoEffects.remove(player);
                 }
-                mmoEffects.remove(player);
             }
-        }
-        endAction.runAllActions(player);
-        cache.cancelCircleTask(this);
+            endAction.runAllActions(player);
+            cache.cancelCircleTask(this);
+        });
     }
 
     public String getId() {
