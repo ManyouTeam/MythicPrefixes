@@ -72,36 +72,36 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
         }
     }
 
+    public boolean enabledEffect() {
+        return config.getBoolean("effects.enabled", false);
+    }
+
     public void runStartAction(ObjectCache cache) {
-        SchedulerUtil.runSync(() -> {
-            Player player = cache.getPlayer();
-            if (useEffect) {
-                Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §fStarted effect for player " + player.getName());
-                mmoEffects.put(player, MythicPrefixesAPI.startEffect(this, player));
-            }
-            startAction.runAllActions(player);
-            if (!circleAction.isEmpty()) {
-                SchedulerUtil task = SchedulerUtil.runTaskTimer(() ->
-                        circleAction.runAllActions(player), 1L, ConfigManager.configManager.getLong("circle-actions.period-tick", 20L));
-                cache.addCircleTask(this, task);
-            }
-        });
+        Player player = cache.getPlayer();
+        if (useEffect) {
+            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §fStarted effect for player " + player.getName());
+            mmoEffects.put(player, MythicPrefixesAPI.startEffect(this, player));
+        }
+        startAction.runAllActions(player);
+        if (!circleAction.isEmpty()) {
+            SchedulerUtil task = SchedulerUtil.runTaskTimer(() ->
+                    circleAction.runAllActions(player), 1L, ConfigManager.configManager.getLong("circle-actions.period-tick", 20L));
+            cache.addCircleTask(this, task);
+        }
     }
 
     public void runEndAction(ObjectCache cache) {
-        SchedulerUtil.runSync(() -> {
-            Player player = cache.getPlayer();
-            if (useEffect) {
-                if (mmoEffects.get(player) != null) {
-                    for (AbstractEffect tempVal1 : mmoEffects.get(player)) {
-                        tempVal1.removePlayerStat();
-                    }
-                    mmoEffects.remove(player);
+        Player player = cache.getPlayer();
+        if (useEffect) {
+            if (mmoEffects.get(player) != null) {
+                for (AbstractEffect tempVal1 : mmoEffects.get(player)) {
+                    tempVal1.removePlayerStat();
                 }
+                mmoEffects.remove(player);
             }
-            endAction.runAllActions(player);
-            cache.cancelCircleTask(this);
-        });
+        }
+        endAction.runAllActions(player);
+        cache.cancelCircleTask(this);
     }
 
     public String getId() {
@@ -172,7 +172,7 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
                 CacheManager.cacheManager.getPlayerCache(player).addActivePrefix(this);
                 break;
             case USING:
-                CacheManager.cacheManager.getPlayerCache(player).removeActivePrefix(this);
+                CacheManager.cacheManager.getPlayerCache(player).removeActivePrefix(this, true);
                 break;
             case CONDITION_NOT_MEET:
                 if (!MythicPrefixes.freeVersion) {

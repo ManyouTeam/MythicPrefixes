@@ -5,8 +5,7 @@ import cn.superiormc.mythicprefixes.objects.ObjectCache;
 import cn.superiormc.mythicprefixes.manager.CacheManager;
 import cn.superiormc.mythicprefixes.manager.ErrorManager;
 import cn.superiormc.mythicprefixes.objects.buttons.ObjectPrefix;
-import cn.superiormc.mythicprefixes.utils.TextUtil;
-import org.bukkit.Bukkit;
+import cn.superiormc.mythicprefixes.utils.SchedulerUtil;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;

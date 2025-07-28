@@ -15,7 +15,7 @@ public class ActionRemovePrefix extends AbstractRunAction {
     protected void onDoAction(ObjectSingleAction singleAction, Player player) {
         ObjectPrefix prefix = ConfigManager.configManager.getPrefix(singleAction.getString("prefix"));
         if (prefix != null) {
-            CacheManager.cacheManager.getPlayerCache(player).removeActivePrefix(prefix);
+            CacheManager.cacheManager.getPlayerCache(player).removeActivePrefix(prefix, true);
         }
     }
 }

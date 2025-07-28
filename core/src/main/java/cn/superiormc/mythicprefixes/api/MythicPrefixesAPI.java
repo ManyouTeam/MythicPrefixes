@@ -42,14 +42,14 @@ public class MythicPrefixesAPI {
                         }
                         break;
                     case "MythicMobs":
-                        if (CommonUtil.checkPluginLoad("MythicMobs") && !MythicPrefixes.freeVersion) {
+                        if (CommonUtil.checkPluginLoad("MythicMobs")) {
                             tempVal2 = new ObjectMMEffect(prefix.getId() + tempVal1,
                                     player,
                                     tempVal3);
                         }
                         break;
                     case "AuraSkills":
-                        if (CommonUtil.checkPluginLoad("AuraSkills") && !MythicPrefixes.freeVersion) {
+                        if (CommonUtil.checkPluginLoad("AuraSkills")) {
                             tempVal2 = new ObjectAuraSkillsEffect(prefix.getId() + tempVal1,
                                     player,
                                     tempVal3);

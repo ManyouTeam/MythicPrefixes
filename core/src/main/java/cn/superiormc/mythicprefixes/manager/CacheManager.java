@@ -21,8 +21,11 @@ public class CacheManager {
 
     private final Map<Player, SchedulerUtil> delayCacheMap = new HashMap<>();
 
+    private boolean isStoppingServer;
+
     public CacheManager() {
         cacheManager = this;
+        isStoppingServer = false;
         if (ConfigManager.configManager.getBoolean("database.enabled")) {
             SQLDatabase.closeSQL();
             SQLDatabase.initSQL();
@@ -40,7 +43,8 @@ public class CacheManager {
 
     public void loadPlayerCache(Player player) {
         ObjectCache cache = getPlayerCache(player);
-        cache.removeAllActivePrefix();
+        cache.runAllPrefixEndActions();
+        cache.removeAllActivePrefix(false);
         if (CommonUtil.checkPluginLoad("AuraSkills")) {
             ObjectAuraSkillsEffect.removePlayerStat(player, 1);
         }
@@ -52,14 +56,14 @@ public class CacheManager {
             SchedulerUtil tempVal1 = SchedulerUtil.runTaskLater(new BukkitRunnable() {
                 @Override
                 public void run() {
-                    playerCacheMap.get(player).removeAllActivePrefix();
+                    playerCacheMap.get(player).removeAllActivePrefix(false);
                     playerCacheMap.remove(player);
                     delayCacheMap.remove(player);
                 }
             }, ConfigManager.configManager.getLong("cache.remove-delay", 60L));
             delayCacheMap.put(player, tempVal1);
         } else {
-            playerCacheMap.get(player).removeAllActivePrefix();
+            playerCacheMap.get(player).removeAllActivePrefix(false);
             playerCacheMap.remove(player);
         }
     }
@@ -78,6 +82,10 @@ public class CacheManager {
             return;
         }
         playerCacheMap.get(player).shutPlayerCacheOnDisable();
+    }
+
+    public void setStoppingServer() {
+        isStoppingServer = true;
     }
 
     public ObjectCache getPlayerCache(Player player) {

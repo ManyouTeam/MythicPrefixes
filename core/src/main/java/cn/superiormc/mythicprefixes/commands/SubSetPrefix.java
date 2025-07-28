@@ -40,7 +40,7 @@ public class SubSetPrefix extends AbstractCommand {
             }
         }
         ObjectCache playerCache = CacheManager.cacheManager.getPlayerCache(whoWillAdd);
-        playerCache.removeAllActivePrefix();
+        playerCache.removeAllActivePrefix(true);
         for (String prefixKey : args[args.length - 1].split(";;")) {
             ObjectPrefix tempVal2 = ConfigManager.configManager.getPrefix(prefixKey);
             if (tempVal2 == null) {
@@ -63,7 +63,7 @@ public class SubSetPrefix extends AbstractCommand {
             return;
         }
         ObjectCache playerCache = CacheManager.cacheManager.getPlayerCache(whoWillAdd);
-        playerCache.removeAllActivePrefix();
+        playerCache.removeAllActivePrefix(true);
         for (String prefixKey : args[2].split(";;")) {
             ObjectPrefix tempVal2 = ConfigManager.configManager.getPrefix(prefixKey);
             if (tempVal2 == null) {

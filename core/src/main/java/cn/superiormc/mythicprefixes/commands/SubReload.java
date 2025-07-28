@@ -29,6 +29,7 @@ public class SubReload extends AbstractCommand {
         MythicPrefixes.instance.reloadConfig();
         TaskManager.taskManager.cancelTask();
         for (Player p : Bukkit.getOnlinePlayers()) {
+            CacheManager.cacheManager.getPlayerCache(player).runAllPrefixEndActions();
             CacheManager.cacheManager.savePlayerCacheOnDisable(p);
         }
         new ConfigManager();
@@ -48,6 +49,7 @@ public class SubReload extends AbstractCommand {
         MythicPrefixes.instance.reloadConfig();
         TaskManager.taskManager.cancelTask();
         for (Player p : Bukkit.getOnlinePlayers()) {
+            CacheManager.cacheManager.getPlayerCache(p).runAllPrefixEndActions();
             CacheManager.cacheManager.savePlayerCacheOnDisable(p);
         }
         new ConfigManager();

@@ -13,6 +13,6 @@ public class ActionRemoveAll extends AbstractRunAction {
 
     @Override
     protected void onDoAction(ObjectSingleAction singleAction, Player player) {
-        CacheManager.cacheManager.getPlayerCache(player).removeAllActivePrefix();
+        CacheManager.cacheManager.getPlayerCache(player).removeAllActivePrefix(true);
     }
 }

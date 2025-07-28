@@ -31,6 +31,7 @@ public class CacheListener implements Listener {
 
     @EventHandler
     public void onExit(PlayerQuitEvent event) {
+        CacheManager.cacheManager.getPlayerCache(event.getPlayer()).runAllPrefixEndActions();
         CacheManager.cacheManager.savePlayerCacheOnExit(event.getPlayer());
     }
 }

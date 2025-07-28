@@ -52,7 +52,7 @@ public class SubRemovePrefix extends AbstractCommand {
                     "prefix", args[args.length - 1]);
             return;
         }
-        playerCache.removeActivePrefix(whatPrefix);
+        playerCache.removeActivePrefix(whatPrefix, true);
         LanguageManager.languageManager.sendStringText(player, "success-remove-prefix",
                 "player", whoWillAdd.getName(),
                 "prefix", args[args.length - 1]);
@@ -77,7 +77,7 @@ public class SubRemovePrefix extends AbstractCommand {
                     "prefix", args[args.length - 1]);
             return;
         }
-        playerCache.removeActivePrefix(whatPrefix);
+        playerCache.removeActivePrefix(whatPrefix, true);
         LanguageManager.languageManager.sendStringText("success-remove-prefix",
                 "player", args[1],
                 "prefix", args[2]);

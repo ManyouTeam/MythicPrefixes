@@ -83,7 +83,9 @@ public final class MythicPrefixes extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        CacheManager.cacheManager.setStoppingServer();
         for (Player player : Bukkit.getOnlinePlayers()) {
+            CacheManager.cacheManager.getPlayerCache(player).runAllPrefixEndActions();
             CacheManager.cacheManager.savePlayerCacheOnDisable(player);
         }
         SQLDatabase.closeSQL();

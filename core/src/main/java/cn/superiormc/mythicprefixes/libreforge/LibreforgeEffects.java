@@ -22,6 +22,7 @@ public class LibreforgeEffects {
     private Config config;
 
     private Map<String, LibreforgeEffect> libreforgeEffectMap;
+
     public LibreforgeEffects() {
         libreforgeEffects = this;
         cleanMap();

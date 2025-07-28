@@ -35,6 +35,8 @@ public class ObjectButton extends AbstractButton {
 
     @Override
     public ItemStack getDisplayItem(Player player) {
+        config.addDefault("name", null);
+        config.addDefault("lore", null);
         return ItemUtil.buildItemStack(player, config);
     }
 }

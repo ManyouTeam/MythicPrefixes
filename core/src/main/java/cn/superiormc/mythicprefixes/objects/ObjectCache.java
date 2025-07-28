@@ -33,8 +33,7 @@ public class ObjectCache {
         SchedulerUtil.runTaskAsynchronously(() -> {
             if (ConfigManager.configManager.getBoolean("database.enabled")) {
                 SQLDatabase.checkData(this);
-            }
-            else {
+            } else {
                 YamlDatabase.checkData(this);
             }
         });
@@ -44,8 +43,7 @@ public class ObjectCache {
         SchedulerUtil.runTaskAsynchronously(() -> {
             if (ConfigManager.configManager.getBoolean("database.enabled")) {
                 SQLDatabase.updateData(this, quitServer);
-            }
-            else {
+            } else {
                 YamlDatabase.updateData(this, quitServer);
             }
         });
@@ -54,8 +52,7 @@ public class ObjectCache {
     public void shutPlayerCacheOnDisable() {
         if (ConfigManager.configManager.getBoolean("database.enabled")) {
             SQLDatabase.updateDataNoAsync(this);
-        }
-        else {
+        } else {
             YamlDatabase.updateData(this, true);
         }
     }
@@ -70,7 +67,7 @@ public class ObjectCache {
             if (tempVal2 == null) {
                 continue;
             }
-            addActivePrefix(tempVal2);
+            SchedulerUtil.runSync(() -> addActivePrefix(tempVal2));
         }
     }
 
@@ -85,17 +82,25 @@ public class ObjectCache {
         }
     }
 
-    public void removeActivePrefix(ObjectPrefix prefix) {
-        prefix.runEndAction(this);
+    public void removeActivePrefix(ObjectPrefix prefix, boolean runEndAction) {
+        if (runEndAction) {
+            prefix.runEndAction(this);
+        }
         prefixCaches.remove(prefix);
         if (ConfigManager.configManager.getBoolean("debug")) {
             Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §fDisabled prefix " + prefix + " for player " + player.getName() + "!");
         }
     }
 
-    public void removeAllActivePrefix() {
+    public void removeAllActivePrefix(boolean runEndAction) {
         for (ObjectPrefix prefix : MythicPrefixesAPI.getActivedPrefixes(player)) {
-            removeActivePrefix(prefix);
+            removeActivePrefix(prefix, runEndAction);
+        }
+    }
+
+    public void runAllPrefixEndActions() {
+        for (ObjectPrefix prefix : MythicPrefixesAPI.getActivedPrefixes(player)) {
+            prefix.runEndAction(this);
         }
     }
 
@@ -122,7 +127,7 @@ public class ObjectCache {
         }
         for (ObjectPrefix prefix : MythicPrefixesAPI.getActivedPrefixes(player)) {
             if (prefix.isConditionNotMeet(this)) {
-                removeActivePrefix(prefix);
+                removeActivePrefix(prefix, true);
             }
         }
     }

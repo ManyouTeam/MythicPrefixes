@@ -28,6 +28,8 @@ public class ConfigManager {
 
     public Map<String, ObjectDisplayPlaceholder> placeholderConfigs = new HashMap<>();
 
+    private int useEffectPrefixAmount = 0;
+
     public ConfigManager() {
         configManager = this;
         MythicPrefixes.instance.saveDefaultConfig();
@@ -112,7 +114,12 @@ public class ConfigManager {
             if (fileName.endsWith(".yml")) {
                 String substring = fileName.substring(0, fileName.length() - 4);
                 ObjectPrefix prefix = new ObjectPrefix(substring, YamlConfiguration.loadConfiguration(file));
-                prefix.initEffects();
+                if (!MythicPrefixes.freeVersion || useEffectPrefixAmount < 3) {
+                    prefix.initEffects();
+                } else if (prefix.enabledEffect()) {
+                    Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §cError: Free version can only create up to 3 prefixes that enable effect, skipping init effect for prefix: " + substring + "!");
+                }
+                useEffectPrefixAmount ++;
                 prefixConfigs.put(substring, prefix);
                 prefixCaches.add(prefix);
                 Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §fLoaded prefix: " +
