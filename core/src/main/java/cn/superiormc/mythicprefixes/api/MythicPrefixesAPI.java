@@ -1,16 +1,12 @@
 package cn.superiormc.mythicprefixes.api;
 
-import cn.superiormc.mythicprefixes.MythicPrefixes;
 import cn.superiormc.mythicprefixes.manager.ConfigManager;
 import cn.superiormc.mythicprefixes.manager.ErrorManager;
 import cn.superiormc.mythicprefixes.objects.ObjectCache;
 import cn.superiormc.mythicprefixes.objects.ObjectCondition;
 import cn.superiormc.mythicprefixes.objects.buttons.ObjectPrefix;
 import cn.superiormc.mythicprefixes.manager.CacheManager;
-import cn.superiormc.mythicprefixes.objects.effect.AbstractEffect;
-import cn.superiormc.mythicprefixes.objects.effect.ObjectAuraSkillsEffect;
-import cn.superiormc.mythicprefixes.objects.effect.ObjectMMEffect;
-import cn.superiormc.mythicprefixes.objects.effect.ObjectMMOEffect;
+import cn.superiormc.mythicprefixes.objects.effect.*;
 import cn.superiormc.mythicprefixes.utils.CommonUtil;
 import cn.superiormc.mythicprefixes.utils.TextUtil;
 import org.bukkit.configuration.ConfigurationSection;
@@ -20,9 +16,9 @@ import java.util.*;
 
 public class MythicPrefixesAPI {
 
-    public static Collection<AbstractEffect> startEffect(ObjectPrefix prefix, Player player) {
+    public static EffectStatus startEffect(ObjectPrefix prefix, Player player) {
+        EffectStatus effectStatus = new EffectStatus();
         ConfigurationSection section = prefix.getConfig().getConfigurationSection("effects");
-        Collection<AbstractEffect> mmoResult = new HashSet<>();
         if (section != null) {
             for (String tempVal1 : section.getKeys(false)) {
                 if (tempVal1.equals("enabled")) {
@@ -57,12 +53,16 @@ public class MythicPrefixesAPI {
                         break;
                 }
                 if (tempVal2 != null) {
-                    tempVal2.addPlayerStat();
-                    mmoResult.add(tempVal2);
+                    if (tempVal2.getCondition().getAllBoolean(player)) {
+                        tempVal2.addPlayerStat();
+                        effectStatus.addAcvtiedEffects(tempVal2);
+                    } else {
+                        effectStatus.addNotActivedEffects(tempVal2);
+                    }
                 }
             }
         }
-        return mmoResult;
+        return effectStatus;
     }
     
     public static Collection<ObjectPrefix> getActivedPrefixes(Player player) {
@@ -76,6 +76,16 @@ public class MythicPrefixesAPI {
         } else {
             return CacheManager.cacheManager.getPlayerCache(player).getActivePrefixes();
         }
+    }
+
+    public static Collection<ObjectPrefix> getActivedPrefixesHasEffect(Player player) {
+        Collection<ObjectPrefix> prefixes = new HashSet<>();
+        for (ObjectPrefix prefix : getActivedPrefixes(player)) {
+            if (!prefix.getEffectStatus(player).getActivedEffects().isEmpty()) {
+                prefixes.add(prefix);
+            }
+        }
+        return prefixes;
     }
 
     public static int getMaxPrefixesAmount(Player player, String groupID) {

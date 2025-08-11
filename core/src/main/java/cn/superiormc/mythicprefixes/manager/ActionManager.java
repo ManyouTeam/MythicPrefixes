@@ -33,8 +33,8 @@ public class ActionManager {
         registerNewAction("chance", new ActionChance());
         registerNewAction("delay", new ActionDelay());
         registerNewAction("any", new ActionAny());
-        registerNewAction("addprefix", new ActionAddPrefix());
-        registerNewAction("removeprefix", new ActionRemovePrefix());
+        registerNewAction("add_prefix", new ActionAddPrefix());
+        registerNewAction("remove_prefix", new ActionRemovePrefix());
         registerNewAction("removeall", new ActionRemoveAll());
         registerNewAction("conditional", new ActionConditional());
     }

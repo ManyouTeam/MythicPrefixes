@@ -25,6 +25,9 @@ public class ConditionManager {
         registerNewCondition("world", new ConditionWorld());
         registerNewCondition("any", new ConditionAny());
         registerNewCondition("not", new ConditionNot());
+        registerNewCondition("equipped_prefix", new ConditionEquippedPrefix());
+        registerNewCondition("equipped_prefix_amount", new ConditionEquippedPrefixAmount());
+        registerNewCondition("effected_prefix_amount", new ConditionEffectedPrefixAmount());
     }
 
     public void registerNewCondition(String actionID,

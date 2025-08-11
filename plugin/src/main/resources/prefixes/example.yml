@@ -50,11 +50,20 @@ effects:
     type: MythicLib
     stat: MAX_HEALTH
     value: 1
+    bypass-condition-after-equip: true
+    conditions:
+      1:
+        type: effected_prefix_amount
+        amount: 1
   2:
-    # Premium version only
     type: MythicMobs
     stat: ATTACK_DAMAGE
     value: 1
+    bypass-condition-after-equip: true
+    conditions:
+      1:
+        type: effected_prefix_amount
+        amount: 1
 
 equip-actions:
   1:

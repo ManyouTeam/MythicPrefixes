@@ -9,6 +9,7 @@ public class ActionAddPrefix extends AbstractRunAction {
 
     public ActionAddPrefix() {
         super("addprefix");
+        setRequiredArgs("prefix");
     }
 
     @Override

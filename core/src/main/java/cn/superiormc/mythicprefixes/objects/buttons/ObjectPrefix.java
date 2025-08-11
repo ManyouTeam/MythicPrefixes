@@ -7,6 +7,7 @@ import cn.superiormc.mythicprefixes.manager.CacheManager;
 import cn.superiormc.mythicprefixes.manager.ConfigManager;
 import cn.superiormc.mythicprefixes.objects.*;
 import cn.superiormc.mythicprefixes.objects.effect.AbstractEffect;
+import cn.superiormc.mythicprefixes.objects.effect.EffectStatus;
 import cn.superiormc.mythicprefixes.utils.CommonUtil;
 import cn.superiormc.mythicprefixes.utils.ItemUtil;
 import cn.superiormc.mythicprefixes.utils.SchedulerUtil;
@@ -36,7 +37,7 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
 
     private final ObjectAction clickActionMXR;
 
-    private final Map<Player, Collection<AbstractEffect>> mmoEffects = new HashMap<>();
+    private final Map<Player, EffectStatus> mmoEffects = new HashMap<>();
 
     private boolean useEffect;
 
@@ -83,18 +84,26 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
             mmoEffects.put(player, MythicPrefixesAPI.startEffect(this, player));
         }
         startAction.runAllActions(player);
-        if (!circleAction.isEmpty()) {
-            SchedulerUtil task = SchedulerUtil.runTaskTimer(() ->
-                    circleAction.runAllActions(player), 1L, ConfigManager.configManager.getLong("circle-actions.period-tick", 20L));
-            cache.addCircleTask(this, task);
-        }
+        SchedulerUtil task = SchedulerUtil.runTaskTimer(() -> {
+            if (!circleAction.isEmpty()) {
+                circleAction.runAllActions(player);
+            }
+            if (mmoEffects.get(player) != null) {
+                mmoEffects.get(player).retryActiveEffects();
+            }
+        }, 1L, ConfigManager.configManager.getLong("circle-actions.period-tick", 20L));
+        cache.addCircleTask(this, task);
+    }
+
+    public EffectStatus getEffectStatus(Player player) {
+        return mmoEffects.get(player);
     }
 
     public void runEndAction(ObjectCache cache) {
         Player player = cache.getPlayer();
         if (useEffect) {
             if (mmoEffects.get(player) != null) {
-                for (AbstractEffect tempVal1 : mmoEffects.get(player)) {
+                for (AbstractEffect tempVal1 : mmoEffects.get(player).getActivedEffects()) {
                     tempVal1.removePlayerStat();
                 }
                 mmoEffects.remove(player);
