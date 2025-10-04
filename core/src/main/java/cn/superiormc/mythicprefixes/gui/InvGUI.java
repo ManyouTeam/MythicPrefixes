@@ -26,7 +26,6 @@ public abstract class InvGUI extends AbstractGUI {
 
     public abstract boolean clickEventHandle(Inventory inventory, ClickType type, int slot);
 
-
     @Override
     public void openGUI() {
         constructGUI();

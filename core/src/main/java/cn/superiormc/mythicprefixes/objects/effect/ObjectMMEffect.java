@@ -65,7 +65,6 @@ public class ObjectMMEffect extends AbstractEffect {
             return;
         }
         stats.putValue(statType, source, modifier, section.getDouble("value", 0));
-        stats.refresh();
     }
 
     @Override
@@ -88,5 +87,19 @@ class ObjectMMEffectSource implements StatSource {
 
     public ObjectMMEffect getMmEffect() {
         return mmEffect;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof ObjectMMEffectSource) {
+            ObjectMMEffectSource mmEffectSource = (ObjectMMEffectSource) obj;
+            return mmEffectSource.mmEffect.id.equals(this.mmEffect.id);
+        }
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        return "ObjectMMEffectSource: {id = " + mmEffect.id + "}";
     }
 }

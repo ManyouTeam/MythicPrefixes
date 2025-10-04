@@ -44,20 +44,27 @@ public class ItemUtil {
             return item;
         }
 
+        // Name
         String displayNameKey = section.getString("name");
         if (displayNameKey != null) {
             MythicPrefixes.methodUtil.setItemName(meta, CommonUtil.modifyString(displayNameKey, args), player);
         }
+
+        // Lore
         List<String> loreKey = section.getStringList("lore");
         if (!loreKey.isEmpty()) {
             MythicPrefixes.methodUtil.setItemLore(meta, CommonUtil.modifyList(player, loreKey, args), player);
         }
+
+        // Custom Model Data
         if (CommonUtil.getMajorVersion(14)) {
             int customModelDataKey = section.getInt("custom-model-data", section.getInt("cmd", -1));
             if (customModelDataKey > 0) {
                 meta.setCustomModelData(customModelDataKey);
             }
         }
+
+        // Flags
         List<String> itemFlagKey = section.getStringList("flags");
         if (!itemFlagKey.isEmpty()) {
             for (String flag : itemFlagKey) {
@@ -71,6 +78,8 @@ public class ItemUtil {
                 }
             }
         }
+
+        // Enchants
         ConfigurationSection enchantsKey = section.getConfigurationSection("enchants");
         if (enchantsKey != null) {
             for (String ench : enchantsKey.getKeys(false)) {
@@ -80,6 +89,29 @@ public class ItemUtil {
                 }
             }
         }
+
+        // Glow
+        if (CommonUtil.getMinorVersion(20, 5)) {
+            if (section.get("glow") != null) {
+                meta.setEnchantmentGlintOverride(section.getBoolean("glow"));
+            }
+        }
+
+        if (CommonUtil.getMinorVersion(21, 2) && !MythicPrefixes.freeVersion) {
+            // Item Model
+            String itemModel = section.getString("item-model", null);
+            if (itemModel != null) {
+                meta.setItemModel(CommonUtil.parseNamespacedKey(itemModel));
+            }
+
+            // Tooltip Style
+            String tooltipStyle = section.getString("tooltip-style", null);
+            if (tooltipStyle != null) {
+                meta.setTooltipStyle(CommonUtil.parseNamespacedKey(tooltipStyle));
+            }
+        }
+
+        // Skull
         if (meta instanceof SkullMeta) {
             SkullMeta skullMeta = (SkullMeta) meta;
             String skullTextureNameKey = section.getString("skull-meta", section.getString("skull"));

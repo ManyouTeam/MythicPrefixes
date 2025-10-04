@@ -8,7 +8,7 @@
     <parent>
         <groupId>cn.superiormc</groupId>
         <artifactId>MythicPrefixes</artifactId>
-        <version>1.8.0</version>
+        <version>1.8.2</version>
         <relativePath>../pom.xml</relativePath> <!-- 如果 plugin 和根目录同级 -->
     </parent>
 

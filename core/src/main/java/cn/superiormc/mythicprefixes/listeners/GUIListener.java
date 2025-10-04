@@ -4,6 +4,7 @@ import cn.superiormc.mythicprefixes.gui.InvGUI;
 import cn.superiormc.mythicprefixes.manager.ConfigManager;
 import cn.superiormc.mythicprefixes.manager.ErrorManager;
 import cn.superiormc.mythicprefixes.utils.TextUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
@@ -34,6 +35,10 @@ public class GUIListener implements Listener {
                     if (e.getClick().isShiftClick() || e.getClick() == ClickType.DOUBLE_CLICK || ConfigManager.configManager.getBoolean("choose-prefix-gui.forbid-click-outside")) {
                         e.setCancelled(true);
                     }
+                    return;
+                }
+                if (e.getClick() == ClickType.DOUBLE_CLICK) {
+                    e.setCancelled(true);
                     return;
                 }
                 if (gui.clickEventHandle(e.getClickedInventory(), e.getClick(), e.getSlot())) {
