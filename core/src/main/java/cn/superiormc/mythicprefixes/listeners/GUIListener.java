@@ -20,6 +20,7 @@ import java.util.Objects;
 public class GUIListener implements Listener {
 
     private Player player;
+
     private InvGUI gui = null;
 
     public GUIListener(InvGUI gui) {

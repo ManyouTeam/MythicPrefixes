@@ -148,31 +148,46 @@ public class ChoosePrefixGUI extends InvGUI {
             if (nowPage < needPages) {
                 nowPage++;
             }
-        } else if (slot == previousPageSlot) {
-            if (nowPage > 0) {
+            constructGUI();
+            return true;
+        }
+
+        if (slot == previousPageSlot) {
+            if (nowPage > 1) {
                 nowPage--;
             }
-        } else if (slot == filterSlot && !MythicPrefixes.freeVersion) {
-            if (filter == Filter.ALL) {
-                filter = Filter.USING;
-            } else if (filter == Filter.USING) {
-                filter = Filter.CAN_USE;
-            } else if (filter == Filter.CAN_USE) {
-                filter = Filter.ALL;
-            }
+            constructGUI();
+            return true;
+        }
+
+        if (slot == filterSlot && !MythicPrefixes.freeVersion) {
+            if (filter == Filter.ALL) filter = Filter.USING;
+            else if (filter == Filter.USING) filter = Filter.CAN_USE;
+            else if (filter == Filter.CAN_USE) filter = Filter.ALL;
+
             prefixCache.clear();
-        } else {
-            AbstractButton prefix = prefixCache.get((nowPage - 1)  * slotCache.size() + slotCache.indexOf(slot));
+            constructGUI();
+            return true;
+        }
+
+        int prefixIndexInSlots = slotCache.indexOf(slot);
+        if (prefixIndexInSlots != -1) { // 是称号槽位
+            int index = (nowPage - 1) * slotCache.size() + prefixIndexInSlots;
+            AbstractButton prefix = prefixCache.get(index);
             if (prefix != null) {
                 prefix.clickEvent(type, player);
-            } else {
-                AbstractButton button = buttonCache.get(slot);
-                if (button != null) {
-                    button.clickEvent(type, player);
-                }
+                constructGUI();
+                return true;
             }
         }
-        constructGUI();
+
+        AbstractButton button = buttonCache.get(slot);
+        if (button != null) {
+            button.clickEvent(type, player);
+            constructGUI();
+            return true;
+        }
+
         return true;
     }
 

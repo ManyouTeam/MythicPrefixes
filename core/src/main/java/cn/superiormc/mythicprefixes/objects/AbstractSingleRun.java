@@ -49,6 +49,10 @@ public abstract class AbstractSingleRun {
         return section.getDouble(path);
     }
 
+    public double getDouble(String path, Player player) {
+        return Double.parseDouble(replacePlaceholder(section.getString(path), player));
+    }
+
     public boolean getBoolean(String path, boolean defaultValue) {
         return section.getBoolean(path, defaultValue);
     }

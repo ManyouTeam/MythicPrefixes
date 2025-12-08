@@ -13,7 +13,7 @@ public final class MythicPrefixes extends JavaPlugin {
 
     public static MythicPrefixes instance;
 
-    public static final boolean freeVersion = true;
+    public static final boolean freeVersion = false;
 
     public static SpecialMethodUtil methodUtil;
 
