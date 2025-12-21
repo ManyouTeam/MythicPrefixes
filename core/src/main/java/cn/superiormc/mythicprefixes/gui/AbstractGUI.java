@@ -3,6 +3,7 @@ package cn.superiormc.mythicprefixes.gui;
 import org.bukkit.entity.Player;
 
 public abstract class AbstractGUI {
+
     protected Player player;
 
     public AbstractGUI(Player player) {

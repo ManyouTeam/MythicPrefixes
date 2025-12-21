@@ -19,6 +19,7 @@ public abstract class InvGUI extends AbstractGUI {
 
     public Listener guiListener;
 
+    public String title;
 
     public InvGUI(Player player) {
         super(player);

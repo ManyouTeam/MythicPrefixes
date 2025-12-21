@@ -3,6 +3,7 @@ package cn.superiormc.mythicprefixes;
 import cn.superiormc.mythicprefixes.database.SQLDatabase;
 import cn.superiormc.mythicprefixes.manager.*;
 import cn.superiormc.mythicprefixes.utils.CommonUtil;
+import cn.superiormc.mythicprefixes.utils.PacketInventoryUtil;
 import cn.superiormc.mythicprefixes.utils.SpecialMethodUtil;
 import cn.superiormc.mythicprefixes.utils.TextUtil;
 import org.bukkit.Bukkit;
@@ -13,13 +14,15 @@ public final class MythicPrefixes extends JavaPlugin {
 
     public static MythicPrefixes instance;
 
-    public static final boolean freeVersion = false;
+    public static final boolean freeVersion = true;
 
     public static SpecialMethodUtil methodUtil;
 
     public static boolean isFolia = false;
 
     public static boolean useGeyser = false;
+
+    public static boolean usePacketEvents = false;
 
     public static int majorVersion;
 
@@ -73,6 +76,12 @@ public final class MythicPrefixes extends JavaPlugin {
         new CommandManager();
         new ListenerManager();
         new TaskManager();
+        if (ConfigManager.configManager.getBoolean("choose-prefix-gui.title-update.enabled") && MythicPrefixes.methodUtil.methodID().equals("paper") &&
+                CommonUtil.checkPluginLoad("packetevents") && !MythicPrefixes.freeVersion) {
+            usePacketEvents = true;
+            new PacketInventoryUtil();
+            MythicPrefixes.methodUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fDynamic title enabled. Hooking into packetevents...");
+        }
         if (!CommonUtil.checkClass("com.mojang.authlib.properties.Property", "getValue") && CommonUtil.getMinorVersion(21, 1)) {
             newSkullMethod = true;
             Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §fNew AuthLib found, enabled new skull get method!");

@@ -6,7 +6,7 @@
 
     <groupId>cn.superiormc</groupId>
     <artifactId>MythicPrefixes</artifactId>
-    <version>1.8.5</version>
+    <version>1.8.6</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -94,6 +94,9 @@
             <name>Lumine Releases</name>
             <url>https://mvn.lumine.io/repository/maven-public/</url>
         </repository>
-
+        <repository>
+            <id>codemc-releases</id>
+            <url>https://repo.codemc.io/repository/maven-releases/</url>
+        </repository>
     </repositories>
 </project>

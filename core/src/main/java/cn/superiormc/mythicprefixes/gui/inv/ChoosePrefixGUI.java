@@ -73,10 +73,10 @@ public class ChoosePrefixGUI extends InvGUI {
                 needPages = (int) (Math.ceil((double) prefixCache.size() / slotCache.size()));
             }
         }
+        title = TextUtil.withPAPI(ConfigManager.configManager.getString("choose-prefix-gui." +
+                "title", "Tag GUI", "now", String.valueOf(nowPage), "max", String.valueOf(needPages)), player);
         if (Objects.isNull(inv)) {
             int size = ConfigManager.configManager.getInt("choose-prefix-gui.size", 54);
-            String title = ConfigManager.configManager.getString("choose-prefix-gui." +
-                            "title", "Tag GUI");
             inv = MythicPrefixes.methodUtil.createNewInv(player, size, title);
         }
         for (int c = 0 ; c < slotCache.size() ; c ++) {

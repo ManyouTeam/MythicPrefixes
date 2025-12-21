@@ -42,7 +42,14 @@ max-prefixes-amount-conditions:
       permission: 'group.vip'
 
 choose-prefix-gui:
+  # You can use {max} to display max page amount, {now} to display now page amount. Require enable title update to
+  # update those placeholder after open GUI.
   title: 'Choose your prefix'
+  # PREMIUM version only, if enabled, can update dynamic value used in GUI title.
+  title-update:
+    # Require packetevents and MythicChanger.
+    enabled: false
+    resend-items-pack: false
   size: 54
   forbid-click-outside: false
   auto-translate-item-name: true

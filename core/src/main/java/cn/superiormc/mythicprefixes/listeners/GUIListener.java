@@ -1,8 +1,10 @@
 package cn.superiormc.mythicprefixes.listeners;
 
+import cn.superiormc.mythicprefixes.MythicPrefixes;
 import cn.superiormc.mythicprefixes.gui.InvGUI;
 import cn.superiormc.mythicprefixes.manager.ConfigManager;
 import cn.superiormc.mythicprefixes.manager.ErrorManager;
+import cn.superiormc.mythicprefixes.utils.PacketInventoryUtil;
 import cn.superiormc.mythicprefixes.utils.TextUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -47,6 +49,9 @@ public class GUIListener implements Listener {
                 }
                 if (e.getClick().toString().equals("SWAP_OFFHAND") && e.isCancelled()) {
                     player.getInventory().setItemInOffHand(player.getInventory().getItemInOffHand());
+                }
+                if (MythicPrefixes.usePacketEvents) {
+                    PacketInventoryUtil.packetInventoryUtil.updateTitle(player, gui);
                 }
             }
         }
