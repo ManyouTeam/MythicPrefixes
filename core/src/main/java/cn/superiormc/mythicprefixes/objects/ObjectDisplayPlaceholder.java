@@ -55,7 +55,7 @@ public class ObjectDisplayPlaceholder {
         for (String prefix : section.getStringList("default-prefixes")) {
             ObjectPrefix objectPrefix = ConfigManager.configManager.getPrefix(prefix);
             if (objectPrefix != null && !MythicPrefixes.freeVersion) {
-                Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §fSet prefix " + prefix + " as default prefix, " +
+                TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fSet prefix " + prefix + " as default prefix, " +
                         "it will no longer display in tag GUI!");
                 defaultPrefixCaches.add(objectPrefix);
                 objectPrefix.setDefaultPrefix(true);

@@ -1,11 +1,15 @@
 package cn.superiormc.mythicprefixes.utils;
 
 import cn.superiormc.mythicprefixes.MythicPrefixes;
+import cn.superiormc.mythicprefixes.manager.LanguageManager;
 import me.clip.placeholderapi.PlaceholderAPI;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Map;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -179,10 +183,247 @@ public class TextUtil {
     }
 
     public static String withPAPI(String text, Player player) {
-        if (CommonUtil.checkPluginLoad("PlaceholderAPI")) {
-            return PlaceholderAPI.setPlaceholders(player, text);
-        } else {
+        if (text == null) {
+            return "";
+        }
+        if (text.matches("[0-9]+")) {
             return text;
+        }
+        if (text.contains("%") && CommonUtil.checkPluginLoad("PlaceholderAPI")) {
+            text = PlaceholderAPI.setPlaceholders(player, text);
+        }
+        Pattern pattern8 = Pattern.compile("\\{lang:(.*?)}");
+        Matcher matcher8 = pattern8.matcher(text);
+        while (matcher8.find()) {
+            String placeholder = matcher8.group(1);
+            text = text.replace("{lang:" + placeholder + "}", LanguageManager.languageManager.getStringText(player, "override-lang." + placeholder));
+        }
+        return text;
+    }
+
+    public static void sendMessage(Player player, String rawText) {
+        if (rawText == null || rawText.isEmpty()) {
+            return;
+        }
+
+        if (!rawText.contains("[") || MythicPrefixes.freeVersion) {
+            MythicPrefixes.methodUtil.sendChat(player, rawText);
+            return;
+        }
+
+        boolean sentAny = false;
+
+        // message
+        for (String msg : parseSimpleTag(rawText, "message")) {
+            MythicPrefixes.methodUtil.sendChat(player, msg);
+            sentAny = true;
+        }
+
+        // title
+        for (TagResult tag : parseArgTag(rawText, "title")) {
+            TitleData data = parseTitle(tag);
+            MythicPrefixes.methodUtil.sendTitle(
+                    player,
+                    data.title,
+                    data.subTitle,
+                    data.fadeIn,
+                    data.stay,
+                    data.fadeOut
+            );
+            sentAny = true;
+        }
+
+        // actionbar
+        for (String msg : parseSimpleTag(rawText, "actionbar")) {
+            MythicPrefixes.methodUtil.sendActionBar(player, msg);
+            sentAny = true;
+        }
+
+        // bossbar
+        for (TagResult tag : parseArgTag(rawText, "bossbar")) {
+            BossBarData data = parseBossBar(tag);
+            MythicPrefixes.methodUtil.sendBossBar(
+                    player,
+                    data.title,
+                    data.progress,
+                    data.color,
+                    data.style
+            );
+            sentAny = true;
+        }
+
+        // sound
+        for (TagResult tag : parseArgTag(rawText, "sound")) {
+            SoundData data = parseSound(tag);
+            if (data.sound != null) {
+                player.playSound(player.getLocation(), data.sound, data.volume, data.pitch);
+                sentAny = true;
+            }
+        }
+
+        // 兜底
+        if (!sentAny) {
+            MythicPrefixes.methodUtil.sendChat(player, rawText);
+        }
+    }
+
+    /* ================= 标签解析 ================= */
+
+    private static List<String> parseSimpleTag(String text, String tag) {
+        List<String> list = new ArrayList<>();
+        Pattern p = Pattern.compile(
+                "\\[" + tag + "]([\\s\\S]*?)\\[/" + tag + "]",
+                Pattern.CASE_INSENSITIVE
+        );
+        Matcher m = p.matcher(text);
+        while (m.find()) {
+            list.add(m.group(1).trim());
+        }
+        return list;
+    }
+
+    private static List<TagResult> parseArgTag(String text, String tag) {
+        List<TagResult> list = new ArrayList<>();
+        Pattern p = Pattern.compile(
+                "\\[" + tag + "(?:=([^\\]]+))?]([\\s\\S]*?)\\[/" + tag + "]",
+                Pattern.CASE_INSENSITIVE
+        );
+        Matcher m = p.matcher(text);
+        while (m.find()) {
+            list.add(new TagResult(
+                    m.group(1),
+                    m.group(2).trim()
+            ));
+        }
+        return list;
+    }
+
+    private static TitleData parseTitle(TagResult tag) {
+        int fadeIn = 10;
+        int stay = 70;
+        int fadeOut = 20;
+
+        if (tag.args != null) {
+            String[] t = tag.args.split(",");
+            if (t.length == 3) {
+                fadeIn = parseInt(t[0], fadeIn);
+                stay = parseInt(t[1], stay);
+                fadeOut = parseInt(t[2], fadeOut);
+            }
+        }
+
+        String[] parts = tag.content.split(";;", 2);
+        String title = parts[0];
+        String sub = parts.length > 1 ? parts[1] : "";
+
+        return new TitleData(title, sub, fadeIn, stay, fadeOut);
+    }
+
+    /* ================= BossBar 解析 ================= */
+
+    private static BossBarData parseBossBar(TagResult tag) {
+        String color = "WHITE";
+        String style = "SOLID";
+        float progress = 1.0f;
+
+        if (tag.args != null) {
+            String[] a = tag.args.split(",");
+            if (a.length > 0) color = a[0];
+            if (a.length > 1) style = a[1];
+            if (a.length > 2) progress = parseFloat(a[2], progress);
+        }
+
+        return new BossBarData(tag.content, progress, color, style);
+    }
+
+    /* ================= 工具 ================= */
+
+    private static int parseInt(String s, int def) {
+        try {
+            return Integer.parseInt(s);
+        } catch (Exception e) {
+            return def;
+        }
+    }
+
+    private static float parseFloat(String s, float def) {
+        try {
+            return Float.parseFloat(s);
+        } catch (Exception e) {
+            return def;
+        }
+    }
+
+    /* ================= 内部数据类 ================= */
+
+    private static class TagResult {
+        final String args;
+        final String content;
+
+        TagResult(String args, String content) {
+            this.args = args;
+            this.content = content;
+        }
+    }
+
+    private static class TitleData {
+        final String title;
+        final String subTitle;
+        final int fadeIn, stay, fadeOut;
+
+        TitleData(String title, String subTitle, int fadeIn, int stay, int fadeOut) {
+            this.title = title;
+            this.subTitle = subTitle;
+            this.fadeIn = fadeIn;
+            this.stay = stay;
+            this.fadeOut = fadeOut;
+        }
+    }
+
+    private static class BossBarData {
+        final String title;
+        final float progress;
+        final String color;
+        final String style;
+
+        BossBarData(String title, float progress, String color, String style) {
+            this.title = title;
+            this.progress = progress;
+            this.color = color;
+            this.style = style;
+        }
+    }
+
+    private static SoundData parseSound(TagResult tag) {
+        Sound sound = null;
+        float volume = 1f;
+        float pitch = 1f;
+
+        if (tag.args != null) {
+            String[] args = tag.args.split(",");
+            if (args.length > 0) {
+                try {
+                    sound = Sound.valueOf(args[0].trim().toUpperCase());
+                } catch (Exception e) {
+                    sound = null; // 无效音效忽略
+                }
+            }
+            if (args.length > 1) volume = parseFloat(args[1], 1f);
+            if (args.length > 2) pitch = parseFloat(args[2], 1f);
+        }
+
+        return new SoundData(sound, volume, pitch);
+    }
+
+    private static class SoundData {
+        final Sound sound;
+        final float volume;
+        final float pitch;
+
+        SoundData(Sound sound, float volume, float pitch) {
+            this.sound = sound;
+            this.volume = volume;
+            this.pitch = pitch;
         }
     }
 }

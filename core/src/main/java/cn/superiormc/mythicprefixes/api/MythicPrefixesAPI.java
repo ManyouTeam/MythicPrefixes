@@ -130,13 +130,13 @@ public class MythicPrefixesAPI {
     public static String getStatusPlaceholder(ObjectPrefix prefix, ObjectCache cache) {
         switch (prefix.getPrefixStatus(cache)) {
             case USING:
-                return TextUtil.parse(ConfigManager.configManager.getString("status-placeholder.using"));
+                return TextUtil.parse(ConfigManager.configManager.getString(cache.getPlayer(), "status-placeholder.using"));
             case CAN_USE:
-                return TextUtil.parse(ConfigManager.configManager.getString("status-placeholder.unlocked"));
+                return TextUtil.parse(ConfigManager.configManager.getString(cache.getPlayer(), "status-placeholder.unlocked"));
             case MAX_LIMIT_REACHED:
-                return TextUtil.parse(ConfigManager.configManager.getString("status-placeholder.max-reached"));
+                return TextUtil.parse(ConfigManager.configManager.getString(cache.getPlayer(), "status-placeholder.max-reached"));
             case CONDITION_NOT_MEET:
-                return TextUtil.parse(ConfigManager.configManager.getString("status-placeholder.locked"));
+                return TextUtil.parse(ConfigManager.configManager.getString(cache.getPlayer(), "status-placeholder.locked"));
         }
         return "";
     }

@@ -4,38 +4,38 @@ display-item:
     material: DRAGON_EGG
     name: '{display-value}'
     lore:
-      - '&7Display Value: {display-value}'
-      - '&7Preview: %mythicprefixes_prefix_example_chat% %player_name%'
-      - '&dOp will always can use the tag, give'
-      - '&dyourself &4-mythicprefixes.bypass.*'
-      - '&dpermission to avoid that.'
-      - '&eClick to use!'
+      - '{lang:display.display-value}:{display-value}'
+      - '{lang:display.preview}: %mythicprefixes_prefix_example_chat% %player_name%'
+      - '{lang:display.op-bypass-1}'
+      - '{lang:display.op-bypass-2}'
+      - '{lang:display.op-bypass-3}'
+      - '{lang:display.click-use}'
   using:
     material: DRAGON_EGG
     name: '{display-value}'
     lore:
-      - '&7Display Value: {display-value}'
-      - '&7Preview: %mythicprefixes_prefix_example_chat% %player_name%'
-      - '&cYou are now using this prefix!'
-      - '&eClick to cancel use this prefix!'
+      - '{lang:display.display-value}:{display-value}'
+      - '{lang:display.preview}: %mythicprefixes_prefix_example_chat% %player_name%'
+      - '{lang:display.using-now}'
+      - '{lang:display.click-cancel}'
   locked:
     material: DRAGON_EGG
-    name: '&cLocked'
+    name: '{lang:display.locked}'
     lore:
-      - '&7Display Value: {display-value}'
-      - '&7Preview: %mythicprefixes_prefix_example_chat% %player_name%'
-      - '&cKill a dragon to unlock!'
+      - '{lang:display.display-value}:{display-value}'
+      - '{lang:display.preview}: %mythicprefixes_prefix_example_chat% %player_name%'
+      - '{lang:display.locked-tip}'
   max-reached:
     material: DRAGON_EGG
     name: '{display-value}'
     lore:
-      - '&7Preview: %mythicprefixes_prefix_example_chat% %player_name%'
-      - '&cYou have reached max use of prefix!'
+      - '{lang:display.preview}: %mythicprefixes_prefix_example_chat% %player_name%'
+      - '{lang:display.max-reached}'
 
 bedrock:
-  extra-line: '&f{status}'
+  extra-line: '{lang:bedrock.extra-line}'
 
-display-value: '&8Dragon Killer'
+display-value: '{lang:dragon-killer}'
 weight: 15
 auto-hide: false
 
@@ -46,47 +46,30 @@ groups:
 
 effects:
   enabled: false
-  1:
-    type: MythicLib
-    stat: MAX_HEALTH
-    value: 1
-    bypass-condition-after-equip: true
-    conditions:
-      1:
-        type: effected_prefix_amount
-        amount: 1
-  2:
-    type: MythicMobs
-    stat: ATTACK_DAMAGE
-    value: 1
-    bypass-condition-after-equip: true
-    conditions:
-      1:
-        type: effected_prefix_amount
-        amount: 1
 
 equip-actions:
   1:
     type: message
-    message: 'Start equip the tag!'
+    message: '{lang:action.equip}'
 unequip-actions:
   1:
     type: message
-    message: 'Not equip the tag!'
+    message: '{lang:action.unequip}'
 circle-actions:
   1:
     type: message
-    message: 'This is default message. Default prefix has equipped so prefix effect also activated!'
+    message: '{lang:action.default}'
+
 # Premium version only
 click-actions:
   condition-not-meet:
     1:
       type: message
-      message: 'You did not unlock this prefix!'
+      message: '{lang:click.condition-not-met}'
   max-limit-reached:
     1:
       type: message
-      message: 'You reached the limit of max prefix using!'
+      message: '{lang:click.max-limit}'
 
 conditions:
   1:

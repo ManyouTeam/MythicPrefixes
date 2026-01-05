@@ -80,7 +80,7 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
     public void runStartAction(ObjectCache cache) {
         Player player = cache.getPlayer();
         if (useEffect) {
-            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §fStarted effect for player " + player.getName());
+            TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fStarted effect for player " + player.getName());
             mmoEffects.put(player, MythicPrefixesAPI.startEffect(this, player));
         }
         startAction.runAllActions(player);

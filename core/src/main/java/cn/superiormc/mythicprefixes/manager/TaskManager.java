@@ -24,8 +24,8 @@ public class TaskManager {
     public void initSaveTasks() {
         saveTask = SchedulerUtil.runTaskTimer(() -> {
             if (!ConfigManager.configManager.getBoolean("auto-save.hide-message")) {
-                Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §fAuto saving data...");
-                Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §fIf this lead to server TPS drop, " +
+                TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fAuto saving data...");
+                TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fIf this lead to server TPS drop, " +
 
                         "you should consider disable auto save feature at config.yml!");
             }

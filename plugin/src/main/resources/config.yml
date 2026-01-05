@@ -6,6 +6,8 @@ debug: false
 
 config-files:
   language: en_US
+  # PREMIUM version only.
+  per-player-language: true
   force-parse-mini-message: true
 
 cache:
@@ -18,10 +20,10 @@ cache:
 
 # {status} Placeholder
 status-placeholder:
-  unlocked: '&eClick to use'
-  using: '&eClick to cancel use this prefix.'
-  locked: '&cYou do not have permission to use this prefix.'
-  max-reached: '&cYou can not use anymore prefix.'
+  unlocked: '{lang}'
+  using: '{lang}'
+  locked: '{lang}'
+  max-reached: '{lang}'
 
 circle-actions:
   period-tick: 20
@@ -44,7 +46,7 @@ max-prefixes-amount-conditions:
 choose-prefix-gui:
   # You can use {max} to display max page amount, {now} to display now page amount. Require enable title update to
   # update those placeholder after open GUI.
-  title: 'Choose your prefix'
+  title: '{lang}'
   # PREMIUM version only, if enabled, can update dynamic value used in GUI title.
   title-update:
     # Require packetevents and MythicChanger.
@@ -66,41 +68,41 @@ choose-prefix-gui:
     # Set to -1 to hide.
     slot: 47
     material: ANVIL
-    name: '&bFilter'
+    name: '{lang:filter-item-name}'
     lore:
-      - '&7Filter: {filter}'
+      - '{lang:filter-item-lore}'
     placeholder:
-      all: '&aALL'
-      using: '&cUSING'
-      can-use: '&dCan Use'
+      all: '{lang:filter-all}'
+      using: '{lang:filter-using}'
+      can-use: '{lang:filter-can-use}'
   next-page-item:
     slot: 52
     material: ARROW
-    name: '&cNext page'
+    name: '{lang:next-item-name}'
     lore:
-      - '&7Page: {now}/{max}'
-      - '&eClick to view next page'
+      - '{lang:next-item-lore-1}'
+      - '{lang:next-item-lore-2}'
   previous-page-item:
     slot: 46
     material: ARROW
-    name: '&cPrevious page'
+    name: '{lang:previous-item-name}'
     lore:
-      - '&7Page: {now}/{max}'
-      - '&eClick to view previous page'
+      - '{lang:previous-item-lore-1}'
+      - '{lang:previous-item-lore-2}'
   custom-item:
     49: # Mean the slot
       material: SPAWNER
-      name: '&4Unequip All tags'
+      name: '{lang:unequip-all-tags-item-name}'
       lore:
-        - '&cClick to unequip.'
+        - '{lang:unequip-all-tags-item-lore}'
       actions:
         1:
           type: removeall
     53: # Mean the slot
       material: BARRIER
-      name: '&cClose'
+      name: '{lang:close-item-name}'
       lore:
-        - '&cClick to close this menu.'
+        - '{lang:close-item-lore}'
       actions:
         1:
           type: close

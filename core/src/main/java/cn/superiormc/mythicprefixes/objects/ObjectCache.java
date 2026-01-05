@@ -3,6 +3,7 @@ package cn.superiormc.mythicprefixes.objects;
 import cn.superiormc.mythicprefixes.api.MythicPrefixesAPI;
 import cn.superiormc.mythicprefixes.database.SQLDatabase;
 import cn.superiormc.mythicprefixes.database.YamlDatabase;
+import cn.superiormc.mythicprefixes.manager.CacheManager;
 import cn.superiormc.mythicprefixes.manager.ConfigManager;
 import cn.superiormc.mythicprefixes.objects.buttons.ObjectPrefix;
 import cn.superiormc.mythicprefixes.utils.SchedulerUtil;
@@ -30,31 +31,16 @@ public class ObjectCache {
     }
 
     public void initPlayerCache() {
-        SchedulerUtil.runTaskAsynchronously(() -> {
-            if (ConfigManager.configManager.getBoolean("database.enabled")) {
-                SQLDatabase.checkData(this);
-            } else {
-                YamlDatabase.checkData(this);
-            }
-        });
+        CacheManager.cacheManager.database.checkData(this);
     }
 
     public void shutPlayerCache(boolean quitServer) {
-        SchedulerUtil.runTaskAsynchronously(() -> {
-            if (ConfigManager.configManager.getBoolean("database.enabled")) {
-                SQLDatabase.updateData(this, quitServer);
-            } else {
-                YamlDatabase.updateData(this, quitServer);
-            }
-        });
+        CacheManager.cacheManager.database.updateData(this, quitServer);
     }
 
-    public void shutPlayerCacheOnDisable() {
-        if (ConfigManager.configManager.getBoolean("database.enabled")) {
-            SQLDatabase.updateDataNoAsync(this);
-        } else {
-            YamlDatabase.updateData(this, true);
-        }
+    public void shutPlayerCacheOnDisable(boolean disable) {
+        CacheManager.cacheManager.database.updateDataOnDisable(this, disable);
+
     }
 
     public Player getPlayer() {
@@ -78,7 +64,7 @@ public class ObjectCache {
         prefix.runStartAction(this);
         prefixCaches.add(prefix);
         if (ConfigManager.configManager.getBoolean("debug")) {
-            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §fEnabled prefix " + prefix + " for player " + player.getName() + "!");
+            TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fEnabled prefix " + prefix + " for player " + player.getName() + "!");
         }
     }
 
@@ -88,7 +74,7 @@ public class ObjectCache {
         }
         prefixCaches.remove(prefix);
         if (ConfigManager.configManager.getBoolean("debug")) {
-            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §fDisabled prefix " + prefix + " for player " + player.getName() + "!");
+            TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fDisabled prefix " + prefix + " for player " + player.getName() + "!");
         }
     }
 

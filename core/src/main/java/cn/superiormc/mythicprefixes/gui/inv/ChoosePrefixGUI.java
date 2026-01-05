@@ -73,7 +73,7 @@ public class ChoosePrefixGUI extends InvGUI {
                 needPages = (int) (Math.ceil((double) prefixCache.size() / slotCache.size()));
             }
         }
-        title = TextUtil.withPAPI(ConfigManager.configManager.getString("choose-prefix-gui." +
+        title = TextUtil.withPAPI(ConfigManager.configManager.getString(player,"choose-prefix-gui." +
                 "title", "Tag GUI", "now", String.valueOf(nowPage), "max", String.valueOf(needPages)), player);
         if (Objects.isNull(inv)) {
             int size = ConfigManager.configManager.getInt("choose-prefix-gui.size", 54);

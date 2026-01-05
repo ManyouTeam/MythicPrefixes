@@ -10,6 +10,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.util.*;
@@ -42,7 +43,7 @@ public class ConfigManager {
 
     private void initLibreforgeHook() {
         if (ConfigManager.configManager.getBoolean("libreforge-hook")) {
-            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §fHooking into libreforge...");
+            TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fHooking into libreforge...");
             try {
                 if (LibreforgeEffects.libreforgeEffects == null) {
                     new LibreforgeEffects();
@@ -50,7 +51,7 @@ public class ConfigManager {
                     LibreforgeEffects.libreforgeEffects.cleanMap();
                 }
             } catch (Exception ignored) {
-                Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §cFailed to hook into.");
+                TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §cFailed to hook into.");
             }
         }
     }
@@ -69,7 +70,7 @@ public class ConfigManager {
             if (fileName.endsWith(".yml")) {
                 String substring = fileName.substring(0, fileName.length() - 4);
                 placeholderConfigs.put(substring, new ObjectDisplayPlaceholder(substring, YamlConfiguration.loadConfiguration(file)));
-                Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §fLoaded display placeholder: " +
+                TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fLoaded display placeholder: " +
                         fileName + "!");
             }
         }
@@ -82,7 +83,7 @@ public class ConfigManager {
             }
             for (String id : tempVal1.getKeys(false)) {
                 placeholderConfigs.put(id, new ObjectDisplayPlaceholder(id, tempVal1.getConfigurationSection(id)));
-                Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §fLoaded display placeholder: " +
+                TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fLoaded display placeholder: " +
                         id + "!");
             }
         }
@@ -95,7 +96,7 @@ public class ConfigManager {
         }
         for (String id : tempVal1.getKeys(false)) {
             buttonConfigs.put(Integer.parseInt(id), new ObjectButton(tempVal1.getConfigurationSection(id)));
-            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §fLoaded custom button: " +
+            TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fLoaded custom button: " +
                     id + "!");
         }
     }
@@ -117,12 +118,12 @@ public class ConfigManager {
                 if (!MythicPrefixes.freeVersion || useEffectPrefixAmount < 3) {
                     prefix.initEffects();
                 } else if (prefix.enabledEffect()) {
-                    Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §cError: Free version can only create up to 3 prefixes that enable effect, skipping init effect for prefix: " + substring + "!");
+                    TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §cError: Free version can only create up to 3 prefixes that enable effect, skipping init effect for prefix: " + substring + "!");
                 }
                 useEffectPrefixAmount ++;
                 prefixConfigs.put(substring, prefix);
                 prefixCaches.add(prefix);
-                Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §fLoaded prefix: " +
+                TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fLoaded prefix: " +
                         fileName + "!");
             }
         }
@@ -195,6 +196,17 @@ public class ConfigManager {
         return s.replace("{plugin_folder}", String.valueOf(MythicPrefixes.instance.getDataFolder()));
     }
 
+    public String getString(Player player, String path, String... args) {
+        String tempVal1 = getString(path, args);
+        if (tempVal1.equalsIgnoreCase("{lang}")) {
+            String tempVal2 = LanguageManager.languageManager.getStringText(player, "override-lang." + path, args);
+            if (tempVal2 != null) {
+                return tempVal2;
+            }
+        }
+        return tempVal1;
+    }
+
     public ConfigurationSection getConfigurationSection(String path) {
         if (!config.contains(path)) {
             return null;
@@ -205,9 +217,4 @@ public class ConfigManager {
     public FileConfiguration getSection() {
         return config;
     }
-
-    public List<String> getStringList(String path) {
-        return config.getStringList(path);
-    }
-
 }

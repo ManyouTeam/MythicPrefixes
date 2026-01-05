@@ -1,6 +1,7 @@
 package cn.superiormc.mythicprefixes.objects.actions;
 
 import cn.superiormc.mythicprefixes.MythicPrefixes;
+import cn.superiormc.mythicprefixes.utils.TextUtil;
 import org.bukkit.entity.Player;
 
 public class ActionMessage extends AbstractRunAction {
@@ -12,6 +13,6 @@ public class ActionMessage extends AbstractRunAction {
 
     @Override
     protected void onDoAction(ObjectSingleAction singleAction, Player player) {
-        MythicPrefixes.methodUtil.sendMessage(player, singleAction.getString("message", player));
+        TextUtil.sendMessage(player, singleAction.getString("message", player));
     }
 }

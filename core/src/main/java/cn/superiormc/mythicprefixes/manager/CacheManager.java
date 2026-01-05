@@ -1,5 +1,7 @@
 package cn.superiormc.mythicprefixes.manager;
 
+import cn.superiormc.mythicprefixes.database.AbstractDatabase;
+import cn.superiormc.mythicprefixes.database.YamlDatabase;
 import cn.superiormc.mythicprefixes.objects.ObjectCache;
 import cn.superiormc.mythicprefixes.database.SQLDatabase;
 import cn.superiormc.mythicprefixes.objects.effect.ObjectAuraSkillsEffect;
@@ -21,14 +23,17 @@ public class CacheManager {
 
     private final Map<Player, SchedulerUtil> delayCacheMap = new HashMap<>();
 
+    public AbstractDatabase database;
+
     private boolean isStoppingServer;
 
     public CacheManager() {
         cacheManager = this;
         isStoppingServer = false;
         if (ConfigManager.configManager.getBoolean("database.enabled")) {
-            SQLDatabase.closeSQL();
-            SQLDatabase.initSQL();
+            database = new SQLDatabase();
+        } else {
+            database = new YamlDatabase();
         }
     }
 
@@ -70,18 +75,18 @@ public class CacheManager {
 
     public void savePlayerCacheOnExit(Player player) {
         if (playerCacheMap.get(player) == null) {
-            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §cError: Can not save player data: " + player.getName() + "!");
+            TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §cError: Can not save player data: " + player.getName() + "!");
             return;
         }
         playerCacheMap.get(player).shutPlayerCache(true);
     }
 
-    public void savePlayerCacheOnDisable(Player player) {
+    public void savePlayerCacheOnDisable(Player player, boolean disable) {
         if (playerCacheMap.get(player) == null) {
-            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §cError: Can not save player data: " + player.getName() + "!");
+            TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §cError: Can not save player data: " + player.getName() + "!");
             return;
         }
-        playerCacheMap.get(player).shutPlayerCacheOnDisable();
+        playerCacheMap.get(player).shutPlayerCacheOnDisable(disable);
     }
 
     public void setStoppingServer() {

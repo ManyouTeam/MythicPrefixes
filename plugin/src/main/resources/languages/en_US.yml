@@ -55,3 +55,55 @@ view-prefix:
   head: '&#98FB98[MythicPrefixes] &fYou are now using those prefixes:'
   format: '&f - {prefix}'
 parse-placeholder: "&#98FB98[MythicPrefixes] &fDisplay placeholder {placeholder} now value: {value}!"
+
+override-lang:
+  choose-prefix-gui:
+    title: 'Choose your prefix'
+  status-placeholder:
+    unlocked: '&eClick to use'
+    using: '&eClick to cancel use this prefix.'
+    locked: '&cYou do not have permission to use this prefix.'
+    max-reached: '&cYou can not use anymore prefix.'
+  filter-item-name: '&bFilter'
+  filter-item-lore: '&7Filter: {filter}'
+  filter-all: '&aALL'
+  filter-using: '&cUSING'
+  filter-can-use: '&dCan Use'
+  next-item-name: '&cNext page'
+  next-item-lore-1: '&7Page: {now}/{max}'
+  next-item-lore-2: '&eClick to view next page'
+  previous-item-name: '&cPrevious page'
+  previous-item-lore-1: '&7Page: {now}/{max}'
+  previous-item-lore-2: '&eClick to view previous page'
+  unequip-all-tags-item-name: '&4Unequip All tags'
+  unequip-all-tags-item-lore: '&cClick to unequip.'
+  close-item-name: '&cClose'
+  close-item-lore: '&cClick to close this menu.'
+  default-message: 'This is default message. Default prefix has equipped so prefix effect also activated!'
+  dragon-killer: 'Dragon Killer'
+
+  display:
+    display-value: '&7Display Value: '
+    preview: '&7Preview'
+    click-use: '&eClick to use!'
+    click-cancel: '&eClick to cancel using this prefix!'
+    using-now: '&cYou are now using this prefix!'
+    locked: '&cLocked'
+    locked-tip: '&cKill a dragon to unlock!'
+    max-reached: '&cYou have reached the maximum prefix limit!'
+
+    op-bypass-1: '&dOP can always use this prefix'
+    op-bypass-2: '&dIf you want to avoid that'
+    op-bypass-3: '&dremove &4-mythicprefixes.bypass.* &dpermission'
+
+  bedrock:
+    extra-line: '&fStatus: {status}'
+
+  action:
+    equip: '&aYou have equipped this prefix'
+    unequip: '&cYou have unequipped this prefix'
+    default: '&7Default action triggered'
+
+  click:
+    condition-not-met: '&cYou did not unlock this prefix!'
+    max-limit: '&cYou reached the maximum prefix usage limit!'

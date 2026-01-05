@@ -63,7 +63,7 @@ public class FormChoosePrefixGUI extends FormGUI {
                 buttonCache.put(tempVal1, button);
             }
         }
-        tempVal2.title(TextUtil.parse(ConfigManager.configManager.getString("choose-prefix-gui." + "title", "Tag GUI")));
+        tempVal2.title(TextUtil.parse(ConfigManager.configManager.getString(player, "choose-prefix-gui." + "title", "Tag GUI")));
         ConfigurationSection filterSection = ConfigManager.configManager.getConfigurationSection("choose-prefix-gui.filter-item");
         if (filterSection != null && !MythicPrefixes.freeVersion) {
             String filterPlaceholder = filterSection.getString("placeholder.all");

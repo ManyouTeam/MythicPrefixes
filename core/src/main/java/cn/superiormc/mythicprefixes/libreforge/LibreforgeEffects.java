@@ -63,7 +63,7 @@ public class LibreforgeEffects {
         for (Config tempVal1 : config.getSubsections("libreforge-effects")) {
             String tempVal2 = tempVal1.getString("id");
             if (id.equals(tempVal2)) {
-                Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §fSuccessfully added " + id + " " +
+                TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fSuccessfully added " + id + " " +
                         "effects to libreforge!");
                 libreforgeEffectMap.put(id,
                 new LibreforgeEffect(id, tempVal1));

@@ -10,7 +10,6 @@ import cn.superiormc.mythicprefixes.objects.ObjectDisplayPlaceholder;
 import cn.superiormc.mythicprefixes.objects.buttons.ObjectPrefix;
 import cn.superiormc.mythicprefixes.utils.TextUtil;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -70,7 +69,7 @@ public class PlaceholderAPIExpansion extends PlaceholderExpansion {
             String prefixId = params.substring("status_".length());
             ObjectPrefix prefix = ConfigManager.configManager.getPrefix(prefixId);
             if (prefix == null) {
-                return LanguageManager.languageManager.getStringText("placeholderapi.unknown-prefix");
+                return LanguageManager.languageManager.getStringText(player, "placeholderapi.unknown-prefix");
             }
             return String.valueOf(prefix.getPrefixStatus(cache));
 
@@ -86,19 +85,19 @@ public class PlaceholderAPIExpansion extends PlaceholderExpansion {
 
                 ObjectPrefix prefix = ConfigManager.configManager.getPrefix(prefixId);
                 if (prefix == null) {
-                    return LanguageManager.languageManager.getStringText("placeholderapi.unknown-prefix");
+                    return LanguageManager.languageManager.getStringText(player, "placeholderapi.unknown-prefix");
                 }
 
                 ObjectDisplayPlaceholder displayPlaceholder = ConfigManager.configManager.getDisplayPlaceholder(displayId);
                 if (displayPlaceholder == null) {
-                    return LanguageManager.languageManager.getStringText("placeholderapi.unknown-display-placeholder");
+                    return LanguageManager.languageManager.getStringText(player, "placeholderapi.unknown-display-placeholder");
                 }
                 return displayPlaceholder.getDisplayText(cache, prefix);
             } else if (!MythicPrefixes.freeVersion) {
                 // 只有prefixId
                 ObjectPrefix prefix = ConfigManager.configManager.getPrefix(sub);
                 if (prefix == null) {
-                    return LanguageManager.languageManager.getStringText("placeholderapi.unknown-prefix");
+                    return LanguageManager.languageManager.getStringText(player, "placeholderapi.unknown-prefix");
                 }
                 return TextUtil.parse(prefix.getDisplayValue(player));
             }
@@ -124,7 +123,7 @@ public class PlaceholderAPIExpansion extends PlaceholderExpansion {
 
             ObjectDisplayPlaceholder displayPlaceholder = ConfigManager.configManager.getDisplayPlaceholder(displayId);
             if (displayPlaceholder == null)
-                return LanguageManager.languageManager.getStringText("placeholderapi.unknown-display-placeholder");
+                return LanguageManager.languageManager.getStringText(player, "placeholderapi.unknown-display-placeholder");
 
             return displayPlaceholder.getNoPrefixDisplayText(cache, index);
 
@@ -134,7 +133,7 @@ public class PlaceholderAPIExpansion extends PlaceholderExpansion {
             // 默认：整个params作为 displayPlaceholderId
             ObjectDisplayPlaceholder displayPlaceholder = ConfigManager.configManager.getDisplayPlaceholder(params);
             if (displayPlaceholder == null)
-                return LanguageManager.languageManager.getStringText("placeholderapi.unknown-display-placeholder");
+                return LanguageManager.languageManager.getStringText(player, "placeholderapi.unknown-display-placeholder");
 
             return displayPlaceholder.getDisplayText(cache);
         }

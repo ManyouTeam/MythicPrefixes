@@ -25,3 +25,56 @@ view-prefix:
   format: '&f{prefix}'
   head: '&#98FB98[MythicPrefixes] &f你正在使用如下称号:'
 parse-placeholder: "&#98FB98[MythicPrefixes] &f显示变量符 {placeholder} 现在的值是: {value}!"
+
+override-lang:
+  choose-prefix-gui:
+    title: '选择你的称号'
+  status-placeholder:
+    unlocked: '&e点击使用'
+    using: '&e点击取消使用此称号'
+    locked: '&c你没有权限使用此称号'
+    max-reached: '&c你已达到可使用称号的上限'
+  filter-item-name: '&b筛选'
+  filter-item-lore: '&7筛选条件：{filter}'
+  filter-all: '&a全部'
+  filter-using: '&c正在使用'
+  filter-can-use: '&d可使用'
+  next-item-name: '&c下一页'
+  next-item-lore-1: '&7页码：{now}/{max}'
+  next-item-lore-2: '&e点击查看下一页'
+  previous-item-name: '&c上一页'
+  previous-item-lore-1: '&7页码：{now}/{max}'
+  previous-item-lore-2: '&e点击查看上一页'
+  unequip-all-tags-item-name: '&4取消全部称号'
+  unequip-all-tags-item-lore: '&c点击取消所有已使用的称号'
+  close-item-name: '&c关闭'
+  close-item-lore: '&c点击关闭此界面'
+  default-message: '由于你穿戴了默认称号，因此默认称号效果已被激活！'
+  dragon-killer: '屠龙者'
+
+  display:
+    display-value: '&7显示名称：'
+    preview: '&7预览'
+    click-use: '&e点击使用！'
+    click-cancel: '&e点击取消使用此称号！'
+    using-now: '&c你正在使用此称号！'
+    locked: '&c未解锁'
+    locked-tip: '&c击杀末影龙以解锁！'
+    max-reached: '&c你已达到可使用称号的上限！'
+
+    op-bypass-1: '&dOP 始终可以使用此称号'
+    op-bypass-2: '&d如果不希望这样'
+    op-bypass-3: '&d请移除 &4-mythicprefixes.bypass.* &d权限'
+
+  bedrock:
+    extra-line: '&f状态：{status}'
+
+  action:
+    equip: '&a你已装备此称号'
+    unequip: '&c你已卸下此称号'
+    default: '&7默认操作已触发'
+
+  click:
+    condition-not-met: '&c你尚未解锁此称号！'
+    max-limit: '&c你已达到最大称号使用数量！'
+  

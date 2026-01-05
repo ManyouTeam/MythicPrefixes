@@ -3,10 +3,12 @@ package cn.superiormc.mythicprefixes.paper;
 import cn.superiormc.mythicprefixes.MythicPrefixes;
 import cn.superiormc.mythicprefixes.manager.ConfigManager;
 import cn.superiormc.mythicprefixes.paper.utils.PaperTextUtil;
+import cn.superiormc.mythicprefixes.utils.SchedulerUtil;
 import cn.superiormc.mythicprefixes.utils.SpecialMethodUtil;
 import cn.superiormc.mythicprefixes.utils.TextUtil;
 import com.destroystokyo.paper.profile.PlayerProfile;
 import com.destroystokyo.paper.profile.ProfileProperty;
+import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.title.Title;
@@ -101,10 +103,11 @@ public class PaperMethodUtil implements SpecialMethodUtil {
 
     @Override
     public void setItemName(ItemMeta meta, String name, Player player) {
+        name = TextUtil.withPAPI(name, player);
         if (PaperTextUtil.containsLegacyCodes(name)) {
             name = "<!i>" + name;
         }
-        meta.displayName(PaperTextUtil.modernParse(name, player));
+        meta.displayName(PaperTextUtil.modernParse(name));
     }
 
     @Override
@@ -112,10 +115,11 @@ public class PaperMethodUtil implements SpecialMethodUtil {
         List<Component> veryNewLore = new ArrayList<>();
         for (String lore : lores) {
             for (String singleLore : lore.split("\n")) {
+                singleLore = TextUtil.withPAPI(singleLore, player);
                 if (PaperTextUtil.containsLegacyCodes(singleLore)) {
                     singleLore = "<!i>" + singleLore;
                 }
-                veryNewLore.add(PaperTextUtil.modernParse(singleLore, player));
+                veryNewLore.add(PaperTextUtil.modernParse(singleLore));
             }
         }
         if (!veryNewLore.isEmpty()) {
@@ -124,7 +128,7 @@ public class PaperMethodUtil implements SpecialMethodUtil {
     }
 
     @Override
-    public void sendMessage(Player player, String text) {
+    public void sendChat(Player player, String text) {
         if (player == null) {
             Bukkit.getConsoleSender().sendMessage(PaperTextUtil.modernParse(text));
         } else {
@@ -134,11 +138,38 @@ public class PaperMethodUtil implements SpecialMethodUtil {
 
     @Override
     public void sendTitle(Player player, String title, String subTitle, int fadeIn, int stay, int fadeOut) {
-        player.showTitle(Title.title(PaperTextUtil.modernParse(title),
-                PaperTextUtil.modernParse(subTitle),
+        player.showTitle(Title.title(PaperTextUtil.modernParse(title, player),
+                PaperTextUtil.modernParse(subTitle, player),
                 Title.Times.times(Ticks.duration(fadeIn),
                         Ticks.duration(stay),
                         Ticks.duration(fadeOut))));
+    }
+
+    @Override
+    public void sendActionBar(Player player, String message) {
+        player.sendActionBar(PaperTextUtil.modernParse(message, player));
+    }
+
+    @Override
+    public void sendBossBar(Player player,
+                            String title,
+                            float progress,
+                            String color,
+                            String style) {
+
+        if (style != null && style.equalsIgnoreCase("SOLID")) {
+            style = "PROGRESS";
+        }
+
+        BossBar bar = BossBar.bossBar(
+                title == null ? Component.empty() : PaperTextUtil.modernParse(title, player),
+                Math.max(0f, Math.min(1f, progress)),
+                color == null ? BossBar.Color.PINK : BossBar.Color.valueOf(color.toUpperCase()),
+                style == null ? BossBar.Overlay.PROGRESS : BossBar.Overlay.valueOf(style.toUpperCase())
+        );
+
+        player.showBossBar(bar);
+        SchedulerUtil.runTaskLater(() -> player.hideBossBar(bar), 60);
     }
 
     @Override

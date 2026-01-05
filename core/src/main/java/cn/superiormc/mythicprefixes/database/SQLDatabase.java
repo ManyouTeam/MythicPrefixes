@@ -1,92 +1,176 @@
 package cn.superiormc.mythicprefixes.database;
 
-import cc.carm.lib.easysql.EasySQL;
-import cc.carm.lib.easysql.api.SQLManager;
-import cc.carm.lib.easysql.api.action.query.QueryAction;
-import cc.carm.lib.easysql.hikari.HikariConfig;
 import cn.superiormc.mythicprefixes.manager.CacheManager;
 import cn.superiormc.mythicprefixes.objects.ObjectCache;
 import cn.superiormc.mythicprefixes.manager.ConfigManager;
 import cn.superiormc.mythicprefixes.utils.TextUtil;
-import org.bukkit.Bukkit;
 
 import java.sql.SQLException;
-import java.util.Objects;
 
-public class SQLDatabase {
-    public static SQLManager sqlManager;
+import cn.superiormc.mythicprefixes.database.sql.*;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 
-    public static void initSQL() {
-        Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §fTrying connect to SQL database...");
+import java.sql.*;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+
+public class SQLDatabase extends AbstractDatabase {
+
+    private HikariDataSource dataSource;
+    private DatabaseDialect dialect;
+
+    /* =========================
+       Lifecycle
+     ========================= */
+
+    @Override
+    public void onInit() {
+        onClose();
+
+        TextUtil.sendMessage(null,
+                TextUtil.pluginPrefix() + " §fConnecting to SQL database...");
+
+        String jdbcUrl = ConfigManager.configManager.getString("database.jdbc-url");
+
+        initDialect(jdbcUrl);
+        dialect.needExtraDownload(jdbcUrl);
+
         HikariConfig config = new HikariConfig();
-        config.setDriverClassName(ConfigManager.configManager.getString("database.jdbc-class"));
-        config.setJdbcUrl(ConfigManager.configManager.getString("database.jdbc-url"));
-        if (ConfigManager.configManager.getString("database.properties.user") != null) {
-            config.setUsername(ConfigManager.configManager.getString("database.properties.user"));
-            config.setPassword(ConfigManager.configManager.getString("database.properties.password"));
+        config.setJdbcUrl(jdbcUrl);
+
+        String user = ConfigManager.configManager.getString("database.properties.user");
+        if (user != null && !user.isEmpty()) {
+            config.setUsername(user);
+            config.setPassword(
+                    ConfigManager.configManager.getString("database.properties.password")
+            );
         }
-        sqlManager = EasySQL.createManager(config);
-        try {
-            if (!sqlManager.getConnection().isValid(5)) {
-                Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §cFailed connect to SQL database!");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+
+        config.setPoolName("MythicPrefixes-Hikari");
+        config.setMaximumPoolSize(dialect.maxPoolSize());
+        config.setMinimumIdle(dialect.minIdle());
+
+        if (dialect.forceSingleConnection()) {
+            config.setMaximumPoolSize(1);
+            config.setMinimumIdle(1);
         }
+
+        dataSource = new HikariDataSource(config);
+
         createTable();
     }
 
-    public static void closeSQL() {
-        if (Objects.nonNull(sqlManager)) {
-            EasySQL.shutdownManager(sqlManager);
-            sqlManager = null;
+    @Override
+    public void onClose() {
+        if (dataSource != null && !dataSource.isClosed()) {
+            dataSource.close();
         }
     }
 
-    public static void createTable() {
-        sqlManager.createTable("mythicprefixes")
-                .addColumn("playerUUID", "VARCHAR(36) NOT NULL PRIMARY KEY")
-                .addColumn("prefixID", "TEXT")
-                .build().execute(null);
+    /* =========================
+       Dialect
+     ========================= */
+
+    private void initDialect(String jdbcUrl) {
+        List<DatabaseDialect> dialects = List.of(
+                new MySQLDialect(),
+                new PostgreSQLDialect(),
+                new H2Dialect(),
+                new SQLiteDialect()
+        );
+
+        this.dialect = dialects.stream()
+                .filter(d -> d.matches(jdbcUrl))
+                .findFirst()
+                .orElse(new MySQLDialect());
     }
 
-    public static void checkData(ObjectCache cache) {
-        QueryAction queryAction = sqlManager.createQuery()
-                .inTable("mythicprefixes")
-                .selectColumns("playerUUID",
-                        "prefixID")
-                .addCondition("playerUUID = '" + cache.getPlayer().getUniqueId().toString() + "'")
-                .build();
-        queryAction.executeAsync((result) -> {
-            while (result.getResultSet().next()) {
-                cache.setActivePrefixes(result.getResultSet().getString("prefixID"));
-            }
-        });
-    }
+    private void createTable() {
+        try (Connection conn = dataSource.getConnection();
+             Statement stmt = conn.createStatement()) {
 
-    public static void updateData(ObjectCache cache, boolean quitServer) {
-        String playerUUID = cache.getPlayer().getUniqueId().toString();
-        sqlManager.createReplace("mythicprefixes")
-                .setColumnNames("playerUUID",
-                        "prefixID")
-                .setParams(playerUUID, cache.getActivePrefixesID())
-                .executeAsync();
-        if (quitServer) {
-            CacheManager.cacheManager.removePlayerCache(cache.getPlayer());
-        }
-    }
+            stmt.execute(dialect.createPrefixTable());
 
-    public static void updateDataNoAsync(ObjectCache cache) {
-        String playerUUID = cache.getPlayer().getUniqueId().toString();
-        try {
-            sqlManager.createReplace("mythicprefixes")
-                    .setColumnNames("playerUUID",
-                            "prefixID")
-                    .setParams(playerUUID, cache.getActivePrefixesID())
-                    .execute();
-            CacheManager.cacheManager.removePlayerCache(cache.getPlayer());
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+        }
+    }
+
+    /* =========================
+       Load
+     ========================= */
+
+    @Override
+    public void checkData(ObjectCache cache) {
+        CompletableFuture.runAsync(
+                () -> loadData(cache),
+                DatabaseExecutor.EXECUTOR
+        );
+    }
+
+    private void loadData(ObjectCache cache) {
+        String playerUUID = cache.getPlayer().getUniqueId().toString();
+
+        String sql = """
+                SELECT prefixID
+                FROM mythicprefixes
+                WHERE playerUUID = ?
+                """;
+
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, playerUUID);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    cache.setActivePrefixes(rs.getString("prefixID"));
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /* =========================
+       Save
+     ========================= */
+
+    @Override
+    public void updateData(ObjectCache cache, boolean quitServer) {
+        CompletableFuture.runAsync(() -> {
+            saveData(cache);
+            if (quitServer) {
+                CacheManager.cacheManager.removePlayerCache(cache.getPlayer());
+            }
+        }, DatabaseExecutor.EXECUTOR);
+    }
+
+    @Override
+    public void updateDataOnDisable(ObjectCache cache, boolean disable) {
+        saveData(cache);
+        CacheManager.cacheManager.removePlayerCache(cache.getPlayer());
+        if (disable) {
+            DatabaseExecutor.EXECUTOR.shutdownNow();
+        }
+    }
+
+    private void saveData(ObjectCache cache) {
+        String playerUUID = cache.getPlayer().getUniqueId().toString();
+        String sql = dialect.upsertPrefix();
+
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, playerUUID);
+            ps.setString(2, cache.getActivePrefixesID());
+
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 }

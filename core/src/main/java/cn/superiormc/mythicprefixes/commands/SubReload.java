@@ -30,7 +30,7 @@ public class SubReload extends AbstractCommand {
         TaskManager.taskManager.cancelTask();
         for (Player p : Bukkit.getOnlinePlayers()) {
             CacheManager.cacheManager.getPlayerCache(player).runAllPrefixEndActions();
-            CacheManager.cacheManager.savePlayerCacheOnDisable(p);
+            CacheManager.cacheManager.savePlayerCacheOnDisable(p, false);
         }
         new ConfigManager();
         new LanguageManager();
@@ -50,7 +50,7 @@ public class SubReload extends AbstractCommand {
         TaskManager.taskManager.cancelTask();
         for (Player p : Bukkit.getOnlinePlayers()) {
             CacheManager.cacheManager.getPlayerCache(p).runAllPrefixEndActions();
-            CacheManager.cacheManager.savePlayerCacheOnDisable(p);
+            CacheManager.cacheManager.savePlayerCacheOnDisable(p, false);
         }
         new ConfigManager();
         new LanguageManager();
