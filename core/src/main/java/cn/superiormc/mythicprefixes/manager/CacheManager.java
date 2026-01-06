@@ -35,6 +35,7 @@ public class CacheManager {
         } else {
             database = new YamlDatabase();
         }
+        database.onInit();
     }
 
     public void addPlayerCache(Player player) {

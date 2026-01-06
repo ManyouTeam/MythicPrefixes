@@ -1,6 +1,6 @@
 package cn.superiormc.mythicprefixes;
 
-import cn.superiormc.mythicprefixes.database.SQLDatabase;
+import cn.superiormc.mythicprefixes.bstats.Metrics;
 import cn.superiormc.mythicprefixes.manager.*;
 import cn.superiormc.mythicprefixes.utils.CommonUtil;
 import cn.superiormc.mythicprefixes.utils.PacketInventoryUtil;
@@ -86,6 +86,7 @@ public final class MythicPrefixes extends JavaPlugin {
             newSkullMethod = true;
             TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fNew AuthLib found, enabled new skull get method!");
         }
+        new Metrics(MythicPrefixes.instance, 28371);
         TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fYour Minecraft version is: 1." + majorVersion + "." + minorVersion + "!");
         TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fPlugin is loaded. Author: PQguanfang.");
     }

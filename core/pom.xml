@@ -36,7 +36,7 @@
             <artifactId>MythicLib-dist</artifactId>
             <version>1.7.1-SNAPSHOT</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/MythicLib-dist-1.7.1-20251205.145545-63.jar</systemPath>
+            <systemPath>${project.basedir}/lib/MythicLib-dist-1.7.1-20260106.010643-64.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>net.luckperms</groupId>

@@ -18,11 +18,8 @@ import java.util.concurrent.CompletableFuture;
 public class SQLDatabase extends AbstractDatabase {
 
     private HikariDataSource dataSource;
-    private DatabaseDialect dialect;
 
-    /* =========================
-       Lifecycle
-     ========================= */
+    private DatabaseDialect dialect;
 
     @Override
     public void onInit() {
@@ -68,10 +65,6 @@ public class SQLDatabase extends AbstractDatabase {
         }
     }
 
-    /* =========================
-       Dialect
-     ========================= */
-
     private void initDialect(String jdbcUrl) {
         List<DatabaseDialect> dialects = List.of(
                 new MySQLDialect(),
@@ -96,10 +89,6 @@ public class SQLDatabase extends AbstractDatabase {
             e.printStackTrace();
         }
     }
-
-    /* =========================
-       Load
-     ========================= */
 
     @Override
     public void checkData(ObjectCache cache) {
@@ -133,10 +122,6 @@ public class SQLDatabase extends AbstractDatabase {
             e.printStackTrace();
         }
     }
-
-    /* =========================
-       Save
-     ========================= */
 
     @Override
     public void updateData(ObjectCache cache, boolean quitServer) {
