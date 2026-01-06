@@ -1,6 +1,5 @@
 package cn.superiormc.mythicprefixes.objects.actions;
 
-import cn.superiormc.mythicprefixes.MythicPrefixes;
 import cn.superiormc.mythicprefixes.utils.TextUtil;
 import org.bukkit.entity.Player;
 
