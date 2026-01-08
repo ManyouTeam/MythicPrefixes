@@ -50,7 +50,6 @@ public class LanguageManager {
             langFolder.mkdirs();
         }
 
-        // 加载默认 en_US.yml 作为临时文件
         InputStream is = MythicPrefixes.instance.getResource("languages/en_US.yml");
         if (is != null) {
             try {
@@ -65,7 +64,6 @@ public class LanguageManager {
             tempMessageFile = new YamlConfiguration();
         }
 
-        // 加载 languages 下所有 yml 文件
         File[] files = langFolder.listFiles((dir, name) -> name.endsWith(".yml"));
         if (files != null) {
             for (File file : files) {
@@ -76,13 +74,15 @@ public class LanguageManager {
             }
         }
 
-        if (!languageFiles.containsKey("en_US")) {
+        if (!languageFiles.containsKey("en_US".toLowerCase())) {
             languageFiles.put("en_US".toLowerCase(), tempMessageFile);
         }
         serverLanguage = ConfigManager.configManager.getString("config-files.language", "en-US");
-        if (!languageFiles.containsKey(serverLanguage)) {
+        if (!languageFiles.containsKey(serverLanguage.toLowerCase())) {
+            ErrorManager.errorManager.sendErrorMessage("§cError: Can not found language file: " + serverLanguage + ".yml at languages folder!");
             serverLanguage = "en_US";
         }
+        TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fDefault language being set to: " + serverLanguage + ".yml!");
     }
 
     private String getMessage(Player player, String key, String... args) {
