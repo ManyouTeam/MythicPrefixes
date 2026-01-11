@@ -62,7 +62,7 @@ public abstract class AbstractButton {
         String tempVal4 = config.getString("bedrock.extra-line");
         if (tempVal4 != null && !tempVal4.isEmpty()) {
             if (this instanceof ObjectPrefix) {
-                tempVal3 = CommonUtil.modifyString(tempVal3 + "\n" + TextUtil.parse(tempVal4, player), "status",
+                tempVal3 = CommonUtil.modifyString(cache.getPlayer(), tempVal3 + "\n" + TextUtil.parse(tempVal4, player), "status",
                         MythicPrefixesAPI.getStatusPlaceholder((ObjectPrefix) this, cache));
             } else {
                 tempVal3 = tempVal3 + "\n" + TextUtil.parse(tempVal4, player);

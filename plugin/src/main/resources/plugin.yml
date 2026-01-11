@@ -1,5 +1,5 @@
 name: MythicPrefixes
-version: '1.9.1'
+version: '1.9.2'
 main: cn.superiormc.mythicprefixes.MythicPrefixes
 api-version: '1.13'
 folia-supported: true

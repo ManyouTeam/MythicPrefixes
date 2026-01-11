@@ -2,6 +2,7 @@ package cn.superiormc.mythicprefixes.utils;
 
 import cn.superiormc.mythicprefixes.MythicPrefixes;
 import cn.superiormc.mythicprefixes.manager.ConfigManager;
+import cn.superiormc.mythicprefixes.manager.LanguageManager;
 import net.luckperms.api.LuckPermsProvider;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
@@ -11,6 +12,8 @@ import java.io.File;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class CommonUtil {
 
@@ -76,13 +79,13 @@ public class CommonUtil {
         }
     }
 
-    public static String modifyString(String text, String... args) {
+    public static String modifyString(Player player, String text, String... args) {
+        text = CommonUtil.parseLang(player, text);
         for (int i = 0 ; i < args.length ; i += 2) {
             String var = "{" + args[i] + "}";
             if (args[i + 1] == null) {
                 text = text.replace(var, "");
-            }
-            else {
+            } else {
                 text = text.replace(var, args[i + 1]);
             }
         }
@@ -92,6 +95,7 @@ public class CommonUtil {
     public static List<String> modifyList(Player player, List<String> config, String... args) {
         List<String> resultList = new ArrayList<>();
         for (String s : config) {
+            s = CommonUtil.parseLang(player, s);
             for (int i = 0 ; i < args.length ; i += 2) {
                 String var = "{" + args[i] + "}";
                 if (args[i + 1] == null) {
@@ -111,6 +115,16 @@ public class CommonUtil {
             resultList.add(TextUtil.withPAPI(s, player));
         }
         return resultList;
+    }
+
+    public static String parseLang(Player player, String text) {
+        Pattern pattern8 = Pattern.compile("\\{lang:(.*?)}");
+        Matcher matcher8 = pattern8.matcher(text);
+        while (matcher8.find()) {
+            String placeholder = matcher8.group(1);
+            text = text.replace("{lang:" + placeholder + "}", LanguageManager.languageManager.getStringText(player, "override-lang." + placeholder));
+        }
+        return text;
     }
 
     public static NamespacedKey parseNamespacedKey(String key) {

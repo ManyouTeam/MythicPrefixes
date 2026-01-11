@@ -47,7 +47,7 @@ public class ItemUtil {
         // Name
         String displayNameKey = section.getString("name");
         if (displayNameKey != null) {
-            MythicPrefixes.methodUtil.setItemName(meta, CommonUtil.modifyString(displayNameKey, args), player);
+            MythicPrefixes.methodUtil.setItemName(meta, CommonUtil.modifyString(player, displayNameKey, args), player);
         }
 
         // Lore

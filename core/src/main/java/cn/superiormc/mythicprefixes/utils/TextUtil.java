@@ -192,12 +192,7 @@ public class TextUtil {
         if (text.contains("%") && CommonUtil.checkPluginLoad("PlaceholderAPI")) {
             text = PlaceholderAPI.setPlaceholders(player, text);
         }
-        Pattern pattern8 = Pattern.compile("\\{lang:(.*?)}");
-        Matcher matcher8 = pattern8.matcher(text);
-        while (matcher8.find()) {
-            String placeholder = matcher8.group(1);
-            text = text.replace("{lang:" + placeholder + "}", LanguageManager.languageManager.getStringText(player, "override-lang." + placeholder));
-        }
+        text = CommonUtil.parseLang(player, text);
         return text;
     }
 
