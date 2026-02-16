@@ -6,9 +6,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>cn.superiormc</groupId>
+        <groupId>cn.superiormc.mythicprefixes</groupId>
         <artifactId>MythicPrefixes</artifactId>
-        <version>1.9.2</version>
+        <version>1.9.3</version>
         <relativePath>../pom.xml</relativePath> <!-- 如果 plugin 和根目录同级 -->
     </parent>
 
@@ -23,21 +23,21 @@
     <dependencies>
         <!-- Core module -->
         <dependency>
-            <groupId>cn.superiormc</groupId>
+            <groupId>cn.superiormc.mythicprefixes</groupId>
             <artifactId>core</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <!-- Spigot module -->
         <dependency>
-            <groupId>cn.superiormc</groupId>
+            <groupId>cn.superiormc.mythicprefixes</groupId>
             <artifactId>spigot</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <!-- Paper module -->
         <dependency>
-            <groupId>cn.superiormc</groupId>
+            <groupId>cn.superiormc.mythicprefixes</groupId>
             <artifactId>paper</artifactId>
             <version>${project.version}</version>
         </dependency>

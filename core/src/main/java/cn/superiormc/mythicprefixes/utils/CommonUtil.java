@@ -58,12 +58,16 @@ public class CommonUtil {
         }
     }
 
+    public static boolean getYearVersion(int year, int majorVersion, int minorVersion) {
+        return MythicPrefixes.yearVersion > year || (MythicPrefixes.yearVersion == year && MythicPrefixes.majorVersion >= majorVersion && MythicPrefixes.minorVersion >= minorVersion);
+    }
+
     public static boolean getMajorVersion(int version) {
-        return MythicPrefixes.majorVersion >= version;
+        return MythicPrefixes.yearVersion > 1 || MythicPrefixes.majorVersion >= version;
     }
 
     public static boolean getMinorVersion(int majorVersion, int minorVersion) {
-        return MythicPrefixes.majorVersion > majorVersion || (MythicPrefixes.majorVersion == majorVersion &&
+        return MythicPrefixes.yearVersion > 1 || MythicPrefixes.majorVersion > majorVersion || (MythicPrefixes.majorVersion == majorVersion &&
                 MythicPrefixes.minorVersion >= minorVersion);
     }
 
