@@ -17,7 +17,7 @@ public class ActionEffect extends AbstractRunAction {
     protected void onDoAction(ObjectSingleAction singleAction, Player player) {
         PotionEffectType potionEffectType;
         if (CommonUtil.getMajorVersion(20)) {
-            potionEffectType = Registry.POTION_EFFECT_TYPE.get(CommonUtil.parseNamespacedKey(singleAction.getString("potion")));
+            potionEffectType = Registry.EFFECT.get(CommonUtil.parseNamespacedKey(singleAction.getString("potion")));
         } else {
             potionEffectType = PotionEffectType.getByName(singleAction.getString("potion"));
         }
