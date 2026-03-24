@@ -10,6 +10,7 @@ import com.github.retrooper.packetevents.protocol.packettype.PacketType;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerOpenWindow;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerWindowItems;
 import io.github.retrooper.packetevents.util.SpigotConversionUtil;
+import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -23,10 +24,16 @@ public class PacketInventoryUtil {
 
     protected final Map<UUID, Integer> WINDOW_IDS = new ConcurrentHashMap<>();
     protected final Map<UUID, Integer> WINDOW_TYPES = new ConcurrentHashMap<>();
+    protected PaperUtil PAPER_UTIL;
 
     public PacketInventoryUtil() {
-        packetInventoryUtil = this;
-        initListener();
+        try {
+            Class<?> paperClass = Class.forName("cn.superiormc.mythicprefixes.paper.PaperUtilImpl");
+            PAPER_UTIL = (PaperUtil) paperClass.getDeclaredConstructor().newInstance();
+            packetInventoryUtil = this;
+            initListener();
+        } catch (Throwable ignored) {
+        }
     }
 
     private void initListener() {
@@ -63,18 +70,22 @@ public class PacketInventoryUtil {
         WINDOW_IDS.remove(uuid);
         WINDOW_TYPES.remove(uuid);
     }
-}
 
-class PacketListener extends PacketListenerAbstract {
-    @Override
-    public void onPacketSend(PacketSendEvent event) {
-        if (event.getPacketType() == PacketType.Play.Server.OPEN_WINDOW) {
-            WrapperPlayServerOpenWindow wrapper = new WrapperPlayServerOpenWindow(event);
-            Player player = event.getPlayer();
-            UUID uuid = player.getUniqueId();
+    private static class PacketListener extends PacketListenerAbstract {
+        @Override
+        public void onPacketSend(PacketSendEvent event) {
+            if (event.getPacketType() == PacketType.Play.Server.OPEN_WINDOW) {
+                WrapperPlayServerOpenWindow wrapper = new WrapperPlayServerOpenWindow(event);
+                Player player = event.getPlayer();
+                UUID uuid = player.getUniqueId();
 
-            PacketInventoryUtil.packetInventoryUtil.WINDOW_IDS.put(uuid, wrapper.getContainerId());
-            PacketInventoryUtil.packetInventoryUtil.WINDOW_TYPES.put(uuid, wrapper.getType());
+                PacketInventoryUtil.packetInventoryUtil.WINDOW_IDS.put(uuid, wrapper.getContainerId());
+                PacketInventoryUtil.packetInventoryUtil.WINDOW_TYPES.put(uuid, wrapper.getType());
+            }
         }
+    }
+
+    public interface PaperUtil {
+        default Component modernParse(Player player, String message){return Component.empty();}
     }
 }

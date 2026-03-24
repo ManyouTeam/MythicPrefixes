@@ -30,8 +30,6 @@ public final class MythicPrefixes extends JavaPlugin {
 
     public static int minorVersion;
 
-    public static boolean newSkullMethod;
-
     @Override
     public void onEnable() {
         instance = this;
@@ -84,10 +82,6 @@ public final class MythicPrefixes extends JavaPlugin {
             usePacketEvents = true;
             new PacketInventoryUtil();
             TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fDynamic title enabled. Hooking into packetevents...");
-        }
-        if (!CommonUtil.checkClass("com.mojang.authlib.properties.Property", "getValue") && CommonUtil.getMinorVersion(21, 1)) {
-            newSkullMethod = true;
-            TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fNew AuthLib found, enabled new skull get method!");
         }
         new Metrics(MythicPrefixes.instance, 28371);
         TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fYour Minecraft version is: 1." + majorVersion + "." + minorVersion + "!");
