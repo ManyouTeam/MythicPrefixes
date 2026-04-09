@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.List;
@@ -29,7 +30,7 @@ public class LanguageManager {
         initLanguages();
     }
 
-    protected String getPlayerLanguage(Player player) {
+    public String getPlayerLanguage(Player player) {
         if (player == null) {
             return serverLanguage.toLowerCase();
         }
@@ -50,18 +51,14 @@ public class LanguageManager {
             langFolder.mkdirs();
         }
 
-        InputStream is = MythicPrefixes.instance.getResource("languages/en_US.yml");
-        if (is != null) {
-            try {
-                File tempFile = new File(MythicPrefixes.instance.getDataFolder(), "tempMessage.yml");
-                Files.copy(is, tempFile.toPath());
-                tempMessageFile = YamlConfiguration.loadConfiguration(tempFile);
-                tempFile.delete();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
+        serverLanguage = ConfigManager.configManager.getString("config-files.language", "en-US");
+        tempMessageFile = loadInternalLanguage(serverLanguage);
+        if (tempMessageFile == null) {
             tempMessageFile = new YamlConfiguration();
+        }
+        YamlConfiguration fullLanguageFile = loadInternalLanguage("en_US");
+        if (fullLanguageFile != null) {
+            mergeMissingKeys(tempMessageFile, fullLanguageFile);
         }
 
         File[] files = langFolder.listFiles((dir, name) -> name.endsWith(".yml"));
@@ -180,5 +177,35 @@ public class LanguageManager {
             }
         }
         return list;
+    }
+
+    private YamlConfiguration loadInternalLanguage(String language) {
+        if (language == null) {
+            return null;
+        }
+
+        String resourceName = language.replace('-', '_');
+        InputStream inputStream = MythicPrefixes.instance.getResource("languages/" + resourceName + ".yml");
+        if (inputStream == null) {
+            return null;
+        }
+
+        try (InputStreamReader reader = new InputStreamReader(inputStream)) {
+            return YamlConfiguration.loadConfiguration(reader);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private void mergeMissingKeys(YamlConfiguration target, YamlConfiguration source) {
+        for (String key : source.getKeys(true)) {
+            if (source.isConfigurationSection(key)) {
+                continue;
+            }
+            if (target.get(key) == null) {
+                target.set(key, source.get(key));
+            }
+        }
     }
 }

@@ -50,7 +50,7 @@ public class PacketInventoryUtil {
             return;
         }
 
-        WrapperPlayServerOpenWindow packet = new WrapperPlayServerOpenWindow(windowId, windowType, PaperTextUtil.modernParse(newTitle));
+        WrapperPlayServerOpenWindow packet = new WrapperPlayServerOpenWindow(windowId, windowType, PAPER_UTIL.modernParse(player, newTitle));
 
         PacketEvents.getAPI().getPlayerManager().sendPacket(player, packet);
         if (ConfigManager.configManager.getBoolean("choose-prefix-gui.title-update.resend-items-pack")) {

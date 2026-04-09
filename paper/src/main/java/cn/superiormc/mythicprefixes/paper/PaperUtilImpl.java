@@ -1,7 +1,7 @@
 package cn.superiormc.mythicprefixes.paper;
 
+import cn.superiormc.mythicprefixes.paper.utils.PaperTextUtil;
 import cn.superiormc.mythicprefixes.utils.PacketInventoryUtil;
-import cn.superiormc.mythicprefixes.utils.PaperTextUtil;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 
