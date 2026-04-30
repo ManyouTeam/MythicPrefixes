@@ -121,8 +121,8 @@ public class CommonUtil {
         return resultList;
     }
 
+    public static Pattern pattern8 = Pattern.compile("\\{lang:(.*?)}");
     public static String parseLang(Player player, String text) {
-        Pattern pattern8 = Pattern.compile("\\{lang:(.*?)}");
         Matcher matcher8 = pattern8.matcher(text);
         while (matcher8.find()) {
             String placeholder = matcher8.group(1);

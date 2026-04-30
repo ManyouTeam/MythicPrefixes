@@ -11,7 +11,6 @@ import org.bukkit.entity.Player;
 
 public class SubReload extends AbstractCommand {
 
-
     public SubReload() {
         this.id = "reload";
         this.requiredPermission =  "mythicprefixes." + id;

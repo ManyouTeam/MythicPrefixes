@@ -1,7 +1,6 @@
 package cn.superiormc.mythicprefixes.utils;
 
 import cn.superiormc.mythicprefixes.MythicPrefixes;
-import cn.superiormc.mythicprefixes.manager.LanguageManager;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;

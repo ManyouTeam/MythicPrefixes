@@ -59,6 +59,8 @@ parse-placeholder: "&#98FB98[MythicPrefixes] &fDisplay placeholder {placeholder}
 override-lang:
   choose-prefix-gui:
     title: 'Choose your prefix'
+  prompt:
+    cancel-keyword: 'cancel'
   status-placeholder:
     unlocked: '&eClick to use'
     using: '&eClick to cancel use this prefix.'

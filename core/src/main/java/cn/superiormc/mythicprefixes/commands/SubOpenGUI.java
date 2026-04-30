@@ -13,7 +13,6 @@ import java.util.List;
 
 public class SubOpenGUI extends AbstractCommand {
 
-
     public SubOpenGUI() {
         this.id = "opengui";
         this.requiredPermission =  "mythicprefixes." + id;

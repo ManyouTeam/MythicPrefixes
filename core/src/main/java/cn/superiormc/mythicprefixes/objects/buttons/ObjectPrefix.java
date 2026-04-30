@@ -12,7 +12,6 @@ import cn.superiormc.mythicprefixes.utils.CommonUtil;
 import cn.superiormc.mythicprefixes.utils.ItemUtil;
 import cn.superiormc.mythicprefixes.utils.SchedulerUtil;
 import cn.superiormc.mythicprefixes.utils.TextUtil;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;

@@ -26,7 +26,6 @@ public class TaskManager {
             if (!ConfigManager.configManager.getBoolean("auto-save.hide-message")) {
                 TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fAuto saving data...");
                 TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fIf this lead to server TPS drop, " +
-
                         "you should consider disable auto save feature at config.yml!");
             }
             for (Player player : Bukkit.getOnlinePlayers()) {

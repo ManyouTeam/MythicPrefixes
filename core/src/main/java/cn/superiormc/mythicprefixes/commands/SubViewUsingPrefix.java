@@ -13,7 +13,6 @@ import java.util.List;
 
 public class SubViewUsingPrefix extends AbstractCommand {
 
-
     public SubViewUsingPrefix() {
         this.id = "viewusingprefix";
         this.requiredPermission =  "mythicprefixes." + id;

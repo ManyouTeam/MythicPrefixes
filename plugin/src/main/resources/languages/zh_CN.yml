@@ -29,6 +29,8 @@ parse-placeholder: "&#98FB98[MythicPrefixes] &f显示变量符 {placeholder} 现
 override-lang:
   choose-prefix-gui:
     title: '选择你的称号'
+  prompt:
+    cancel-keyword: '取消'
   status-placeholder:
     unlocked: '&e点击使用'
     using: '&e点击取消使用此称号'

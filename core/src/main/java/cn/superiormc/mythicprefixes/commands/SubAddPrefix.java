@@ -15,7 +15,6 @@ import java.util.List;
 
 public class SubAddPrefix extends AbstractCommand {
 
-
     public SubAddPrefix() {
         this.id = "addprefix";
         this.requiredPermission =  "mythicprefixes." + id;

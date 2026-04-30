@@ -13,7 +13,6 @@ import java.util.List;
 
 public class SubParsePlaceholder extends AbstractCommand {
 
-
     public SubParsePlaceholder() {
         this.id = "parseplaceholder";
         this.requiredPermission =  "mythicprefixes." + id;

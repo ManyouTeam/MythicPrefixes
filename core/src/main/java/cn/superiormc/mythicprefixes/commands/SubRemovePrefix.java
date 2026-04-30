@@ -14,7 +14,6 @@ import java.util.List;
 
 public class SubRemovePrefix extends AbstractCommand {
 
-
     public SubRemovePrefix() {
         this.id = "removeprefix";
         this.requiredPermission =  "mythicprefixes." + id;
