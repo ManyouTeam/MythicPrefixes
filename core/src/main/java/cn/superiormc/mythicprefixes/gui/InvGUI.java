@@ -28,10 +28,12 @@ public abstract class InvGUI extends AbstractGUI {
     public void openGUI() {
         constructGUI();
         if (inv != null) {
-            player.openInventory(inv);
+            SchedulerUtil.runSync(player, () -> {
+                this.guiListener = new GUIListener(this);
+                Bukkit.getPluginManager().registerEvents(guiListener, MythicPrefixes.instance);
+                player.openInventory(inv);
+            });
         }
-        this.guiListener = new GUIListener(this);
-        SchedulerUtil.runSync(() -> Bukkit.getPluginManager().registerEvents(guiListener, MythicPrefixes.instance));
     }
 
     public Inventory getInv() {

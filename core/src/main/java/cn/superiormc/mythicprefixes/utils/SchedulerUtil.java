@@ -3,6 +3,7 @@ package cn.superiormc.mythicprefixes.utils;
 import cn.superiormc.mythicprefixes.MythicPrefixes;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Entity;
 import org.bukkit.scheduler.BukkitTask;
 
 public class SchedulerUtil {
@@ -31,6 +32,14 @@ public class SchedulerUtil {
     public static void runSync(Runnable task) {
         if (MythicPrefixes.isFolia) {
             Bukkit.getGlobalRegionScheduler().execute(MythicPrefixes.instance, task);
+        } else {
+            Bukkit.getScheduler().runTask(MythicPrefixes.instance, task);
+        }
+    }
+
+    public static void runSync(Entity entity, Runnable task) {
+        if (MythicPrefixes.isFolia) {
+            entity.getScheduler().run(MythicPrefixes.instance, scheduledTask -> task.run(), null);
         } else {
             Bukkit.getScheduler().runTask(MythicPrefixes.instance, task);
         }
