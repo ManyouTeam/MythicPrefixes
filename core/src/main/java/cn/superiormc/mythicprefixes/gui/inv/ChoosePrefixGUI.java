@@ -83,7 +83,7 @@ public class ChoosePrefixGUI extends InvGUI {
                 inv.clear(slotCache.get(c));
                 continue;
             }
-            inv.setItem(slotCache.get(c), prefix.getDisplayItem(player));
+            setItem(slotCache.get(c), prefix.getDisplayItem(player));
         }
         if (buttonCache.isEmpty()) {
             for (int slot : ConfigManager.configManager.getButtons().keySet()) {
@@ -92,7 +92,7 @@ public class ChoosePrefixGUI extends InvGUI {
                     continue;
                 }
                 buttonCache.put(slot, button);
-                inv.setItem(slot, button.getDisplayItem(player));
+                setItem(slot, button.getDisplayItem(player));
             }
         }
         ConfigurationSection nextPageSection = ConfigManager.configManager.getConfigurationSection("choose-prefix-gui.next-page-item");
@@ -102,7 +102,7 @@ public class ChoosePrefixGUI extends InvGUI {
                     "now", String.valueOf(nowPage));
             nextPageSlot = nextPageSection.getInt("slot", 52);
             if (nextPageSlot >= 0) {
-                inv.setItem(nextPageSlot, nextPageItem);
+                setItem(nextPageSlot, nextPageItem);
             }
         } else {
             if (nextPageSlot >= 0 && nextPageSlot < 54) {
@@ -116,7 +116,7 @@ public class ChoosePrefixGUI extends InvGUI {
                     "now", String.valueOf(nowPage));
             previousPageSlot = previousPageSection.getInt("slot", 46);
             if (previousPageSlot >= 0) {
-                inv.setItem(previousPageSlot, previousPageItem);
+                setItem(previousPageSlot, previousPageItem);
             }
         } else {
             if (previousPageSlot >= 0 && previousPageSlot < 54) {
@@ -135,7 +135,7 @@ public class ChoosePrefixGUI extends InvGUI {
                     "filter", filterPlaceholder);
             filterSlot = filterSection.getInt("slot", 47);
             if (filterSlot >= 0) {
-                inv.setItem(filterSlot, filterItem);
+                setItem(filterSlot, filterItem);
             }
         }
     }
