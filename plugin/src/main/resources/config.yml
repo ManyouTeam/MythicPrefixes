@@ -28,6 +28,13 @@ status-placeholder:
 circle-actions:
   period-tick: 20
 
+dynamic-prefix:
+  # Prefix config option `dynamic-prefix: true` allows players to edit this prefix value.
+  # Java players right click the prefix item in GUI, Bedrock players edit through FormUI.
+  min-length: 1
+  max-length: 32
+  sensitive-words: []
+
 max-prefixes-amount:
   default:
     default: 1
@@ -47,6 +54,7 @@ choose-prefix-gui:
   # You can use {max} to display max page amount, {now} to display now page amount. Require enable title update to
   # update those placeholder after open GUI.
   title: '{lang}'
+  bedrock-title: '{lang}'
   # PREMIUM version only, if enabled, can update dynamic value used in GUI title.
   title-update:
     # Require packetevents and MythicChanger.
@@ -54,11 +62,11 @@ choose-prefix-gui:
     resend-items-pack: false
   size: 54
   forbid-click-outside: false
-  anti-dupe-fixes: false
+  anti-dupe-checker: false
   auto-translate-item-name: true
-  prefix-item-slot: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,
-                     16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,
-                     31,32,33,34,35,36,37,38,39,40,41,42,43,44]
+  prefix-item-slot: [10,11,12,13,14,15,16,
+                     19,20,21,22,23,24,25,
+                     28,29,30,31,32,33,34]
   # Premium version only
   bedrock:
     enabled: true
@@ -68,45 +76,145 @@ choose-prefix-gui:
   filter-item:
     # Set to -1 to hide.
     slot: 47
-    material: ANVIL
+    material: HOPPER
     name: '{lang:filter-item-name}'
+    bedrock-name: '{lang:filter-item-name2}'
     lore:
       - '{lang:filter-item-lore}'
+      - '{lang:filter-item-click}'
     placeholder:
       all: '{lang:filter-all}'
       using: '{lang:filter-using}'
       can-use: '{lang:filter-can-use}'
   next-page-item:
-    slot: 52
+    slot: 53
     material: ARROW
     name: '{lang:next-item-name}'
     lore:
       - '{lang:next-item-lore-1}'
       - '{lang:next-item-lore-2}'
   previous-page-item:
-    slot: 46
+    slot: 45
     material: ARROW
     name: '{lang:previous-item-name}'
     lore:
       - '{lang:previous-item-lore-1}'
       - '{lang:previous-item-lore-2}'
   custom-item:
+    0:
+      material: BROWN_STAINED_GLASS_PANE
+      name: ' '
+    1:
+      material: ORANGE_STAINED_GLASS_PANE
+      name: ' '
+    2:
+      material: BROWN_STAINED_GLASS_PANE
+      name: ' '
+    3:
+      material: ORANGE_STAINED_GLASS_PANE
+      name: ' '
+    4:
+      material: BOOKSHELF
+      name: '{lang:archive-item-name}'
+      lore:
+        - '{lang:archive-item-lore-1}'
+        - '{lang:archive-item-lore-2}'
+      bedrock:
+        hide: true
+    5:
+      material: ORANGE_STAINED_GLASS_PANE
+      name: ' '
+    6:
+      material: BROWN_STAINED_GLASS_PANE
+      name: ' '
+    7:
+      material: ORANGE_STAINED_GLASS_PANE
+      name: ' '
+    8:
+      material: BROWN_STAINED_GLASS_PANE
+      name: ' '
+    9:
+      material: BROWN_STAINED_GLASS_PANE
+      name: ' '
+    17:
+      material: BROWN_STAINED_GLASS_PANE
+      name: ' '
+    18:
+      material: ORANGE_STAINED_GLASS_PANE
+      name: ' '
+    26:
+      material: ORANGE_STAINED_GLASS_PANE
+      name: ' '
+    27:
+      material: BROWN_STAINED_GLASS_PANE
+      name: ' '
+    35:
+      material: BROWN_STAINED_GLASS_PANE
+      name: ' '
+    36:
+      material: ORANGE_STAINED_GLASS_PANE
+      name: ' '
+    37:
+      material: BROWN_STAINED_GLASS_PANE
+      name: ' '
+    38:
+      material: ORANGE_STAINED_GLASS_PANE
+      name: ' '
+    39:
+      material: BROWN_STAINED_GLASS_PANE
+      name: ' '
+    40:
+      material: WRITABLE_BOOK
+      name: '{lang:guide-item-name}'
+      lore:
+        - '{lang:guide-item-lore-1}'
+        - '{lang:guide-item-lore-2}'
+        - '{lang:guide-item-lore-3}'
+      bedrock:
+        hide: true
+    41:
+      material: BROWN_STAINED_GLASS_PANE
+      name: ' '
+    42:
+      material: ORANGE_STAINED_GLASS_PANE
+      name: ' '
+    43:
+      material: BROWN_STAINED_GLASS_PANE
+      name: ' '
+    44:
+      material: ORANGE_STAINED_GLASS_PANE
+      name: ' '
+    46:
+      material: BROWN_STAINED_GLASS_PANE
+      name: ' '
+    48:
+      material: BROWN_STAINED_GLASS_PANE
+      name: ' '
     49: # Mean the slot
-      material: SPAWNER
+      material: CAULDRON
       name: '{lang:unequip-all-tags-item-name}'
       lore:
-        - '{lang:unequip-all-tags-item-lore}'
+        - '{lang:unequip-all-tags-item-lore-1}'
+        - '{lang:unequip-all-tags-item-lore-2}'
+        - '{lang:unequip-all-tags-item-lore-3}'
       actions:
         1:
           type: removeall
-    53: # Mean the slot
+    50:
+      material: BROWN_STAINED_GLASS_PANE
+      name: ' '
+    51: # Mean the slot
       material: BARRIER
       name: '{lang:close-item-name}'
       lore:
-        - '{lang:close-item-lore}'
+        - '{lang:close-item-lore-1}'
+        - '{lang:close-item-lore-2}'
       actions:
         1:
           type: close
+    52:
+      material: BROWN_STAINED_GLASS_PANE
+      name: ' '
 
 database:
   enabled: false

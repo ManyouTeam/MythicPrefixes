@@ -8,6 +8,7 @@ import org.bukkit.command.TabCompleter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class MainCommandTab implements TabCompleter {
 
@@ -16,19 +17,24 @@ public class MainCommandTab implements TabCompleter {
         List<String> tempVal1 = new ArrayList<>();
         if (args.length == 1) {
             for (AbstractCommand object : CommandManager.commandManager.getSubCommandsMap().values()) {
-                if (object.getRequiredPermission() != null && !object.getRequiredPermission().isEmpty()
-                        && !sender.hasPermission(object.getRequiredPermission())) {
+                if (!canUse(sender, object)) {
                     continue;
                 }
                 tempVal1.add(object.getId());
             }
         } else {
-            AbstractCommand tempVal2 = CommandManager.commandManager.getSubCommandsMap().get(args[0]);
-            if (tempVal2 != null && tempVal2.getRequiredPermission() != null && sender.hasPermission(tempVal2.getRequiredPermission())) {
-                AbstractCommand object = CommandManager.commandManager.getSubCommandsMap().get(args[0]);
-                tempVal1 = object.getTabResult(args.length);
+            AbstractCommand object = CommandManager.commandManager.getSubCommandsMap().get(args[0].toLowerCase(Locale.ROOT));
+            if (object != null && canUse(sender, object)) {
+                tempVal1 = object.getTabResult(args);
             }
         }
         return tempVal1;
+    }
+
+    private boolean canUse(CommandSender sender, AbstractCommand command) {
+        String permission = command.getRequiredPermission();
+        return permission == null || permission.isEmpty()
+                || sender.hasPermission(permission)
+                || sender.hasPermission("mythicprefixes.admin");
     }
 }

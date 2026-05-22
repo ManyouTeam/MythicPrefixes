@@ -50,4 +50,8 @@ public abstract class AbstractCommand {
     public List<String> getTabResult(int length) {
         return new ArrayList<>();
     }
+
+    public List<String> getTabResult(String[] args) {
+        return getTabResult(args.length);
+    }
 }

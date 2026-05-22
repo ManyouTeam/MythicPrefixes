@@ -2,32 +2,30 @@
 display-item:
   unlocked:
     material: DRAGON_EGG
-    name: '{display-value}'
+    name: '{lang:display.unlocked-name}'
     lore:
-      - '{lang:display.display-value}:{display-value}'
+      - '{lang:display.display-value}: {display-value}'
       - '{lang:display.preview}: %mythicprefixes_prefix_example_chat% %player_name%'
-      - '{lang:display.op-bypass-1}'
-      - '{lang:display.op-bypass-2}'
-      - '{lang:display.op-bypass-3}'
+      - '{lang:display.unlocked-tip}'
       - '{lang:display.click-use}'
   using:
     material: DRAGON_EGG
-    name: '{display-value}'
+    name: '{lang:display.using-name}'
     lore:
-      - '{lang:display.display-value}:{display-value}'
+      - '{lang:display.display-value}: {display-value}'
       - '{lang:display.preview}: %mythicprefixes_prefix_example_chat% %player_name%'
       - '{lang:display.using-now}'
       - '{lang:display.click-cancel}'
   locked:
     material: DRAGON_EGG
-    name: '{lang:display.locked}'
+    name: '{lang:display.locked-name}'
     lore:
-      - '{lang:display.display-value}:{display-value}'
+      - '{lang:display.display-value}: {display-value}'
       - '{lang:display.preview}: %mythicprefixes_prefix_example_chat% %player_name%'
       - '{lang:display.locked-tip}'
   max-reached:
     material: DRAGON_EGG
-    name: '{display-value}'
+    name: '{lang:display.max-reached-name}'
     lore:
       - '{lang:display.preview}: %mythicprefixes_prefix_example_chat% %player_name%'
       - '{lang:display.max-reached}'
@@ -36,6 +34,7 @@ bedrock:
   extra-line: '{lang:bedrock.extra-line}'
 
 display-value: '{lang:dragon-killer}'
+dynamic-prefix: false
 weight: 15
 auto-hide: false
 

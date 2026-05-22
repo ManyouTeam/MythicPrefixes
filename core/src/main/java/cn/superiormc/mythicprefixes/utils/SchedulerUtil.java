@@ -3,6 +3,7 @@ package cn.superiormc.mythicprefixes.utils;
 import cn.superiormc.mythicprefixes.MythicPrefixes;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -45,10 +46,18 @@ public class SchedulerUtil {
         }
     }
 
+    public static void runSync(Location location, Runnable task) {
+        if (MythicPrefixes.isFolia) {
+            Bukkit.getRegionScheduler().run(MythicPrefixes.instance, location, scheduledTask -> task.run());
+        } else {
+            Bukkit.getScheduler().runTask(MythicPrefixes.instance, task);
+        }
+    }
+
     // 在异步线程上运行任务
     public static void runTaskAsynchronously(Runnable task) {
         if (MythicPrefixes.isFolia) {
-            task.run();
+            Bukkit.getAsyncScheduler().runNow(MythicPrefixes.instance, scheduledTask -> task.run());
         } else {
             Bukkit.getScheduler().runTaskAsynchronously(MythicPrefixes.instance, task);
         }

@@ -1,0 +1,82 @@
+# Dynamic prefix example.
+# Players right click this item in the Java GUI to submit a custom value.
+# Admins can review requests with:
+# /mythicprefixes dynamicprefix list
+# /mythicprefixes dynamicprefix approve <uuid> dynamic_example
+# /mythicprefixes dynamicprefix deny <uuid> dynamic_example
+display-item:
+  unlocked:
+    material: NAME_TAG
+    name: '{lang:display.unlocked-name}'
+    lore:
+      - '{lang:display.display-value}: {display-value}'
+      - '{lang:display.dynamic-pending}: {pending-value}'
+      - '{lang:display.preview}: %mythicprefixes_prefix_dynamic_example_chat% %player_name%'
+      - '{lang:display.dynamic-approved}'
+      - '{lang:display.click-use}'
+      - '{lang:display.dynamic-edit}'
+  using:
+    material: NAME_TAG
+    name: '{lang:display.using-name}'
+    lore:
+      - '{lang:display.display-value}: {display-value}'
+      - '{lang:display.dynamic-pending}: {pending-value}'
+      - '{lang:display.preview}: %mythicprefixes_prefix_dynamic_example_chat% %player_name%'
+      - '{lang:display.using-now}'
+      - '{lang:display.click-cancel}'
+      - '{lang:display.dynamic-edit}'
+  locked:
+    material: PAPER
+    name: '{lang:display.dynamic-locked-name}'
+    lore:
+      - '{lang:display.dynamic-create}'
+      - '{lang:display.dynamic-pending}: {pending-value}'
+      - '{lang:display.dynamic-submit}'
+      - '{lang:display.dynamic-after-approval}'
+  max-reached:
+    material: NAME_TAG
+    name: '{lang:display.max-reached-name}'
+    lore:
+      - '{lang:display.display-value}: {display-value}'
+      - '{lang:display.dynamic-pending}: {pending-value}'
+      - '{lang:display.preview}: %mythicprefixes_prefix_dynamic_example_chat% %player_name%'
+      - '{lang:display.max-reached}'
+      - '{lang:display.dynamic-edit}'
+
+bedrock:
+  extra-line: '{lang:bedrock.extra-line}'
+
+display-value: '{lang:custom-title}'
+dynamic-prefix: true
+weight: 20
+auto-hide: false
+
+# Premium version only
+groups:
+  - chat
+  - example
+
+effects:
+  enabled: false
+
+equip-actions:
+  1:
+    type: message
+    message: '&aYou equipped your custom title.'
+unequip-actions:
+  1:
+    type: message
+    message: '&cYou unequipped your custom title.'
+
+# Premium version only
+click-actions:
+  condition-not-meet:
+    1:
+      type: message
+      message: '&cSubmit a custom value first, then wait for admin approval.'
+  max-limit-reached:
+    1:
+      type: message
+      message: '&cYou reached the maximum prefix usage limit.'
+
+conditions: []

@@ -1,4 +1,5 @@
 display-value: '&fPlayer'
+dynamic-prefix: false
 weight: 1
 auto-hide: false
 

@@ -34,6 +34,7 @@ public class CommandManager {
         registeredCommands.put("opengui", new SubOpenGUI());
         registeredCommands.put("help", new SubHelp());
         registeredCommands.put("parseplaceholder", new SubParsePlaceholder());
+        registeredCommands.put("dynamicprefix", new SubDynamicPrefix());
     }
 
     public Map<String, AbstractCommand> getSubCommandsMap() {

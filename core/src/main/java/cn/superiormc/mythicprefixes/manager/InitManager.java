@@ -27,12 +27,13 @@ public class InitManager {
         resourceOutput("display_placeholders/group_example.yml", false);
         resourceOutput("prefixes/example.yml", false);
         resourceOutput("prefixes/default.yml", false);
+        resourceOutput("prefixes/dynamic_example.yml", false);
     }
     
-    private void resourceOutput(String fileName, boolean fix) {
+    private void resourceOutput(String fileName, boolean regenerate) {
         File tempVal1 = new File(MythicPrefixes.instance.getDataFolder(), fileName);
         if (!tempVal1.exists()) {
-            if (!firstLoad && !fix) {
+            if (!firstLoad && !regenerate) {
                 return;
             }
             File tempVal2 = new File(fileName);

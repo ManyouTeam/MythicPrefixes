@@ -65,6 +65,14 @@ public class PlaceholderAPIExpansion extends PlaceholderExpansion {
         if (params.equals("amount")) {
             return String.valueOf(cache.getActivePrefixes().size());
 
+        } else if (params.startsWith("pending_")) {
+            String prefixId = params.substring("pending_".length());
+            ObjectPrefix prefix = ConfigManager.configManager.getPrefix(prefixId);
+            if (prefix == null) {
+                return LanguageManager.languageManager.getStringText(player, "placeholderapi.unknown-prefix");
+            }
+            return TextUtil.parse(prefix.getPendingDisplayValue(player));
+
         } else if (params.startsWith("status_")) {
             String prefixId = params.substring("status_".length());
             ObjectPrefix prefix = ConfigManager.configManager.getPrefix(prefixId);

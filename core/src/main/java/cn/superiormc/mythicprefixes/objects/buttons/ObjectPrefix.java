@@ -5,6 +5,8 @@ import cn.superiormc.mythicprefixes.api.MythicPrefixesAPI;
 import cn.superiormc.mythicprefixes.libreforge.LibreforgeEffects;
 import cn.superiormc.mythicprefixes.manager.CacheManager;
 import cn.superiormc.mythicprefixes.manager.ConfigManager;
+import cn.superiormc.mythicprefixes.manager.LanguageManager;
+import cn.superiormc.mythicprefixes.methods.DynamicPrefixes;
 import cn.superiormc.mythicprefixes.objects.*;
 import cn.superiormc.mythicprefixes.objects.effect.AbstractEffect;
 import cn.superiormc.mythicprefixes.objects.effect.EffectStatus;
@@ -44,6 +46,8 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
 
     private final List<String> groups;
 
+    private final boolean dynamicPrefix;
+
     public ObjectPrefix(String id, YamlConfiguration config) {
         super(config);
         this.id = id;
@@ -59,6 +63,7 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
         } else {
             this.groups = new ArrayList<>();
         }
+        this.dynamicPrefix = config.getBoolean("dynamic-prefix", false);
         ObjectDisplayPlaceholder.groupNames.addAll(groups);
     }
 
@@ -118,7 +123,28 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
 
     // Without color code
     public String getDisplayValue(Player player) {
+        if (dynamicPrefix) {
+            ObjectCache cache = CacheManager.cacheManager.getPlayerCache(player);
+            String value = cache.getApprovedDynamicPrefixValue(id);
+            if (value != null && !value.isEmpty()) {
+                return TextUtil.withPAPI(value, player);
+            }
+            CacheManager.cacheManager.getPlayerCache(player).removeActivePrefix(this, true);
+            return LanguageManager.languageManager.getStringText(player, "dynamic-prefix.none");
+        }
         return TextUtil.withPAPI(config.getString("display-value", "UNKNOWN"), player);
+    }
+
+    public String getPendingDisplayValue(Player player) {
+        if (!dynamicPrefix) {
+            return "";
+        }
+        ObjectCache cache = CacheManager.cacheManager.getPlayerCache(player);
+        String value = cache.getPendingDynamicPrefixValue(id);
+        if (value != null && !value.isEmpty()) {
+            return TextUtil.withPAPI(value, player);
+        }
+        return LanguageManager.languageManager.getStringText(player, "dynamic-prefix.none");
     }
 
     public int getWeight() {
@@ -133,7 +159,7 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
             return PrefixStatus.USING;
         }
         Player player = cache.getPlayer();
-        if (isConditionNotMeet(cache)) {
+        if (isConditionNotMeet(cache) || isDynamicPrefixEmpty(cache)) {
             return PrefixStatus.CONDITION_NOT_MEET;
         }
         Collection<ObjectPrefix> nowPrefixes = MythicPrefixesAPI.getActivedPrefixes(player);
@@ -164,8 +190,17 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
         return !condition.getAllBoolean(player) && !CommonUtil.checkPermission(player, "mythicprefixes.bypass." + getId());
     }
 
+    public boolean isDynamicPrefixEmpty(ObjectCache cache) {
+        String dynamicValue = cache.getApprovedDynamicPrefixValue(id);
+        return dynamicPrefix && (dynamicValue == null || dynamicValue.isEmpty());
+    }
+
     public boolean getDisplayInGUI() {
         return config.contains("display-item", true) && !isDefaultPrefix();
+    }
+
+    public boolean isDynamicPrefix() {
+        return dynamicPrefix;
     }
 
     public boolean shouldHideInGUI(Player player) {
@@ -174,6 +209,10 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
 
     @Override
     public void clickEvent(ClickType type, Player player) {
+        if (dynamicPrefix && type.isRightClick()) {
+            DynamicPrefixes.openDynamicPrefixEditor(player, this);
+            return;
+        }
         ObjectCache cache = CacheManager.cacheManager.getPlayerCache(player);
         switch (getPrefixStatus(cache)) {
             case CAN_USE:
@@ -213,12 +252,14 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
             if (config.getConfigurationSection("display-item") != null) {
                 return ItemUtil.buildItemStack(player, config.getConfigurationSection("display-item"),
                         "display-value", getDisplayValue(player),
+                        "pending-value", getPendingDisplayValue(player),
                         "status", MythicPrefixesAPI.getStatusPlaceholder(this, cache));
             }
             return new ItemStack(Material.STONE);
         }
         return ItemUtil.buildItemStack(player, section,
                 "display-value", getDisplayValue(player),
+                "pending-value", getPendingDisplayValue(player),
                 "status", MythicPrefixesAPI.getStatusPlaceholder(this, cache));
     }
 
@@ -263,8 +304,7 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof ObjectPrefix) {
-            ObjectPrefix prefix = (ObjectPrefix) obj;
+        if (obj instanceof ObjectPrefix prefix) {
             return prefix.getId().equals(this.getId());
         }
         return false;

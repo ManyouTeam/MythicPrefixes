@@ -39,6 +39,9 @@ help:
     &f/mythicprefixes setprefix <prefixes> &7- Set your using prefixes to specifed value. Support use ;; split each prefix.
     &f/mythicprefixes setprefix <player> <prefixes> &7- Set specified player using prefixes to specifed value. Support use ;; split each prefix.
     &f/mythicprefixes parseplaceholder <placeholder> &7- Parse display placeholder.
+    &f/mythicprefixes dynamicprefix list &7- List pending dynamic prefix requests.
+    &f/mythicprefixes dynamicprefix approve <uuid> <prefix> &7- Approve a dynamic prefix request.
+    &f/mythicprefixes dynamicprefix deny <uuid> <prefix> &7- Deny a dynamic prefix request.
   main-console: |
     &#98FB98&lMythicPrefixes &7Made by @PQguanfang
     &f/mythicprefixes help &7- View help.
@@ -47,6 +50,9 @@ help:
     &f/mythicprefixes addprefix <player> <prefix> &7- Add new prefix for specifed player.
     &f/mythicprefixes removeprefix <player> <prefix> &7- Remove using prefix for specifed player.
     &f/mythicprefixes setprefix <player> <prefixes> &7- Set specified player using prefixes to specifed value. Support use ;; split each prefix.
+    &f/mythicprefixes dynamicprefix list &7- List pending dynamic prefix requests.
+    &f/mythicprefixes dynamicprefix approve <uuid> <prefix> &7- Approve a dynamic prefix request.
+    &f/mythicprefixes dynamicprefix deny <uuid> <prefix> &7- Deny a dynamic prefix request.
 
 success-add-prefix: "&#98FB98[MythicPrefixes] &fSuccessfully add prefix {prefix} for player {player}!"
 success-remove-prefix: "&#98FB98[MythicPrefixes] &fSuccessfully remove prefix {prefix} for player {player}!"
@@ -55,10 +61,37 @@ view-prefix:
   head: '&#98FB98[MythicPrefixes] &fYou are now using those prefixes:'
   format: '&f - {prefix}'
 parse-placeholder: "&#98FB98[MythicPrefixes] &fDisplay placeholder {placeholder} now value: {value}!"
+dupe-removed: "&#98FB98[MythicPrefixes] &fAn illegal item from your inventory has been removed!"
+
+dynamic-prefix:
+  input: "&#98FB98[MythicPrefixes] &fPlease type the new value for {prefix}. Current: {current}. Type cancel to cancel."
+  submitted: "&#98FB98[MythicPrefixes] &fYour dynamic prefix request for {prefix} has been submitted: {value}"
+  cancelled: "&#98FB98[MythicPrefixes] &fDynamic prefix edit cancelled."
+  empty: "&#98FB98[MythicPrefixes] &cDynamic prefix can not be empty."
+  length: "&#98FB98[MythicPrefixes] &cDynamic prefix length is invalid."
+  sensitive-word: "&#98FB98[MythicPrefixes] &cDynamic prefix contains sensitive words."
+  condition-not-meet: "&#98FB98[MythicPrefixes] &cYou can not edit {prefix} yet."
+  admin-notify: "&#98FB98[MythicPrefixes] &eThere are {amount} dynamic prefix requests waiting for review."
+  list-format: "&#98FB98[MythicPrefixes] &f{player} ({uuid}) -> {prefix}: {value}"
+  list-empty: "&#98FB98[MythicPrefixes] &fNo dynamic prefix requests are waiting."
+  request-not-found: "&#98FB98[MythicPrefixes] &cDynamic prefix request not found."
+  approved-admin: "&#98FB98[MythicPrefixes] &fApproved dynamic prefix {prefix} for {uuid}."
+  denied-admin: "&#98FB98[MythicPrefixes] &fDenied dynamic prefix {prefix} for {uuid}."
+  approved-player: "&#98FB98[MythicPrefixes] &aYour dynamic prefix {prefix} has been approved."
+  denied-player: "&#98FB98[MythicPrefixes] &cYour dynamic prefix {prefix} has been denied."
+  none: "None"
+  form-title: "Edit {prefix}"
+  form-label: "Current: {current}\nPending: {pending}"
+  form-action: "Action"
+  form-action-submit: "Submit new value"
+  form-action-equip: "Equip this prefix"
+  form-action-unequip: "Unequip this prefix"
+  form-input: "New value"
 
 override-lang:
   choose-prefix-gui:
-    title: 'Choose your prefix'
+    title: '&8[&6Choose Prefix&8] &7Page &f{now}&8/&f{max}'
+    bedrock-title: '&8[&6Choose Prefix&8]'
   prompt:
     cancel-keyword: 'cancel'
   status-placeholder:
@@ -66,33 +99,60 @@ override-lang:
     using: '&eClick to cancel use this prefix.'
     locked: '&cYou do not have permission to use this prefix.'
     max-reached: '&cYou can not use anymore prefix.'
-  filter-item-name: '&bFilter'
-  filter-item-lore: '&7Filter: {filter}'
+  gui-empty-name: '&8'
+  filter-item-name: '&6Filter &8| &f{filter}'
+  filter-item-name2: '&6Filter'
+  filter-item-lore: '&7Sort the cabinet by prefix status.'
+  filter-item-click: '&eClick to change filter.'
   filter-all: '&aALL'
   filter-using: '&cUSING'
   filter-can-use: '&dCan Use'
-  next-item-name: '&cNext page'
-  next-item-lore-1: '&7Page: {now}/{max}'
-  next-item-lore-2: '&eClick to view next page'
-  previous-item-name: '&cPrevious page'
-  previous-item-lore-1: '&7Page: {now}/{max}'
-  previous-item-lore-2: '&eClick to view previous page'
-  unequip-all-tags-item-name: '&4Unequip All tags'
+  next-item-name: '&6Next Page'
+  next-item-lore-1: '&7Page: &f{now}&8/&f{max}'
+  next-item-lore-2: '&eClick to browse forward.'
+  previous-item-name: '&6Previous Page'
+  previous-item-lore-1: '&7Page: &f{now}&8/&f{max}'
+  previous-item-lore-2: '&eClick to browse back.'
+  archive-item-name: '&6Prefix Archive'
+  archive-item-lore-1: '&7A quiet shelf for every title'
+  archive-item-lore-2: '&7you have earned.'
+  guide-item-name: '&6How to use'
+  guide-item-lore-1: '&7Left click a title to equip it.'
+  guide-item-lore-2: '&7Left click again to remove it.'
+  guide-item-lore-3: '&7Right click dynamic titles to edit.'
+  unequip-all-tags-item-name: '&cUnequip All Titles'
   unequip-all-tags-item-lore: '&cClick to unequip.'
+  unequip-all-tags-item-lore-1: '&7Put every active title back'
+  unequip-all-tags-item-lore-2: '&7into the archive.'
+  unequip-all-tags-item-lore-3: '&eClick to unequip.'
   close-item-name: '&cClose'
-  close-item-lore: '&cClick to close this menu.'
+  close-item-lore-1: '&7Leave the prefix cabinet.'
+  close-item-lore-2: '&eClick to close.'
   default-message: 'This is default message. Default prefix has equipped so prefix effect also activated!'
   dragon-killer: 'Dragon Killer'
+  custom-title: '&7Custom'
 
   display:
-    display-value: '&7Display Value: '
+    unlocked-name: '&bCan Use &8| &f{display-value}'
+    using-name: '&aUsing &8| &f{display-value}'
+    locked-name: '&cLocked &8| &f{display-value}'
+    max-reached-name: '&cLimit Reached &8| &f{display-value}'
+    dynamic-locked-name: '&6Custom Prefix'
+    display-value: '&7Display Value'
     preview: '&7Preview'
+    unlocked-tip: '&aThis prefix is ready to use.'
     click-use: '&eClick to use!'
     click-cancel: '&eClick to cancel using this prefix!'
     using-now: '&cYou are now using this prefix!'
     locked: '&cLocked'
     locked-tip: '&cKill a dragon to unlock!'
     max-reached: '&cYou have reached the maximum prefix limit!'
+    dynamic-approved: '&aThis custom prefix has been approved.'
+    dynamic-create: '&7Create your own display value.'
+    dynamic-pending: '&7Pending review'
+    dynamic-submit: '&eRight click to submit a value for review.'
+    dynamic-after-approval: '&8After approval, this prefix can be equipped.'
+    dynamic-edit: '&eRight click to submit a new value.'
 
     op-bypass-1: '&dOP can always use this prefix'
     op-bypass-2: '&dIf you want to avoid that'

@@ -1,71 +1,161 @@
 error:
-  args: '&#98FB98[MythicPrefixes] &c错误的指令用法，请使用 /prefix help 查看帮助!'
-  in-game: '&#98FB98[MythicPrefixes] &c你必须在游戏中使用该指令!'
-  miss-permission: '&#98FB98[MythicPrefixes] &c你没有权限使用该指令!'
-  player-not-found: '&#98FB98[MythicPrefixes] &c无法找到玩家 {player}!'
-  prefix-not-found: '&#98FB98[MythicPrefixes] &c无法找到称号 {prefix}!'
-  placeholder-not-found: "&#98FB98[MythicPrefixes] &c无法找到显示变量符 {placeholder}!"
-  prefix-not-using: '&#98FB98[MythicPrefixes] &c玩家 {player} 目前没有使用称号 {prefix}!'
-  prefix-is-using: '&#98FB98[MythicPrefixes] &c玩家 {player} 正在使用称号 {prefix}!'
-  prefix-is-empty: '&#98FB98[MythicPrefixes] &c玩家 {player} 目前没有使用任何称号!'
-  max-prefix-reached: "&#98FB98[MythicPrefixes] &c玩家 {player} 已达到称号使用上限!"
-  prefix-condition-not-meet: "&#98FB98[MythicPrefixes] &c玩家 {player} 为满足称号 {prefix} 的使用条件!"
+  args: "&#98FB98[MythicPrefixes] &c命令用法错误，如需帮助，请查看插件 Wiki！"
+  in-game: "&#98FB98[MythicPrefixes] &c你必须在游戏内使用此命令！"
+  miss-permission: "&#98FB98[MythicPrefixes] &c你没有权限使用此命令！"
+  player-not-found: "&#98FB98[MythicPrefixes] &c找不到玩家 {player}！"
+  prefix-not-found: "&#98FB98[MythicPrefixes] &c找不到称号：{prefix}！"
+  placeholder-not-found: "&#98FB98[MythicPrefixes] &c找不到占位符：{placeholder}！"
+  prefix-not-using: "&#98FB98[MythicPrefixes] &c玩家 {player} 未使用称号 {prefix}！"
+  prefix-is-using: "&#98FB98[MythicPrefixes] &c玩家 {player} 正在使用称号 {prefix}！"
+  prefix-is-empty: "&#98FB98[MythicPrefixes] &c玩家 {player} 当前没有使用任何称号！"
+  max-prefix-reached: "&#98FB98[MythicPrefixes] &c玩家 {player} 已达到最大称号使用数量！"
+  prefix-condition-not-meet: "&#98FB98[MythicPrefixes] &c玩家 {player} 不满足 {prefix} 的条件！"
 
 plugin:
-  reloaded: '&#98FB98[MythicPrefixes] &f插件已重启!'
+  reloaded: "&#98FB98[MythicPrefixes] &f插件已重载！"
 
 placeholderapi:
-  unknown-display-placeholder: 未知称号PAPI的ID
-  unknown-prefix: 未知称号
+  unknown-display-placeholder: "未知显示占位符 ID"
+  unknown-prefix: "未知称号"
 
-success-add-prefix: '&#98FB98[MythicPrefixes] &f成功给玩家 {player} 添加了正在使用的称号 {prefix}!'
-success-remove-prefix: '&#98FB98[MythicPrefixes] &f成功给玩家 {player} 移除了正在使用的称号 {prefix}!'
-success-set-prefix: "&#98FB98[MythicPrefixes] &f成功设置玩家 {player} 正在使用的称号为 {prefix}!"
+# 所有消息也支持多行，就像这样！
+help:
+  main: |
+    &#98FB98&lMythicPrefixes &7作者 @PQguanfang
+    &f/mythicprefixes help &7- 查看帮助。
+    &f/mythicprefixes opengui &7- 打开称号 GUI。
+    &f/mythicprefixes viewusingprefix &7- 查看你正在使用的称号。
+  main-admin: |
+    &#98FB98&lMythicPrefixes &7作者 @PQguanfang
+    &f/mythicprefixes help &7- 查看帮助。
+    &f/mythicprefixes opengui &7- 打开称号 GUI。
+    &f/mythicprefixes opengui <player> &7- 为指定玩家打开称号 GUI。
+    &f/mythicprefixes viewusingprefix &7- 查看你正在使用的称号。
+    &f/mythicprefixes viewusingprefix <player> &7- 查看指定玩家正在使用的称号。
+    &f/mythicprefixes addprefix <prefix> &7- 为自己添加新称号。
+    &f/mythicprefixes addprefix <player> <prefix> &7- 为指定玩家添加新称号。
+    &f/mythicprefixes removeprefix <prefix> &7- 移除自己正在使用的称号。
+    &f/mythicprefixes removeprefix <player> <prefix> &7- 移除指定玩家正在使用的称号。
+    &f/mythicprefixes setprefix <prefixes> &7- 将你正在使用的称号设置为指定值。支持使用 ;; 分隔每个称号。
+    &f/mythicprefixes setprefix <player> <prefixes> &7- 将指定玩家正在使用的称号设置为指定值。支持使用 ;; 分隔每个称号。
+    &f/mythicprefixes parseplaceholder <placeholder> &7- 解析显示占位符。
+    &f/mythicprefixes dynamicprefix list &7- 列出待审核的动态称号申请。
+    &f/mythicprefixes dynamicprefix approve <uuid> <prefix> &7- 通过一个动态称号申请。
+    &f/mythicprefixes dynamicprefix deny <uuid> <prefix> &7- 拒绝一个动态称号申请。
+  main-console: |
+    &#98FB98&lMythicPrefixes &7作者 @PQguanfang
+    &f/mythicprefixes help &7- 查看帮助。
+    &f/mythicprefixes opengui <player> &7- 为指定玩家打开称号 GUI。
+    &f/mythicprefixes viewusingprefix <player> &7- 查看指定玩家正在使用的称号。
+    &f/mythicprefixes addprefix <player> <prefix> &7- 为指定玩家添加新称号。
+    &f/mythicprefixes removeprefix <player> <prefix> &7- 移除指定玩家正在使用的称号。
+    &f/mythicprefixes setprefix <player> <prefixes> &7- 将指定玩家正在使用的称号设置为指定值。支持使用 ;; 分隔每个称号。
+    &f/mythicprefixes dynamicprefix list &7- 列出待审核的动态称号申请。
+    &f/mythicprefixes dynamicprefix approve <uuid> <prefix> &7- 通过一个动态称号申请。
+    &f/mythicprefixes dynamicprefix deny <uuid> <prefix> &7- 拒绝一个动态称号申请。
+
+success-add-prefix: "&#98FB98[MythicPrefixes] &f成功为玩家 {player} 添加称号 {prefix}！"
+success-remove-prefix: "&#98FB98[MythicPrefixes] &f成功为玩家 {player} 移除称号 {prefix}！"
+success-set-prefix: "&#98FB98[MythicPrefixes] &f成功将玩家 {player} 正在使用的称号设置为 {prefix}！"
 view-prefix:
-  format: '&f{prefix}'
-  head: '&#98FB98[MythicPrefixes] &f你正在使用如下称号:'
-parse-placeholder: "&#98FB98[MythicPrefixes] &f显示变量符 {placeholder} 现在的值是: {value}!"
+  head: '&#98FB98[MythicPrefixes] &f你当前正在使用以下称号：'
+  format: '&f - {prefix}'
+parse-placeholder: "&#98FB98[MythicPrefixes] &f显示占位符 {placeholder} 当前值：{value}！"
+dupe-removed: "&#98FB98[MythicPrefixes] &f你背包中的一个非法物品已被移除！"
+
+dynamic-prefix:
+  input: "&#98FB98[MythicPrefixes] &f请输入 {prefix} 的新值。当前值：{current}。输入 cancel 取消。"
+  submitted: "&#98FB98[MythicPrefixes] &f你对 {prefix} 的动态称号申请已提交：{value}"
+  cancelled: "&#98FB98[MythicPrefixes] &f动态称号编辑已取消。"
+  empty: "&#98FB98[MythicPrefixes] &c动态称号不能为空。"
+  length: "&#98FB98[MythicPrefixes] &c动态称号长度无效。"
+  sensitive-word: "&#98FB98[MythicPrefixes] &c动态称号包含敏感词。"
+  condition-not-meet: "&#98FB98[MythicPrefixes] &c你暂时无法编辑 {prefix}。"
+  admin-notify: "&#98FB98[MythicPrefixes] &e有 {amount} 个动态称号申请等待审核。"
+  list-format: "&#98FB98[MythicPrefixes] &f{player} ({uuid}) -> {prefix}: {value}"
+  list-empty: "&#98FB98[MythicPrefixes] &f当前没有待审核的动态称号申请。"
+  request-not-found: "&#98FB98[MythicPrefixes] &c未找到动态称号申请。"
+  approved-admin: "&#98FB98[MythicPrefixes] &f已通过 {uuid} 的动态称号 {prefix}。"
+  denied-admin: "&#98FB98[MythicPrefixes] &f已拒绝 {uuid} 的动态称号 {prefix}。"
+  approved-player: "&#98FB98[MythicPrefixes] &a你的动态称号 {prefix} 已通过审核。"
+  denied-player: "&#98FB98[MythicPrefixes] &c你的动态称号 {prefix} 已被拒绝。"
+  none: "无"
+  form-title: "编辑 {prefix}"
+  form-label: "当前：{current}\n待审核：{pending}"
+  form-action: "操作"
+  form-action-submit: "提交新值"
+  form-action-equip: "穿戴此称号"
+  form-action-unequip: "卸下此称号"
+  form-input: "新值"
 
 override-lang:
   choose-prefix-gui:
-    title: '选择你的称号'
+    title: '&8[&6选择称号&8] &7第 &f{now}&8/&f{max} &7页'
+    bedrock-title: '&8[&6选择称号&8]'
   prompt:
-    cancel-keyword: '取消'
+    cancel-keyword: 'cancel'
   status-placeholder:
     unlocked: '&e点击使用'
-    using: '&e点击取消使用此称号'
-    locked: '&c你没有权限使用此称号'
-    max-reached: '&c你已达到可使用称号的上限'
-  filter-item-name: '&b筛选'
-  filter-item-lore: '&7筛选条件：{filter}'
+    using: '&e点击取消使用此称号。'
+    locked: '&c你没有权限使用此称号。'
+    max-reached: '&c你不能再使用更多称号。'
+  gui-empty-name: '&8'
+  filter-item-name: '&6筛选 &8| &f{filter}'
+  filter-item-name2: '&6筛选'
+  filter-item-lore: '&7按称号状态整理展示。'
+  filter-item-click: '&e点击切换筛选。'
   filter-all: '&a全部'
   filter-using: '&c正在使用'
   filter-can-use: '&d可使用'
-  next-item-name: '&c下一页'
-  next-item-lore-1: '&7页码：{now}/{max}'
-  next-item-lore-2: '&e点击查看下一页'
-  previous-item-name: '&c上一页'
-  previous-item-lore-1: '&7页码：{now}/{max}'
-  previous-item-lore-2: '&e点击查看上一页'
-  unequip-all-tags-item-name: '&4取消全部称号'
-  unequip-all-tags-item-lore: '&c点击取消所有已使用的称号'
+  next-item-name: '&6下一页'
+  next-item-lore-1: '&7页数：&f{now}&8/&f{max}'
+  next-item-lore-2: '&e点击向后浏览。'
+  previous-item-name: '&6上一页'
+  previous-item-lore-1: '&7页数：&f{now}&8/&f{max}'
+  previous-item-lore-2: '&e点击向前浏览。'
+  archive-item-name: '&6称号档案'
+  archive-item-lore-1: '&7安静收纳每一个'
+  archive-item-lore-2: '&7你获得过的称号。'
+  guide-item-name: '&6使用说明'
+  guide-item-lore-1: '&7左键称号即可装备。'
+  guide-item-lore-2: '&7再次左键即可卸下。'
+  guide-item-lore-3: '&7右键动态称号可编辑。'
+  unequip-all-tags-item-name: '&c卸下所有称号'
+  unequip-all-tags-item-lore: '&c点击卸下。'
+  unequip-all-tags-item-lore-1: '&7将所有正在使用的称号'
+  unequip-all-tags-item-lore-2: '&7放回档案中。'
+  unequip-all-tags-item-lore-3: '&e点击卸下。'
   close-item-name: '&c关闭'
-  close-item-lore: '&c点击关闭此界面'
-  default-message: '由于你穿戴了默认称号，因此默认称号效果已被激活！'
+  close-item-lore-1: '&7离开称号档案。'
+  close-item-lore-2: '&e点击关闭。'
+  default-message: '这是默认消息。默认称号已装备，因此称号效果也已激活！'
   dragon-killer: '屠龙者'
+  custom-title: '&7自定义'
 
   display:
-    display-value: '&7显示名称：'
+    unlocked-name: '&b可使用 &8| &f{display-value}'
+    using-name: '&a使用中 &8| &f{display-value}'
+    locked-name: '&c已锁定 &8| &f{display-value}'
+    max-reached-name: '&c已达上限 &8| &f{display-value}'
+    dynamic-locked-name: '&6自定义称号'
+    display-value: '&7显示值'
     preview: '&7预览'
+    unlocked-tip: '&a此称号已可使用。'
     click-use: '&e点击使用！'
     click-cancel: '&e点击取消使用此称号！'
-    using-now: '&c你正在使用此称号！'
-    locked: '&c未解锁'
-    locked-tip: '&c击杀末影龙以解锁！'
-    max-reached: '&c你已达到可使用称号的上限！'
+    using-now: '&c你当前正在使用此称号！'
+    locked: '&c已锁定'
+    locked-tip: '&c击杀一条末影龙以解锁！'
+    max-reached: '&c你已达到最大称号数量限制！'
+    dynamic-approved: '&a此自定义称号已通过审核。'
+    dynamic-create: '&7创建你自己的显示值。'
+    dynamic-pending: '&7待审核值'
+    dynamic-submit: '&e右键提交一个值以供审核。'
+    dynamic-after-approval: '&8审核通过后，此称号即可装备。'
+    dynamic-edit: '&e右键提交一个新值。'
 
-    op-bypass-1: '&dOP 始终可以使用此称号'
-    op-bypass-2: '&d如果不希望这样'
+    op-bypass-1: '&dOP 可以始终使用此称号'
+    op-bypass-2: '&d如果你想避免这种情况'
     op-bypass-3: '&d请移除 &4-mythicprefixes.bypass.* &d权限'
 
   bedrock:
@@ -74,9 +164,8 @@ override-lang:
   action:
     equip: '&a你已装备此称号'
     unequip: '&c你已卸下此称号'
-    default: '&7默认操作已触发'
+    default: '&7默认动作已触发'
 
   click:
     condition-not-met: '&c你尚未解锁此称号！'
-    max-limit: '&c你已达到最大称号使用数量！'
-  
+    max-limit: '&c你已达到最大称号使用数量限制！'

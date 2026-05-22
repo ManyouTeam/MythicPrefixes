@@ -58,7 +58,11 @@ public abstract class AbstractButton {
         if (config.getBoolean("bedrock.hide", false)) {
             return null;
         }
-        String tempVal3 = TextUtil.parse(ItemUtil.getItemNameWithoutVanilla(getDisplayItem(player)), player);
+        String tempVal3 = ItemUtil.getItemNameWithoutVanilla(getDisplayItem(player));
+        if (tempVal3.trim().isEmpty()) {
+            return null;
+        }
+        tempVal3 = TextUtil.parse(tempVal3, player);
         String tempVal4 = config.getString("bedrock.extra-line");
         if (tempVal4 != null && !tempVal4.isEmpty()) {
             if (this instanceof ObjectPrefix) {

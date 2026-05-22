@@ -38,6 +38,64 @@ public class MySQLDialect extends DatabaseDialect {
     }
 
     @Override
+    public String createDynamicPrefixTable() {
+        return """
+            CREATE TABLE IF NOT EXISTS mythicprefixes_dynamic (
+              playerUUID VARCHAR(36) NOT NULL,
+              prefixID VARCHAR(128) NOT NULL,
+              approvedValue TEXT,
+              PRIMARY KEY (playerUUID, prefixID)
+            )
+            """;
+    }
+
+    @Override
+    public String upsertDynamicPrefix() {
+        return """
+            INSERT INTO mythicprefixes_dynamic (playerUUID, prefixID, approvedValue)
+            VALUES (?, ?, ?)
+            ON DUPLICATE KEY UPDATE
+              approvedValue = VALUES(approvedValue)
+            """;
+    }
+
+    @Override
+    public String createDynamicPrefixRequestTable() {
+        return """
+            CREATE TABLE IF NOT EXISTS mythicprefixes_dynamic_pending (
+              playerUUID VARCHAR(36) NOT NULL,
+              playerName VARCHAR(16),
+              prefixID VARCHAR(128) NOT NULL,
+              pendingValue TEXT,
+              PRIMARY KEY (playerUUID, prefixID)
+            )
+            """;
+    }
+
+    @Override
+    public String upsertDynamicPrefixRequest() {
+        return """
+            INSERT INTO mythicprefixes_dynamic_pending (playerUUID, playerName, prefixID, pendingValue)
+            VALUES (?, ?, ?, ?)
+            ON DUPLICATE KEY UPDATE
+              playerName = VALUES(playerName),
+              pendingValue = VALUES(pendingValue)
+            """;
+    }
+
+    @Override
+    public String approveDynamicPrefixRequest() {
+        return """
+            INSERT INTO mythicprefixes_dynamic (playerUUID, prefixID, approvedValue)
+            SELECT playerUUID, prefixID, pendingValue
+            FROM mythicprefixes_dynamic_pending
+            WHERE playerUUID = ? AND prefixID = ?
+            ON DUPLICATE KEY UPDATE
+              approvedValue = VALUES(approvedValue)
+            """;
+    }
+
+    @Override
     public void needExtraDownload(String jdbcUrl) {
         if (jdbcUrl.startsWith("jdbc:mariadb:")) {
             loadDriver("mariadb-java-client",

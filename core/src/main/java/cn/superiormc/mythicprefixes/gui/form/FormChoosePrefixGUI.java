@@ -20,7 +20,6 @@ import org.geysermc.cumulus.util.FormImage;
 import java.util.HashMap;
 import java.util.Map;
 
-
 public class FormChoosePrefixGUI extends FormGUI {
 
     private final Map<ButtonComponent, AbstractButton> buttonCache = new HashMap<>();
@@ -63,7 +62,7 @@ public class FormChoosePrefixGUI extends FormGUI {
                 buttonCache.put(tempVal1, button);
             }
         }
-        tempVal2.title(TextUtil.parse(ConfigManager.configManager.getString(player, "choose-prefix-gui." + "title", "Tag GUI")));
+        tempVal2.title(TextUtil.parse(ConfigManager.configManager.getString(player, "choose-prefix-gui.bedrock-title", "Tag GUI")));
         ConfigurationSection filterSection = ConfigManager.configManager.getConfigurationSection("choose-prefix-gui.filter-item");
         if (filterSection != null && !MythicPrefixes.freeVersion) {
             String filterPlaceholder = filterSection.getString("placeholder.all");
@@ -77,12 +76,12 @@ public class FormChoosePrefixGUI extends FormGUI {
             if (icon != null && icon.split(";;").length == 2) {
                 String type = icon.split(";;")[0].toLowerCase();
                 if (type.equals("url")) {
-                    tempVal1 = ButtonComponent.of(TextUtil.parse(filterSection.getString("name") + "\n" + filterPlaceholder), FormImage.Type.URL, icon.split(";;")[1]);
+                    tempVal1 = ButtonComponent.of(TextUtil.parse(filterSection.getString("bedrock-name") + "\n" + filterPlaceholder, player), FormImage.Type.URL, icon.split(";;")[1]);
                 } else if (type.equals("path")) {
-                    tempVal1 = ButtonComponent.of(TextUtil.parse(filterSection.getString("name") + "\n" + filterPlaceholder), FormImage.Type.PATH, icon.split(";;")[1]);
+                    tempVal1 = ButtonComponent.of(TextUtil.parse(filterSection.getString("bedrock-name") + "\n" + filterPlaceholder, player), FormImage.Type.PATH, icon.split(";;")[1]);
                 }
             } else {
-                tempVal1 = ButtonComponent.of(TextUtil.parse(filterSection.getString("name") + "\n" + filterPlaceholder));
+                tempVal1 = ButtonComponent.of(TextUtil.parse(filterSection.getString("bedrock-name") + "\n" + filterPlaceholder, player));
             }
             if (tempVal1 != null) {
                 tempVal2.button(tempVal1);
@@ -104,7 +103,12 @@ public class FormChoosePrefixGUI extends FormGUI {
                     openGUI();
                 }
             } else {
-                buttonCache.get(response.clickedButton()).clickEvent(ClickType.LEFT, player);
+                AbstractButton button = buttonCache.get(response.clickedButton());
+                if (button instanceof ObjectPrefix && ((ObjectPrefix) button).isDynamicPrefix()) {
+                    new FormDynamicPrefixGUI(player, (ObjectPrefix) button).openGUI();
+                    return;
+                }
+                button.clickEvent(ClickType.LEFT, player);
             }
         });
         form = tempVal2.build();

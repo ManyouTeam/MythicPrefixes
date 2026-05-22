@@ -1,6 +1,7 @@
 package cn.superiormc.mythicprefixes.database;
 
 import cn.superiormc.mythicprefixes.manager.CacheManager;
+import cn.superiormc.mythicprefixes.objects.DynamicPrefixRequest;
 import cn.superiormc.mythicprefixes.objects.ObjectCache;
 import cn.superiormc.mythicprefixes.manager.ConfigManager;
 import cn.superiormc.mythicprefixes.utils.TextUtil;
@@ -13,6 +14,8 @@ import com.zaxxer.hikari.HikariDataSource;
 
 import java.sql.*;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 
 public class SQLDatabase extends AbstractDatabase {
@@ -84,6 +87,8 @@ public class SQLDatabase extends AbstractDatabase {
              Statement stmt = conn.createStatement()) {
 
             stmt.execute(dialect.createPrefixTable());
+            stmt.execute(dialect.createDynamicPrefixTable());
+            stmt.execute(dialect.createDynamicPrefixRequestTable());
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -112,10 +117,40 @@ public class SQLDatabase extends AbstractDatabase {
 
             ps.setString(1, playerUUID);
 
+            String activePrefixes = null;
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    cache.setActivePrefixes(rs.getString("prefixID"));
+                    activePrefixes = rs.getString("prefixID");
                 }
+            }
+
+            try (PreparedStatement ps2 = conn.prepareStatement("""
+                    SELECT prefixID, approvedValue
+                    FROM mythicprefixes_dynamic
+                    WHERE playerUUID = ?
+                    """)) {
+                ps2.setString(1, playerUUID);
+                try (ResultSet rs2 = ps2.executeQuery()) {
+                    while (rs2.next()) {
+                        String prefixID = rs2.getString("prefixID");
+                        cache.setDynamicPrefixValue(prefixID, rs2.getString("approvedValue"));
+                    }
+                }
+            }
+            try (PreparedStatement ps3 = conn.prepareStatement("""
+                    SELECT prefixID, pendingValue
+                    FROM mythicprefixes_dynamic_pending
+                    WHERE playerUUID = ?
+                    """)) {
+                ps3.setString(1, playerUUID);
+                try (ResultSet rs3 = ps3.executeQuery()) {
+                    while (rs3.next()) {
+                        cache.setPendingDynamicPrefixValue(rs3.getString("prefixID"), rs3.getString("pendingValue"));
+                    }
+                }
+            }
+            if (activePrefixes != null) {
+                cache.setActivePrefixes(activePrefixes);
             }
 
         } catch (SQLException e) {
@@ -158,4 +193,205 @@ public class SQLDatabase extends AbstractDatabase {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public CompletableFuture<Void> saveDynamicPrefixRequest(org.bukkit.entity.Player player, String prefixID, String value) {
+        return CompletableFuture.runAsync(() -> {
+            try (Connection conn = dataSource.getConnection();
+                 PreparedStatement ps = conn.prepareStatement(dialect.upsertDynamicPrefixRequest())) {
+                ps.setString(1, player.getUniqueId().toString());
+                ps.setString(2, player.getName());
+                ps.setString(3, prefixID);
+                ps.setString(4, value);
+                ps.executeUpdate();
+                try (PreparedStatement ps2 = conn.prepareStatement(dialect.upsertDynamicPrefix())) {
+                    ObjectCache cache = CacheManager.cacheManager.getPlayerCache(player);
+                    String markedValue = cache == null ? ObjectCache.markDynamicPrefixPending(value) : cache.getDynamicPrefixValue(prefixID);
+                    ps2.setString(1, player.getUniqueId().toString());
+                    ps2.setString(2, prefixID);
+                    ps2.setString(3, markedValue == null ? ObjectCache.markDynamicPrefixPending(value) : markedValue);
+                    ps2.executeUpdate();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }, DatabaseExecutor.EXECUTOR);
+    }
+
+    @Override
+    public CompletableFuture<Collection<DynamicPrefixRequest>> getPendingDynamicPrefixRequests() {
+        return CompletableFuture.supplyAsync(() -> {
+            List<DynamicPrefixRequest> result = new ArrayList<>();
+            try (Connection conn = dataSource.getConnection();
+                 PreparedStatement ps = conn.prepareStatement("""
+                         SELECT playerUUID, playerName, prefixID, pendingValue
+                         FROM mythicprefixes_dynamic_pending
+                         WHERE pendingValue IS NOT NULL AND pendingValue <> ''
+                         """);
+                 ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    result.add(new DynamicPrefixRequest(
+                            rs.getString("playerUUID"),
+                            rs.getString("playerName"),
+                            rs.getString("prefixID"),
+                            rs.getString("pendingValue")
+                    ));
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return result;
+        }, DatabaseExecutor.EXECUTOR);
+    }
+
+    @Override
+    public CompletableFuture<Integer> getPendingDynamicPrefixRequestAmount() {
+        return CompletableFuture.supplyAsync(() -> {
+            try (Connection conn = dataSource.getConnection();
+                 PreparedStatement ps = conn.prepareStatement("""
+                         SELECT COUNT(*) AS amount
+                         FROM mythicprefixes_dynamic_pending
+                         WHERE pendingValue IS NOT NULL AND pendingValue <> ''
+                         """);
+                 ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("amount");
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return 0;
+        }, DatabaseExecutor.EXECUTOR);
+    }
+
+    @Override
+    public CompletableFuture<Boolean> approveDynamicPrefixRequest(String playerUUID, String prefixID) {
+        return handleDynamicPrefixRequest(playerUUID, prefixID, true);
+    }
+
+    @Override
+    public CompletableFuture<Boolean> denyDynamicPrefixRequest(String playerUUID, String prefixID) {
+        return handleDynamicPrefixRequest(playerUUID, prefixID, false);
+    }
+
+    private CompletableFuture<Boolean> handleDynamicPrefixRequest(String playerUUID, String prefixID, boolean approve) {
+        return CompletableFuture.supplyAsync(() -> {
+            try (Connection conn = dataSource.getConnection()) {
+                conn.setAutoCommit(false);
+                boolean exists;
+                try (PreparedStatement ps = conn.prepareStatement("""
+                        SELECT pendingValue
+                        FROM mythicprefixes_dynamic_pending
+                        WHERE playerUUID = ? AND prefixID = ? AND pendingValue IS NOT NULL AND pendingValue <> ''
+                        """)) {
+                    ps.setString(1, playerUUID);
+                    ps.setString(2, prefixID);
+                    try (ResultSet rs = ps.executeQuery()) {
+                        exists = rs.next();
+                    }
+                }
+                if (!exists) {
+                    conn.rollback();
+                    return false;
+                }
+                if (approve) {
+                    try (PreparedStatement ps = conn.prepareStatement(dialect.upsertDynamicPrefix())) {
+                        ps.setString(1, playerUUID);
+                        ps.setString(2, prefixID);
+                        ps.setString(3, ObjectCache.markDynamicPrefixApproved(getPendingValue(conn, playerUUID, prefixID)));
+                        ps.executeUpdate();
+                    }
+                } else {
+                    String currentValue = getDynamicValue(conn, playerUUID, prefixID);
+                    String approvedValue = ObjectCache.parseApprovedDynamicPrefixValue(currentValue);
+                    try (PreparedStatement ps = conn.prepareStatement(dialect.upsertDynamicPrefix())) {
+                        ps.setString(1, playerUUID);
+                        ps.setString(2, prefixID);
+                        ps.setString(3, ObjectCache.markDynamicPrefixDenied(approvedValue, getPendingValue(conn, playerUUID, prefixID)));
+                        ps.executeUpdate();
+                    }
+                }
+                try (PreparedStatement ps = conn.prepareStatement("""
+                        DELETE FROM mythicprefixes_dynamic_pending
+                        WHERE playerUUID = ? AND prefixID = ?
+                        """)) {
+                    ps.setString(1, playerUUID);
+                    ps.setString(2, prefixID);
+                    ps.executeUpdate();
+                }
+                conn.commit();
+                return true;
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return false;
+        }, DatabaseExecutor.EXECUTOR);
+    }
+
+    @Override
+    public CompletableFuture<Void> clearDynamicPrefixValue(String playerUUID, String prefixID) {
+        return CompletableFuture.runAsync(() -> {
+            try (Connection conn = dataSource.getConnection();
+                 PreparedStatement ps = conn.prepareStatement("""
+                         DELETE FROM mythicprefixes_dynamic
+                         WHERE playerUUID = ? AND prefixID = ?
+                         """)) {
+                ps.setString(1, playerUUID);
+                ps.setString(2, prefixID);
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }, DatabaseExecutor.EXECUTOR);
+    }
+
+    @Override
+    public CompletableFuture<Void> saveDynamicPrefixValue(String playerUUID, String prefixID, String value) {
+        return CompletableFuture.runAsync(() -> {
+            try (Connection conn = dataSource.getConnection();
+                 PreparedStatement ps = conn.prepareStatement(dialect.upsertDynamicPrefix())) {
+                ps.setString(1, playerUUID);
+                ps.setString(2, prefixID);
+                ps.setString(3, value);
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }, DatabaseExecutor.EXECUTOR);
+    }
+
+    private String getPendingValue(Connection conn, String playerUUID, String prefixID) throws SQLException {
+        try (PreparedStatement ps = conn.prepareStatement("""
+                SELECT pendingValue
+                FROM mythicprefixes_dynamic_pending
+                WHERE playerUUID = ? AND prefixID = ?
+                """)) {
+            ps.setString(1, playerUUID);
+            ps.setString(2, prefixID);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("pendingValue");
+                }
+            }
+        }
+        return "";
+    }
+
+    private String getDynamicValue(Connection conn, String playerUUID, String prefixID) throws SQLException {
+        try (PreparedStatement ps = conn.prepareStatement("""
+                SELECT approvedValue
+                FROM mythicprefixes_dynamic
+                WHERE playerUUID = ? AND prefixID = ?
+                """)) {
+            ps.setString(1, playerUUID);
+            ps.setString(2, prefixID);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("approvedValue");
+                }
+            }
+        }
+        return "";
+    }
+
 }

@@ -30,6 +30,16 @@ public abstract class DatabaseDialect {
 
     public abstract String upsertPrefix();
 
+    public abstract String createDynamicPrefixTable();
+
+    public abstract String upsertDynamicPrefix();
+
+    public abstract String createDynamicPrefixRequestTable();
+
+    public abstract String upsertDynamicPrefixRequest();
+
+    public abstract String approveDynamicPrefixRequest();
+
     public abstract void needExtraDownload(String jdbcUrl);
 
     public void loadDriver(String driverName, String mavenUrl, String driverClassName) {
