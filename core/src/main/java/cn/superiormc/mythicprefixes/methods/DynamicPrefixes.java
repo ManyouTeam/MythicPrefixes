@@ -13,14 +13,14 @@ import cn.superiormc.mythicprefixes.utils.SchedulerUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.UUID;
 
 public class DynamicPrefixes {
 
-    private static final Map<UUID, ObjectPrefix> editingDynamicPrefixes = new HashMap<>();
+    private static final Map<UUID, ObjectPrefix> editingDynamicPrefixes = new ConcurrentHashMap<>();
 
     public static void openDynamicPrefixEditor(Player player, ObjectPrefix prefix) {
         if (!prefix.isDynamicPrefix()) {

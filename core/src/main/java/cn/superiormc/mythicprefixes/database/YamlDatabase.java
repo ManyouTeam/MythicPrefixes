@@ -20,6 +20,8 @@ import java.util.concurrent.CompletableFuture;
 
 public class YamlDatabase extends AbstractDatabase {
 
+    private final Object pendingRequestLock = new Object();
+
     private final File dataDir = new File(MythicPrefixes.instance.getDataFolder(), "datas");
 
     private final File pendingFile = new File(dataDir, "pending-dynamic-prefixes.yml");
@@ -124,11 +126,13 @@ public class YamlDatabase extends AbstractDatabase {
             if (!dataDir.exists()) {
                 dataDir.mkdirs();
             }
-            YamlConfiguration config = loadPendingFile();
-            String path = "requests." + player.getUniqueId() + "." + prefixID;
-            config.set(path + ".playerName", player.getName());
-            config.set(path + ".value", value);
-            savePendingFile(config);
+            synchronized (pendingRequestLock) {
+                YamlConfiguration config = loadPendingFile();
+                String path = "requests." + player.getUniqueId() + "." + prefixID;
+                config.set(path + ".playerName", player.getName());
+                config.set(path + ".value", value);
+                savePendingFile(config);
+            }
             File file = new File(dataDir, player.getUniqueId() + ".yml");
             YamlConfiguration playerConfig = YamlConfiguration.loadConfiguration(file);
             ObjectCache cache = CacheManager.cacheManager.getPlayerCache(player);
@@ -143,7 +147,10 @@ public class YamlDatabase extends AbstractDatabase {
     public CompletableFuture<Collection<DynamicPrefixRequest>> getPendingDynamicPrefixRequests() {
         return CompletableFuture.supplyAsync(() -> {
             List<DynamicPrefixRequest> result = new ArrayList<>();
-            YamlConfiguration config = loadPendingFile();
+            YamlConfiguration config;
+            synchronized (pendingRequestLock) {
+                config = loadPendingFile();
+            }
             if (config.getConfigurationSection("requests") == null) {
                 return result;
             }
@@ -181,32 +188,35 @@ public class YamlDatabase extends AbstractDatabase {
 
     private CompletableFuture<Boolean> handleDynamicPrefixRequest(String playerUUID, String prefixID, boolean approve) {
         return CompletableFuture.supplyAsync(() -> {
-            YamlConfiguration pendingConfig = loadPendingFile();
-            String requestPath = "requests." + playerUUID + "." + prefixID;
-            String value = pendingConfig.getString(requestPath + ".value");
-            if (value == null) {
-                return false;
+            synchronized (pendingRequestLock) {
+                YamlConfiguration pendingConfig = loadPendingFile();
+                String requestPath = "requests." + playerUUID + "." + prefixID;
+                String value = pendingConfig.getString(requestPath + ".value");
+                if (value == null) {
+                    return false;
+                }
+                if (!dataDir.exists()) {
+                    dataDir.mkdirs();
+                }
+                File file = new File(dataDir, playerUUID + ".yml");
+                YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
+                if (approve) {
+                    config.set("dynamic-prefix-values." + prefixID, ObjectCache.markDynamicPrefixApproved(value));
+                } else {
+                    String approvedValue = ObjectCache.parseApprovedDynamicPrefixValue(config.getString("dynamic-prefix-values." + prefixID));
+                    config.set("dynamic-prefix-values." + prefixID, ObjectCache.markDynamicPrefixDenied(approvedValue, value));
+                }
+                pendingConfig.set(requestPath, null);
+                try {
+                    config.save(file);
+                    savePendingFile(pendingConfig);
+                } catch (IOException e) {
+                    ErrorManager.errorManager.sendErrorMessage("\u00a7cError: Can not save data file: " + file.getName() + "!");
+                    return false;
+                }
+                return true;
             }
-            if (!dataDir.exists()) {
-                dataDir.mkdirs();
-            }
-            File file = new File(dataDir, playerUUID + ".yml");
-            YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
-            if (approve) {
-                config.set("dynamic-prefix-values." + prefixID, ObjectCache.markDynamicPrefixApproved(value));
-            } else {
-                String approvedValue = ObjectCache.parseApprovedDynamicPrefixValue(config.getString("dynamic-prefix-values." + prefixID));
-                config.set("dynamic-prefix-values." + prefixID, ObjectCache.markDynamicPrefixDenied(approvedValue, value));
-            }
-            pendingConfig.set(requestPath, null);
-            try {
-                config.save(file);
-                savePendingFile(pendingConfig);
-            } catch (IOException e) {
-                ErrorManager.errorManager.sendErrorMessage("\u00a7cError: Can not save data file: " + file.getName() + "!");
-                return false;
-            }
-            return true;
+            
         }, DatabaseExecutor.EXECUTOR);
     }
 

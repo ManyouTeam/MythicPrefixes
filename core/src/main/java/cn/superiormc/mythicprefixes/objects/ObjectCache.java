@@ -293,7 +293,7 @@ public class ObjectCache {
             return;
         }
         for (ObjectPrefix prefix : MythicPrefixesAPI.getActivedPrefixes(player)) {
-            if (prefix.isConditionNotMeet(this) || prefix.isConditionNotMeet(this)) {
+            if (prefix.isConditionNotMeet(this) || prefix.isDynamicPrefixEmpty(this)) {
                 removeActivePrefix(prefix, true);
             }
         }
