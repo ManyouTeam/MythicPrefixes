@@ -55,6 +55,10 @@ public class SubDynamicPrefix extends AbstractCommand {
         }
         String playerUUID = args[2];
         String prefixID = args[3];
+        if (!isValidUUID(playerUUID)) {
+            LanguageManager.languageManager.sendStringText(sender, "error.args");
+            return;
+        }
         if (args[1].equalsIgnoreCase("approve")) {
             CacheManager.cacheManager.database.approveDynamicPrefixRequest(playerUUID, prefixID).thenAccept(success ->
                     SchedulerUtil.runSync(() -> afterHandle(sender, playerUUID, prefixID, success, true)));
@@ -82,6 +86,15 @@ public class SubDynamicPrefix extends AbstractCommand {
             LanguageManager.languageManager.sendStringText(sender, "dynamic-prefix.list-empty");
         }
         pendingRequestCache = cache;
+    }
+
+    private boolean isValidUUID(String value) {
+        try {
+            UUID.fromString(value);
+            return true;
+        } catch (IllegalArgumentException ex) {
+            return false;
+        }
     }
 
     private void afterHandle(Player sender, String playerUUID, String prefixID, boolean success, boolean approve) {

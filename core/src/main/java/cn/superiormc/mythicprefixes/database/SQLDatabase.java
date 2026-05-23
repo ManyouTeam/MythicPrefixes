@@ -276,7 +276,9 @@ public class SQLDatabase extends AbstractDatabase {
 
     private CompletableFuture<Boolean> handleDynamicPrefixRequest(String playerUUID, String prefixID, boolean approve) {
         return CompletableFuture.supplyAsync(() -> {
-            try (Connection conn = dataSource.getConnection()) {
+            Connection conn = null;
+            try {
+                conn = dataSource.getConnection();
                 conn.setAutoCommit(false);
                 boolean exists;
                 try (PreparedStatement ps = conn.prepareStatement("""
@@ -322,7 +324,23 @@ public class SQLDatabase extends AbstractDatabase {
                 conn.commit();
                 return true;
             } catch (SQLException e) {
+                if (conn != null) {
+                    try {
+                        conn.rollback();
+                    } catch (SQLException rollbackEx) {
+                        rollbackEx.printStackTrace();
+                    }
+                }
                 e.printStackTrace();
+            } finally {
+                if (conn != null) {
+                    try {
+                        conn.setAutoCommit(true);
+                        conn.close();
+                    } catch (SQLException closeEx) {
+                        closeEx.printStackTrace();
+                    }
+                }
             }
             return false;
         }, DatabaseExecutor.EXECUTOR);
