@@ -1,10 +1,8 @@
 package cn.superiormc.mythicprefixes.gui;
 
-import cn.superiormc.mythicprefixes.MythicPrefixes;
-import cn.superiormc.mythicprefixes.listeners.GUIListener;
+import cn.superiormc.mythicprefixes.manager.ListenerManager;
 import cn.superiormc.mythicprefixes.methods.Dupe;
 import cn.superiormc.mythicprefixes.utils.SchedulerUtil;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
@@ -31,9 +29,8 @@ public abstract class InvGUI extends AbstractGUI {
         constructGUI();
         if (inv != null) {
             SchedulerUtil.runSync(player, () -> {
-                this.guiListener = new GUIListener(this);
-                Bukkit.getPluginManager().registerEvents(guiListener, MythicPrefixes.instance);
                 player.openInventory(inv);
+                ListenerManager.listenerManager.registerNewGUIListener(player, this);
             });
         }
     }

@@ -14,7 +14,7 @@ public final class MythicPrefixes extends JavaPlugin {
 
     public static MythicPrefixes instance;
 
-    public static final boolean freeVersion = false;
+    public static final boolean freeVersion = true;
 
     public static SpecialMethodUtil methodUtil;
 
@@ -90,6 +90,7 @@ public final class MythicPrefixes extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        ListenerManager.listenerManager.unregisterAllListener();
         CacheManager.cacheManager.setStoppingServer();
         for (Player player : Bukkit.getOnlinePlayers()) {
             CacheManager.cacheManager.getPlayerCache(player).runAllPrefixEndActions();

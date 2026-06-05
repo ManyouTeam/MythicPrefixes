@@ -21,9 +21,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class PaperMethodUtil implements SpecialMethodUtil {
 
@@ -93,11 +91,20 @@ public class PaperMethodUtil implements SpecialMethodUtil {
         }
     }
 
+    public Map<String, PlayerProfile> playerProfiles = new HashMap<>();
+
     @Override
     public SkullMeta setSkullMeta(SkullMeta meta, String skull) {
         PlayerProfile profile = Bukkit.createProfile(UUID.randomUUID(), "");
-        profile.setProperty(new ProfileProperty("textures", skull));
-        meta.setPlayerProfile(profile);
+        if (skull.length() > 16) {
+            profile.setProperty(new ProfileProperty("textures", skull));
+            meta.setPlayerProfile(profile);
+        } else {
+            if (!playerProfiles.containsKey(skull)) {
+                playerProfiles.put(skull, Bukkit.getOfflinePlayer(skull).getPlayerProfile());
+            }
+            meta.setPlayerProfile(playerProfiles.get(skull));
+        }
         return meta;
     }
 
