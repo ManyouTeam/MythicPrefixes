@@ -26,6 +26,7 @@ status-placeholder:
   max-reached: '{lang}'
 
 circle-actions:
+  # Default cycle period for prefixes without their own circle-actions.period-tick.
   period-tick: 20
 
 dynamic-prefix:

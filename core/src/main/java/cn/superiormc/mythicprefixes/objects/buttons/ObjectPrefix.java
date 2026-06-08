@@ -12,7 +12,6 @@ import cn.superiormc.mythicprefixes.objects.effect.AbstractEffect;
 import cn.superiormc.mythicprefixes.objects.effect.EffectStatus;
 import cn.superiormc.mythicprefixes.utils.CommonUtil;
 import cn.superiormc.mythicprefixes.utils.ItemUtil;
-import cn.superiormc.mythicprefixes.utils.SchedulerUtil;
 import cn.superiormc.mythicprefixes.utils.TextUtil;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -33,6 +32,8 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
     private final ObjectAction endAction;
 
     private final ObjectAction circleAction;
+
+    private final long circleActionPeriodTick;
 
     private final ObjectAction clickActionCDM;
 
@@ -56,6 +57,8 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
         this.startAction = new ObjectAction(config.getConfigurationSection("equip-actions"));
         this.endAction = new ObjectAction(config.getConfigurationSection("unequip-actions"));
         this.circleAction = new ObjectAction(config.getConfigurationSection("circle-actions"));
+        this.circleActionPeriodTick = Math.max(1L, config.getLong("circle-actions.period-tick",
+                ConfigManager.configManager.getLong("circle-actions.period-tick", 20L)));
         this.clickActionCDM = new ObjectAction(config.getConfigurationSection("click-actions.condition-not-meet"));
         this.clickActionMXR = new ObjectAction(config.getConfigurationSection("click-actions.max-limit-reached"));
         if (!MythicPrefixes.freeVersion) {
@@ -88,15 +91,23 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
             mmoEffects.put(player, MythicPrefixesAPI.startEffect(this, player));
         }
         startAction.runAllActions(player);
-        SchedulerUtil task = SchedulerUtil.runTaskTimer(() -> {
-            if (!circleAction.isEmpty()) {
-                circleAction.runAllActions(player);
-            }
-            if (mmoEffects.get(player) != null) {
-                mmoEffects.get(player).retryActiveEffects();
-            }
-        }, 1L, ConfigManager.configManager.getLong("circle-actions.period-tick", 20L));
-        cache.addCircleTask(this, task);
+    }
+
+    public void runCircleAction(Player player) {
+        if (!circleAction.isEmpty()) {
+            circleAction.runAllActions(player);
+        }
+        if (mmoEffects.get(player) != null) {
+            mmoEffects.get(player).retryActiveEffects();
+        }
+    }
+
+    public long getCircleActionPeriodTick() {
+        return circleActionPeriodTick;
+    }
+
+    public boolean requiresCircleTask() {
+        return !circleAction.isEmpty() || useEffect;
     }
 
     public EffectStatus getEffectStatus(Player player) {
@@ -114,7 +125,6 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
             }
         }
         endAction.runAllActions(player);
-        cache.cancelCircleTask(this);
     }
 
     public String getId() {

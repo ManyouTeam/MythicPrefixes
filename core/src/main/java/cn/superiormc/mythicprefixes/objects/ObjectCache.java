@@ -28,8 +28,6 @@ public class ObjectCache {
 
     private final Collection<ObjectPrefix> prefixCaches = new TreeSet<>();
 
-    private final Map<ObjectPrefix, SchedulerUtil> taskCache = new HashMap<>();
-
     private final Map<String, String> dynamicPrefixValues = new HashMap<>();
 
     private final Map<String, String> pendingDynamicPrefixValues = new HashMap<>();
@@ -310,15 +308,4 @@ public class ObjectCache {
         return finishLoad;
     }
 
-    public void addCircleTask(ObjectPrefix prefix, SchedulerUtil schedulerUtil) {
-        taskCache.put(prefix, schedulerUtil);
-    }
-
-    public void cancelCircleTask(ObjectPrefix prefix) {
-        SchedulerUtil schedulerUtil = taskCache.get(prefix);
-        if (schedulerUtil != null) {
-            schedulerUtil.cancel();
-        }
-        taskCache.remove(prefix);
-    }
 }

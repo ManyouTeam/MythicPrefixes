@@ -55,6 +55,8 @@ unequip-actions:
     type: message
     message: '{lang:action.unequip}'
 circle-actions:
+  # Optional. Prefixes with the same period-tick share one scheduled task.
+  period-tick: 20
   1:
     type: message
     message: '{lang:action.default}'
