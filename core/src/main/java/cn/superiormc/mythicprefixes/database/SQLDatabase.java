@@ -66,6 +66,11 @@ public class SQLDatabase extends AbstractDatabase {
         if (dataSource != null && !dataSource.isClosed()) {
             dataSource.close();
         }
+        if (dialect != null) {
+            dialect.closeDrivers();
+        }
+        dataSource = null;
+        dialect = null;
     }
 
     private void initDialect(String jdbcUrl) {
@@ -99,7 +104,7 @@ public class SQLDatabase extends AbstractDatabase {
     public void checkData(ObjectCache cache) {
         CompletableFuture.runAsync(
                 () -> loadData(cache),
-                DatabaseExecutor.EXECUTOR
+                DatabaseExecutor.getExecutor()
         );
     }
 
@@ -163,18 +168,15 @@ public class SQLDatabase extends AbstractDatabase {
         CompletableFuture.runAsync(() -> {
             saveData(cache);
             if (quitServer) {
-                CacheManager.cacheManager.removePlayerCache(cache.getPlayer());
+                CacheManager.cacheManager.removePlayerCache(cache);
             }
-        }, DatabaseExecutor.EXECUTOR);
+        }, DatabaseExecutor.getExecutor());
     }
 
     @Override
     public void updateDataOnDisable(ObjectCache cache, boolean disable) {
         saveData(cache);
-        CacheManager.cacheManager.removePlayerCache(cache.getPlayer());
-        if (disable) {
-            DatabaseExecutor.EXECUTOR.shutdownNow();
-        }
+        CacheManager.cacheManager.removePlayerCache(cache);
     }
 
     private void saveData(ObjectCache cache) {
@@ -215,7 +217,7 @@ public class SQLDatabase extends AbstractDatabase {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-        }, DatabaseExecutor.EXECUTOR);
+        }, DatabaseExecutor.getExecutor());
     }
 
     @Override
@@ -241,7 +243,7 @@ public class SQLDatabase extends AbstractDatabase {
                 e.printStackTrace();
             }
             return result;
-        }, DatabaseExecutor.EXECUTOR);
+        }, DatabaseExecutor.getExecutor());
     }
 
     @Override
@@ -261,7 +263,7 @@ public class SQLDatabase extends AbstractDatabase {
                 e.printStackTrace();
             }
             return 0;
-        }, DatabaseExecutor.EXECUTOR);
+        }, DatabaseExecutor.getExecutor());
     }
 
     @Override
@@ -343,7 +345,7 @@ public class SQLDatabase extends AbstractDatabase {
                 }
             }
             return false;
-        }, DatabaseExecutor.EXECUTOR);
+        }, DatabaseExecutor.getExecutor());
     }
 
     @Override
@@ -360,7 +362,7 @@ public class SQLDatabase extends AbstractDatabase {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-        }, DatabaseExecutor.EXECUTOR);
+        }, DatabaseExecutor.getExecutor());
     }
 
     @Override
@@ -375,7 +377,7 @@ public class SQLDatabase extends AbstractDatabase {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-        }, DatabaseExecutor.EXECUTOR);
+        }, DatabaseExecutor.getExecutor());
     }
 
     private String getPendingValue(Connection conn, String playerUUID, String prefixID) throws SQLException {

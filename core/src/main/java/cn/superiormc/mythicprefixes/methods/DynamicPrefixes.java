@@ -54,6 +54,14 @@ public class DynamicPrefixes {
         return editingDynamicPrefixes.containsKey(player.getUniqueId());
     }
 
+    public static void closeDynamicPrefixEditor(Player player) {
+        editingDynamicPrefixes.remove(player.getUniqueId());
+    }
+
+    public static void clearDynamicPrefixEditors() {
+        editingDynamicPrefixes.clear();
+    }
+
     public static void submitDynamicPrefix(Player player, ObjectPrefix prefix, String value) {
         String error = validateDynamicPrefixValue(value);
         if (error != null) {

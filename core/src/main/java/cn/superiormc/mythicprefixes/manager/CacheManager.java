@@ -12,24 +12,22 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class CacheManager {
 
     public static CacheManager cacheManager;
 
-    private final Map<Player, ObjectCache> playerCacheMap = new HashMap<>();
+    private final Map<UUID, ObjectCache> playerCacheMap = new ConcurrentHashMap<>();
 
-    private final Map<Player, SchedulerUtil> delayCacheMap = new HashMap<>();
+    private final Map<UUID, SchedulerUtil> delayCacheMap = new ConcurrentHashMap<>();
 
     public AbstractDatabase database;
 
-    private boolean isStoppingServer;
-
     public CacheManager() {
         cacheManager = this;
-        isStoppingServer = false;
         if (ConfigManager.configManager.getBoolean("database.enabled")) {
             database = new SQLDatabase();
         } else {
@@ -39,12 +37,12 @@ public class CacheManager {
     }
 
     public void addPlayerCache(Player player) {
-        if (delayCacheMap.containsKey(player)) {
-            delayCacheMap.get(player).cancel();
+        UUID playerUUID = player.getUniqueId();
+        SchedulerUtil delayedRemoval = delayCacheMap.remove(playerUUID);
+        if (delayedRemoval != null) {
+            delayedRemoval.cancel();
         }
-        if (!playerCacheMap.containsKey(player)) {
-            playerCacheMap.put(player, new ObjectCache(player));
-        }
+        playerCacheMap.computeIfAbsent(playerUUID, ignored -> new ObjectCache(player));
     }
 
     public void loadPlayerCache(Player player) {
@@ -57,45 +55,59 @@ public class CacheManager {
         cache.initPlayerCache();
     }
 
-    public void removePlayerCache(Player player) {
+    public void removePlayerCache(ObjectCache cache) {
+        Player player = cache.getPlayer();
+        UUID playerUUID = player.getUniqueId();
         if (ConfigManager.configManager.getLong("cache.remove-delay", -1L) > 0) {
-            SchedulerUtil tempVal1 = SchedulerUtil.runTaskLater(new BukkitRunnable() {
+            SchedulerUtil[] taskRef = new SchedulerUtil[1];
+            taskRef[0] = SchedulerUtil.runTaskLater(new BukkitRunnable() {
                 @Override
                 public void run() {
-                    playerCacheMap.get(player).removeAllActivePrefix(false);
-                    playerCacheMap.remove(player);
-                    delayCacheMap.remove(player);
+                    if (playerCacheMap.remove(playerUUID, cache)) {
+                        cache.removeAllActivePrefix(false);
+                    }
+                    delayCacheMap.remove(playerUUID, taskRef[0]);
                 }
             }, ConfigManager.configManager.getLong("cache.remove-delay", 60L));
-            delayCacheMap.put(player, tempVal1);
+            SchedulerUtil oldTask = delayCacheMap.put(playerUUID, taskRef[0]);
+            if (oldTask != null) {
+                oldTask.cancel();
+            }
         } else {
-            playerCacheMap.get(player).removeAllActivePrefix(false);
-            playerCacheMap.remove(player);
+            if (playerCacheMap.remove(playerUUID, cache)) {
+                cache.removeAllActivePrefix(false);
+            }
         }
     }
 
     public void savePlayerCacheOnExit(Player player) {
-        if (playerCacheMap.get(player) == null) {
+        ObjectCache cache = playerCacheMap.get(player.getUniqueId());
+        if (cache == null) {
             TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §cError: Can not save player data: " + player.getName() + "!");
             return;
         }
-        playerCacheMap.get(player).shutPlayerCache(true);
+        cache.shutPlayerCache(true);
     }
 
     public void savePlayerCacheOnDisable(Player player, boolean disable) {
-        if (playerCacheMap.get(player) == null) {
+        ObjectCache cache = playerCacheMap.get(player.getUniqueId());
+        if (cache == null) {
             TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §cError: Can not save player data: " + player.getName() + "!");
             return;
         }
-        playerCacheMap.get(player).shutPlayerCacheOnDisable(disable);
+        cache.shutPlayerCacheOnDisable(disable);
     }
 
-    public void setStoppingServer() {
-        isStoppingServer = true;
+    public void shutdown() {
+        for (SchedulerUtil delayedRemoval : delayCacheMap.values()) {
+            delayedRemoval.cancel();
+        }
+        delayCacheMap.clear();
+        playerCacheMap.clear();
     }
 
     public ObjectCache getPlayerCache(Player player) {
-        ObjectCache playerCache = playerCacheMap.get(player);
+        ObjectCache playerCache = playerCacheMap.get(player.getUniqueId());
         if (playerCache == null) {
             CacheManager.cacheManager.addPlayerCache(player);
             playerCache = CacheManager.cacheManager.getPlayerCache(player);

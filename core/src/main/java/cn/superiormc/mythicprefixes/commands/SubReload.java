@@ -5,9 +5,13 @@ import cn.superiormc.mythicprefixes.manager.CacheManager;
 import cn.superiormc.mythicprefixes.manager.ConfigManager;
 import cn.superiormc.mythicprefixes.manager.LanguageManager;
 import cn.superiormc.mythicprefixes.manager.TaskManager;
+import cn.superiormc.mythicprefixes.methods.ReloadPlugin;
 import cn.superiormc.mythicprefixes.objects.AbstractCommand;
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.util.List;
 
 public class SubReload extends AbstractCommand {
 
@@ -25,41 +29,27 @@ public class SubReload extends AbstractCommand {
      */
     @Override
     public void executeCommandInGame(String[] args, Player player) {
-        MythicPrefixes.instance.reloadConfig();
-        TaskManager.taskManager.cancelTask();
-        for (Player p : Bukkit.getOnlinePlayers()) {
-            CacheManager.cacheManager.getPlayerCache(player).runAllPrefixEndActions();
-            CacheManager.cacheManager.savePlayerCacheOnDisable(p, false);
-        }
-        new ConfigManager();
-        new LanguageManager();
-        new CacheManager();
-        new TaskManager();
-        for (Player p : Bukkit.getOnlinePlayers()) {
-            CacheManager.cacheManager.addPlayerCache(p);
-            CacheManager.cacheManager.getPlayerCache(p).setAsFinished();
-            CacheManager.cacheManager.loadPlayerCache(p);
-        }
-        LanguageManager.languageManager.sendStringText(player, "plugin.reloaded");
+        executeReload(args, player);
     }
 
     @Override
     public void executeCommandInConsole(String[] args) {
-        MythicPrefixes.instance.reloadConfig();
-        TaskManager.taskManager.cancelTask();
-        for (Player p : Bukkit.getOnlinePlayers()) {
-            CacheManager.cacheManager.getPlayerCache(p).runAllPrefixEndActions();
-            CacheManager.cacheManager.savePlayerCacheOnDisable(p, false);
+        executeReload(args, Bukkit.getConsoleSender());
+    }
+
+    @Override
+    public List<String> getTabResult(int length) {
+        if (length == 2) {
+            return List.of("all");
         }
-        new ConfigManager();
-        new LanguageManager();
-        new CacheManager();
-        new TaskManager();
-        for (Player p : Bukkit.getOnlinePlayers()) {
-            CacheManager.cacheManager.addPlayerCache(p);
-            CacheManager.cacheManager.getPlayerCache(p).setAsFinished();
-            CacheManager.cacheManager.loadPlayerCache(p);
+        return List.of();
+    }
+
+    private void executeReload(String[] args, CommandSender sender) {
+        if (args.length == 2 && !"all".equalsIgnoreCase(args[1])) {
+            LanguageManager.languageManager.sendStringText(sender, "error.args");
+            return;
         }
-        LanguageManager.languageManager.sendStringText("plugin.reloaded");
+        ReloadPlugin.reload(sender, args.length == 2);
     }
 }

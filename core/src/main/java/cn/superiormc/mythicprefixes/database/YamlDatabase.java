@@ -28,7 +28,7 @@ public class YamlDatabase extends AbstractDatabase {
 
     @Override
     public void checkData(ObjectCache cache) {
-        CompletableFuture.runAsync(() -> loadData(cache), DatabaseExecutor.EXECUTOR);
+        CompletableFuture.runAsync(() -> loadData(cache), DatabaseExecutor.getExecutor());
     }
 
     private void loadData(ObjectCache cache) {
@@ -75,9 +75,9 @@ public class YamlDatabase extends AbstractDatabase {
         CompletableFuture.runAsync(() -> {
             saveData(cache);
             if (quitServer) {
-                CacheManager.cacheManager.removePlayerCache(cache.getPlayer());
+                CacheManager.cacheManager.removePlayerCache(cache);
             }
-        }, DatabaseExecutor.EXECUTOR);
+        }, DatabaseExecutor.getExecutor());
     }
 
     private void saveData(ObjectCache cache) {
@@ -114,10 +114,7 @@ public class YamlDatabase extends AbstractDatabase {
     @Override
     public void updateDataOnDisable(ObjectCache cache, boolean disable) {
         saveData(cache);
-        CacheManager.cacheManager.removePlayerCache(cache.getPlayer());
-        if (disable) {
-            DatabaseExecutor.EXECUTOR.shutdownNow();
-        }
+        CacheManager.cacheManager.removePlayerCache(cache);
     }
 
     @Override
@@ -140,7 +137,7 @@ public class YamlDatabase extends AbstractDatabase {
             playerConfig.set("playerName", player.getName());
             playerConfig.set("dynamic-prefix-values." + prefixID, markedValue == null ? ObjectCache.markDynamicPrefixPending(value) : markedValue);
             savePlayerFile(playerConfig, file);
-        }, DatabaseExecutor.EXECUTOR);
+        }, DatabaseExecutor.getExecutor());
     }
 
     @Override
@@ -168,7 +165,7 @@ public class YamlDatabase extends AbstractDatabase {
                 }
             }
             return result;
-        }, DatabaseExecutor.EXECUTOR);
+        }, DatabaseExecutor.getExecutor());
     }
 
     @Override
@@ -217,7 +214,7 @@ public class YamlDatabase extends AbstractDatabase {
                 return true;
             }
             
-        }, DatabaseExecutor.EXECUTOR);
+        }, DatabaseExecutor.getExecutor());
     }
 
     @Override
@@ -230,7 +227,7 @@ public class YamlDatabase extends AbstractDatabase {
             YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
             config.set("dynamic-prefix-values." + prefixID, value);
             savePlayerFile(config, file);
-        }, DatabaseExecutor.EXECUTOR);
+        }, DatabaseExecutor.getExecutor());
     }
 
     @Override
@@ -243,7 +240,7 @@ public class YamlDatabase extends AbstractDatabase {
             YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
             config.set("dynamic-prefix-values." + prefixID, null);
             savePlayerFile(config, file);
-        }, DatabaseExecutor.EXECUTOR);
+        }, DatabaseExecutor.getExecutor());
     }
 
     private YamlConfiguration loadPendingFile() {

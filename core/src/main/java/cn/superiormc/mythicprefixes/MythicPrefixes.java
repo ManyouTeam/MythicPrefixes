@@ -1,7 +1,10 @@
 package cn.superiormc.mythicprefixes;
 
 import cn.superiormc.mythicprefixes.bstats.Metrics;
+import cn.superiormc.mythicprefixes.database.DatabaseExecutor;
 import cn.superiormc.mythicprefixes.manager.*;
+import cn.superiormc.mythicprefixes.methods.DynamicPrefixes;
+import cn.superiormc.mythicprefixes.papi.PlaceholderAPIExpansion;
 import cn.superiormc.mythicprefixes.utils.CommonUtil;
 import cn.superiormc.mythicprefixes.utils.PacketInventoryUtil;
 import cn.superiormc.mythicprefixes.utils.SpecialMethodUtil;
@@ -13,6 +16,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 public final class MythicPrefixes extends JavaPlugin {
 
     public static MythicPrefixes instance;
+
+    private Metrics metrics;
 
     public static final boolean freeVersion = true;
 
@@ -33,6 +38,7 @@ public final class MythicPrefixes extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
+        DatabaseExecutor.start();
         try {
             String[] versionParts = Bukkit.getBukkitVersion().split("-")[0].split("\\.");
             yearVersion = versionParts.length > 0 ? Integer.parseInt(versionParts[0]) : 1;
@@ -83,20 +89,34 @@ public final class MythicPrefixes extends JavaPlugin {
             new PacketInventoryUtil();
             TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fDynamic title enabled. Hooking into packetevents...");
         }
-        new Metrics(MythicPrefixes.instance, 28371);
+        metrics = new Metrics(MythicPrefixes.instance, 28731);
         TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fYour server version is: " + yearVersion + "." + majorVersion + "." + minorVersion + "!");
         TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fPlugin is loaded. Author: PQguanfang.");
     }
 
     @Override
     public void onDisable() {
+        TaskManager.taskManager.cancelTask();
         ListenerManager.listenerManager.unregisterAllListener();
-        CacheManager.cacheManager.setStoppingServer();
+        DynamicPrefixes.clearDynamicPrefixEditors();
+        if (PlaceholderAPIExpansion.papi != null) {
+            PlaceholderAPIExpansion.papi.unregister();
+            PlaceholderAPIExpansion.papi = null;
+        }
+        if (PacketInventoryUtil.packetInventoryUtil != null) {
+            PacketInventoryUtil.packetInventoryUtil.shutdown();
+        }
         for (Player player : Bukkit.getOnlinePlayers()) {
             CacheManager.cacheManager.getPlayerCache(player).runAllPrefixEndActions();
             CacheManager.cacheManager.savePlayerCacheOnDisable(player, true);
         }
         CacheManager.cacheManager.database.onClose();
+        CacheManager.cacheManager.shutdown();
+        DatabaseExecutor.shutdown();
+        if (metrics != null) {
+            metrics.shutdown();
+            metrics = null;
+        }
         TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fPlugin is disabled. Author: PQguanfang.");
     }
 }

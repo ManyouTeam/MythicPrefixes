@@ -52,6 +52,7 @@ public class ListenerManager {
     }
 
     public void unregisterAllListener() {
+        listeners.clear();
         HandlerList.unregisterAll(MythicPrefixes.instance);
     }
 }

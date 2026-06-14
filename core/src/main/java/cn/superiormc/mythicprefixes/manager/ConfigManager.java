@@ -35,6 +35,7 @@ public class ConfigManager {
         configManager = this;
         MythicPrefixes.instance.saveDefaultConfig();
         this.config = MythicPrefixes.instance.getConfig();
+        ObjectDisplayPlaceholder.groupNames.clear();
         initLibreforgeHook();
         initPrefixesConfigs();
         initDisplayPlaceholderConfigs();

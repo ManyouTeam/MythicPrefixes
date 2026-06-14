@@ -1,8 +1,11 @@
 package cn.superiormc.mythicprefixes.listeners;
 
+import cn.superiormc.mythicprefixes.MythicPrefixes;
 import cn.superiormc.mythicprefixes.manager.CacheManager;
 import cn.superiormc.mythicprefixes.manager.ConfigManager;
+import cn.superiormc.mythicprefixes.manager.ListenerManager;
 import cn.superiormc.mythicprefixes.methods.DynamicPrefixes;
+import cn.superiormc.mythicprefixes.utils.PacketInventoryUtil;
 import cn.superiormc.mythicprefixes.utils.SchedulerUtil;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -16,6 +19,9 @@ public class CacheListener implements Listener {
     @EventHandler
     public void onLogin(PlayerLoginEvent event) {
         SchedulerUtil.runTaskLater(() -> {
+            if (!event.getPlayer().isOnline()) {
+                return;
+            }
             CacheManager.cacheManager.addPlayerCache(event.getPlayer());
             if (ConfigManager.configManager.getString("cache.load-mode").equals("LOGIN")) {
                 CacheManager.cacheManager.loadPlayerCache(event.getPlayer());
@@ -34,6 +40,11 @@ public class CacheListener implements Listener {
 
     @EventHandler
     public void onExit(PlayerQuitEvent event) {
+        DynamicPrefixes.closeDynamicPrefixEditor(event.getPlayer());
+        ListenerManager.listenerManager.unregisterListeners(event.getPlayer());
+        if (MythicPrefixes.usePacketEvents && PacketInventoryUtil.packetInventoryUtil != null) {
+            PacketInventoryUtil.packetInventoryUtil.clear(event.getPlayer());
+        }
         CacheManager.cacheManager.getPlayerCache(event.getPlayer()).runAllPrefixEndActions();
         CacheManager.cacheManager.savePlayerCacheOnExit(event.getPlayer());
     }

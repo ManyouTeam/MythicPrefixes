@@ -53,8 +53,5 @@ public abstract class AbstractDatabase {
 
     public void updateDataOnDisable(ObjectCache cache, boolean disable) {
         updateData(cache, true);
-        if (disable) {
-            DatabaseExecutor.EXECUTOR.shutdownNow();
-        }
     }
 }
