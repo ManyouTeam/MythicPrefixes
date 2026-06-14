@@ -10,6 +10,8 @@ public class HookManager {
 
     public static HookManager hookManager;
 
+    public PlaceholderAPIExpansion papi = null;
+
     public HookManager() {
         hookManager = this;
         initNormalHook();
@@ -17,9 +19,9 @@ public class HookManager {
 
     private void initNormalHook() {
         if (CommonUtil.checkPluginLoad("PlaceholderAPI")) {
-            PlaceholderAPIExpansion.papi = new PlaceholderAPIExpansion(MythicPrefixes.instance);
+            papi = new PlaceholderAPIExpansion(MythicPrefixes.instance);
             TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fHooking into PlaceholderAPI...");
-            if (PlaceholderAPIExpansion.papi.register()){
+            if (papi.register()){
                 TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fFinished hook!");
             }
         }

@@ -4,7 +4,7 @@ import cn.superiormc.mythicprefixes.bstats.Metrics;
 import cn.superiormc.mythicprefixes.database.DatabaseExecutor;
 import cn.superiormc.mythicprefixes.manager.*;
 import cn.superiormc.mythicprefixes.methods.DynamicPrefixes;
-import cn.superiormc.mythicprefixes.papi.PlaceholderAPIExpansion;
+import cn.superiormc.mythicprefixes.objects.ObjectCache;
 import cn.superiormc.mythicprefixes.utils.CommonUtil;
 import cn.superiormc.mythicprefixes.utils.PacketInventoryUtil;
 import cn.superiormc.mythicprefixes.utils.SpecialMethodUtil;
@@ -79,6 +79,7 @@ public final class MythicPrefixes extends JavaPlugin {
         new ConfigManager();
         new HookManager();
         new LanguageManager();
+        new DatabaseManager();
         new CacheManager();
         new CommandManager();
         new ListenerManager();
@@ -99,18 +100,23 @@ public final class MythicPrefixes extends JavaPlugin {
         TaskManager.taskManager.cancelTask();
         ListenerManager.listenerManager.unregisterAllListener();
         DynamicPrefixes.clearDynamicPrefixEditors();
-        if (PlaceholderAPIExpansion.papi != null) {
-            PlaceholderAPIExpansion.papi.unregister();
-            PlaceholderAPIExpansion.papi = null;
+        if (HookManager.hookManager.papi != null) {
+            HookManager.hookManager.papi.unregister();
+            HookManager.hookManager.papi = null;
         }
         if (PacketInventoryUtil.packetInventoryUtil != null) {
             PacketInventoryUtil.packetInventoryUtil.shutdown();
         }
+        TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fWaiting for all pending database task finished, this may freeze your server if your database is lost connection.");
+        DatabaseExecutor.await();
         for (Player player : Bukkit.getOnlinePlayers()) {
-            CacheManager.cacheManager.getPlayerCache(player).runAllPrefixEndActions();
+            ObjectCache cache = CacheManager.cacheManager.getPlayerCache(player);
+            if (cache != null) {
+                cache.runAllPrefixEndActions();
+            }
             CacheManager.cacheManager.savePlayerCacheOnDisable(player, true);
         }
-        CacheManager.cacheManager.database.onClose();
+        DatabaseManager.databaseManager.database.onClose();
         CacheManager.cacheManager.shutdown();
         DatabaseExecutor.shutdown();
         if (metrics != null) {

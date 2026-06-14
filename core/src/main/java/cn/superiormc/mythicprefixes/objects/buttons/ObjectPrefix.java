@@ -135,11 +135,13 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
     public String getDisplayValue(Player player) {
         if (dynamicPrefix) {
             ObjectCache cache = CacheManager.cacheManager.getPlayerCache(player);
-            String value = cache.getApprovedDynamicPrefixValue(id);
-            if (value != null && !value.isEmpty()) {
-                return TextUtil.withPAPI(value, player);
+            if (cache != null) {
+                String value = cache.getApprovedDynamicPrefixValue(id);
+                if (value != null && !value.isEmpty()) {
+                    return TextUtil.withPAPI(value, player);
+                }
+                cache.removeActivePrefix(this, true);
             }
-            CacheManager.cacheManager.getPlayerCache(player).removeActivePrefix(this, true);
             return LanguageManager.languageManager.getStringText(player, "dynamic-prefix.none");
         }
         return TextUtil.withPAPI(config.getString("display-value", "UNKNOWN"), player);
@@ -150,9 +152,11 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
             return "";
         }
         ObjectCache cache = CacheManager.cacheManager.getPlayerCache(player);
-        String value = cache.getPendingDynamicPrefixValue(id);
-        if (value != null && !value.isEmpty()) {
-            return TextUtil.withPAPI(value, player);
+        if (cache != null) {
+            String value = cache.getPendingDynamicPrefixValue(id);
+            if (value != null && !value.isEmpty()) {
+                return TextUtil.withPAPI(value, player);
+            }
         }
         return LanguageManager.languageManager.getStringText(player, "dynamic-prefix.none");
     }
@@ -194,7 +198,7 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
 
     public boolean isConditionNotMeet(ObjectCache cache) {
         Player player = cache.getPlayer();
-        if (!cache.isFinishLoad()) {
+        if (!cache.conditionCanCheck()) {
             return false;
         }
         return !condition.getAllBoolean(player) && !CommonUtil.checkPermission(player, "mythicprefixes.bypass." + getId());
@@ -224,12 +228,15 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
             return;
         }
         ObjectCache cache = CacheManager.cacheManager.getPlayerCache(player);
+        if (cache == null) {
+            return;
+        }
         switch (getPrefixStatus(cache)) {
             case CAN_USE:
-                CacheManager.cacheManager.getPlayerCache(player).addActivePrefix(this);
+                cache.addActivePrefix(this);
                 break;
             case USING:
-                CacheManager.cacheManager.getPlayerCache(player).removeActivePrefix(this, true);
+                cache.removeActivePrefix(this, true);
                 break;
             case CONDITION_NOT_MEET:
                 if (!MythicPrefixes.freeVersion) {

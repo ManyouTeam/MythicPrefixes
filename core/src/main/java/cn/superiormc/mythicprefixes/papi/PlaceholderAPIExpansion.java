@@ -16,9 +16,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class PlaceholderAPIExpansion extends PlaceholderExpansion {
 
-    public static PlaceholderAPIExpansion papi = null;
-
     private final MythicPrefixes plugin;
+    
     @Override
     public boolean canRegister() {
         return true;

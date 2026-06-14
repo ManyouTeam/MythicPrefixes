@@ -45,6 +45,10 @@ public class SubRemovePrefix extends AbstractCommand {
             return;
         }
         ObjectCache playerCache = CacheManager.cacheManager.getPlayerCache(whoWillAdd);
+        if (playerCache == null) {
+            LanguageManager.languageManager.sendStringText(player, "error.player-not-found", "player", whoWillAdd.getName());
+            return;
+        }
         if (!playerCache.getActivePrefixes().contains(whatPrefix)) {
             LanguageManager.languageManager.sendStringText(player, "error.prefix-not-using",
                     "player", whoWillAdd.getName(),
@@ -70,6 +74,10 @@ public class SubRemovePrefix extends AbstractCommand {
             return;
         }
         ObjectCache playerCache = CacheManager.cacheManager.getPlayerCache(whoWillAdd);
+        if (playerCache == null) {
+            LanguageManager.languageManager.sendStringText("error.player-not-found", "player", whoWillAdd.getName());
+            return;
+        }
         if (!playerCache.getActivePrefixes().contains(whatPrefix)) {
             LanguageManager.languageManager.sendStringText("error.prefix-not-using",
                     "player", whoWillAdd.getName(),

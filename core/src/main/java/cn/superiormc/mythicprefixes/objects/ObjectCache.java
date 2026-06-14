@@ -1,8 +1,7 @@
 package cn.superiormc.mythicprefixes.objects;
 
-import cn.superiormc.mythicprefixes.api.MythicPrefixesAPI;
-import cn.superiormc.mythicprefixes.manager.CacheManager;
 import cn.superiormc.mythicprefixes.manager.ConfigManager;
+import cn.superiormc.mythicprefixes.manager.DatabaseManager;
 import cn.superiormc.mythicprefixes.manager.LanguageManager;
 import cn.superiormc.mythicprefixes.objects.buttons.ObjectPrefix;
 import cn.superiormc.mythicprefixes.utils.SchedulerUtil;
@@ -32,22 +31,40 @@ public class ObjectCache {
 
     private final Map<String, String> pendingDynamicPrefixValues = new HashMap<>();
 
-    private boolean finishLoad;
+    private volatile boolean initialized = false;
+
+    private volatile boolean closed = false;
+
+    private volatile boolean ready = false;
 
     public ObjectCache(Player player) {
         this.player = player;
     }
 
     public void initPlayerCache() {
-        CacheManager.cacheManager.database.checkData(this);
+        if (closed || initialized) {
+            return;
+        }
+        initialized = true;
+        DatabaseManager.databaseManager.database.checkData(this);
     }
 
     public void shutPlayerCache(boolean quitServer) {
-        CacheManager.cacheManager.database.updateData(this, quitServer);
+        if (canNotModify()) {
+            return;
+        }
+        DatabaseManager.databaseManager.database.updateData(this, quitServer);
+        if (quitServer) {
+            closed = true;
+        }
     }
 
     public void shutPlayerCacheOnDisable(boolean disable) {
-        CacheManager.cacheManager.database.updateDataOnDisable(this, disable);
+        if (canNotModify()) {
+            return;
+        }
+        DatabaseManager.databaseManager.database.updateDataOnDisable(this, disable);
+        closed = true;
 
     }
 
@@ -61,7 +78,7 @@ public class ObjectCache {
             if (tempVal2 == null) {
                 continue;
             }
-            SchedulerUtil.runSync(() -> addActivePrefix(tempVal2));
+            addActivePrefix(tempVal2);
         }
     }
 
@@ -88,10 +105,10 @@ public class ObjectCache {
             String approvedValue = parseApprovedDynamicPrefixValue(value);
             if (approvedValue == null || approvedValue.isEmpty()) {
                 dynamicPrefixValues.remove(prefixID);
-                CacheManager.cacheManager.database.clearDynamicPrefixValue(player.getUniqueId().toString(), prefixID);
+                DatabaseManager.databaseManager.database.clearDynamicPrefixValue(player.getUniqueId().toString(), prefixID);
             } else {
                 dynamicPrefixValues.put(prefixID, approvedValue);
-                CacheManager.cacheManager.database.saveDynamicPrefixValue(player.getUniqueId().toString(), prefixID, approvedValue);
+                DatabaseManager.databaseManager.database.saveDynamicPrefixValue(player.getUniqueId().toString(), prefixID, approvedValue);
             }
             return;
         }
@@ -101,10 +118,10 @@ public class ObjectCache {
             String approvedValue = parseApprovedDynamicPrefixValue(value);
             if (approvedValue == null || approvedValue.isEmpty()) {
                 dynamicPrefixValues.remove(prefixID);
-                CacheManager.cacheManager.database.clearDynamicPrefixValue(player.getUniqueId().toString(), prefixID);
+                DatabaseManager.databaseManager.database.clearDynamicPrefixValue(player.getUniqueId().toString(), prefixID);
             } else {
                 dynamicPrefixValues.put(prefixID, approvedValue);
-                CacheManager.cacheManager.database.saveDynamicPrefixValue(player.getUniqueId().toString(), prefixID, approvedValue);
+                DatabaseManager.databaseManager.database.saveDynamicPrefixValue(player.getUniqueId().toString(), prefixID, approvedValue);
             }
             return;
         }
@@ -237,8 +254,12 @@ public class ObjectCache {
         if (prefix.getPrefixStatus(this) != PrefixStatus.CAN_USE) {
             return;
         }
-        prefix.runStartAction(this);
         prefixCaches.add(prefix);
+        SchedulerUtil.runSync(() -> {
+            if (getActivePrefixes().contains(prefix)) {
+                prefix.runStartAction(this);
+            }
+        });
         if (ConfigManager.configManager.getBoolean("debug")) {
             TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fEnabled prefix " + prefix + " for player " + player.getName() + "!");
         }
@@ -258,13 +279,13 @@ public class ObjectCache {
     }
 
     public void removeAllActivePrefix(boolean runEndAction) {
-        for (ObjectPrefix prefix : MythicPrefixesAPI.getActivedPrefixes(player)) {
+        for (ObjectPrefix prefix : getActivePrefixes()) {
             removeActivePrefix(prefix, runEndAction);
         }
     }
 
     public void runAllPrefixEndActions() {
-        for (ObjectPrefix prefix : MythicPrefixesAPI.getActivedPrefixes(player)) {
+        for (ObjectPrefix prefix : getActivePrefixes()) {
             prefix.runEndAction(this);
         }
     }
@@ -287,25 +308,33 @@ public class ObjectCache {
     }
 
     public void checkCondition() {
-        if (!isFinishLoad()) {
+        if (!conditionCanCheck()) {
             return;
         }
-        for (ObjectPrefix prefix : MythicPrefixesAPI.getActivedPrefixes(player)) {
+        for (ObjectPrefix prefix : getActivePrefixes()) {
             if (prefix.isConditionNotMeet(this) || prefix.isDynamicPrefixEmpty(this)) {
                 removeActivePrefix(prefix, true);
             }
         }
     }
 
-    public void setAsFinished() {
-        finishLoad = true;
-    }
-
-    public boolean isFinishLoad() {
+    public boolean conditionCanCheck() {
         if (!ConfigManager.configManager.getBoolean("cache.bypass-condition-when-loading")) {
             return true;
         }
-        return finishLoad;
+        return ready;
+    }
+
+    public void ready() {
+        ready = true;
+    }
+
+    public void close() {
+        closed = true;
+    }
+
+    public boolean canNotModify() {
+        return closed || !ready;
     }
 
 }

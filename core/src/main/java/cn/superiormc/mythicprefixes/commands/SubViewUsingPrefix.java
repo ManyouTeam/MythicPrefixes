@@ -39,6 +39,10 @@ public class SubViewUsingPrefix extends AbstractCommand {
             return;
         }
         ObjectCache playerCache = CacheManager.cacheManager.getPlayerCache(whoWillAdd);
+        if (playerCache == null) {
+            LanguageManager.languageManager.sendStringText(player, "error.player-not-found", "player", whoWillAdd.getName());
+            return;
+        }
         if (playerCache.getActivePrefixes().isEmpty()) {
             LanguageManager.languageManager.sendStringText(player, "error.prefix-is-empty",
                     "player", whoWillAdd.getName());
@@ -67,6 +71,10 @@ public class SubViewUsingPrefix extends AbstractCommand {
             return;
         }
         ObjectCache playerCache = CacheManager.cacheManager.getPlayerCache(whoWillAdd);
+        if (playerCache == null) {
+            LanguageManager.languageManager.sendStringText("error.player-not-found", "player", whoWillAdd.getName());
+            return;
+        }
         if (playerCache.getActivePrefixes().isEmpty()) {
             LanguageManager.languageManager.sendStringText("error.prefix-is-empty",
                     "player", whoWillAdd.getName());

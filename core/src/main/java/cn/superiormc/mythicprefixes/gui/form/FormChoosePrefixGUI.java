@@ -37,7 +37,7 @@ public class FormChoosePrefixGUI extends FormGUI {
     protected void constructGUI() {
         SimpleForm.Builder tempVal2 = SimpleForm.builder();
         ObjectCache cache = CacheManager.cacheManager.getPlayerCache(player);
-        if (buttonCache.isEmpty()) {
+        if (buttonCache.isEmpty() && cache != null) {
             for (ObjectPrefix prefix : ConfigManager.configManager.getPrefixesWithoutHide()) {
                 PrefixStatus status = prefix.getPrefixStatus(cache);
                 if ((filter == Filter.ALL || (filter == Filter.USING && status == PrefixStatus.USING) || (

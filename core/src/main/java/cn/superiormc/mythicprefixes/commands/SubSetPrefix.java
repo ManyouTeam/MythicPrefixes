@@ -39,6 +39,10 @@ public class SubSetPrefix extends AbstractCommand {
             }
         }
         ObjectCache playerCache = CacheManager.cacheManager.getPlayerCache(whoWillAdd);
+        if (playerCache == null) {
+            LanguageManager.languageManager.sendStringText(player, "error.player-not-found", "player", whoWillAdd.getName());
+            return;
+        }
         playerCache.removeAllActivePrefix(true);
         for (String prefixKey : args[args.length - 1].split(";;")) {
             ObjectPrefix tempVal2 = ConfigManager.configManager.getPrefix(prefixKey);
@@ -62,6 +66,10 @@ public class SubSetPrefix extends AbstractCommand {
             return;
         }
         ObjectCache playerCache = CacheManager.cacheManager.getPlayerCache(whoWillAdd);
+        if (playerCache == null) {
+            LanguageManager.languageManager.sendStringText("error.player-not-found", "player", whoWillAdd.getName());
+            return;
+        }
         playerCache.removeAllActivePrefix(true);
         for (String prefixKey : args[2].split(";;")) {
             ObjectPrefix tempVal2 = ConfigManager.configManager.getPrefix(prefixKey);

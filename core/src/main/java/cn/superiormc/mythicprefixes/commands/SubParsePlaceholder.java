@@ -6,6 +6,7 @@ import cn.superiormc.mythicprefixes.manager.LanguageManager;
 import cn.superiormc.mythicprefixes.objects.AbstractCommand;
 import cn.superiormc.mythicprefixes.objects.ObjectCache;
 import cn.superiormc.mythicprefixes.objects.ObjectDisplayPlaceholder;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -33,6 +34,10 @@ public class SubParsePlaceholder extends AbstractCommand {
             return;
         }
         ObjectCache cache = CacheManager.cacheManager.getPlayerCache(player);
+        if (cache == null) {
+            LanguageManager.languageManager.sendStringText(player, "error.player-not-found", "player", player.getName());
+            return;
+        }
         LanguageManager.languageManager.sendStringText(player, "parse-placeholder", "placeholder", args[1], "value",
                 displayPlaceholder.getDisplayText(cache));
     }

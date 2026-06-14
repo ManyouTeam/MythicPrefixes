@@ -1,10 +1,7 @@
 package cn.superiormc.mythicprefixes.methods;
 
 import cn.superiormc.mythicprefixes.commands.SubDynamicPrefix;
-import cn.superiormc.mythicprefixes.manager.CacheManager;
-import cn.superiormc.mythicprefixes.manager.CommandManager;
-import cn.superiormc.mythicprefixes.manager.ConfigManager;
-import cn.superiormc.mythicprefixes.manager.LanguageManager;
+import cn.superiormc.mythicprefixes.manager.*;
 import cn.superiormc.mythicprefixes.objects.AbstractCommand;
 import cn.superiormc.mythicprefixes.objects.DynamicPrefixRequest;
 import cn.superiormc.mythicprefixes.objects.ObjectCache;
@@ -26,7 +23,11 @@ public class DynamicPrefixes {
         if (!prefix.isDynamicPrefix()) {
             return;
         }
-        if (prefix.isConditionNotMeet(CacheManager.cacheManager.getPlayerCache(player))) {
+        ObjectCache cache = CacheManager.cacheManager.getPlayerCache(player);
+        if (cache == null) {
+            return;
+        }
+        if (prefix.isConditionNotMeet(cache)) {
             LanguageManager.languageManager.sendStringText(player, "dynamic-prefix.condition-not-meet", "prefix", prefix.getId());
             return;
         }
@@ -69,10 +70,13 @@ public class DynamicPrefixes {
             return;
         }
         ObjectCache cache = CacheManager.cacheManager.getPlayerCache(player);
+        if (cache == null) {
+            return;
+        }
         String approvedValue = cache.getApprovedDynamicPrefixValue(prefix.getId());
         cache.setPendingDynamicPrefixValue(prefix.getId(), value);
         cache.setDynamicPrefixValue(prefix.getId(), ObjectCache.markDynamicPrefixPending(approvedValue, value));
-        CacheManager.cacheManager.database.saveDynamicPrefixRequest(player, prefix.getId(), value).thenRun(() -> {
+        DatabaseManager.databaseManager.database.saveDynamicPrefixRequest(player, prefix.getId(), value).thenRun(() -> {
             cacheDynamicPrefixRequest(player, prefix.getId(), value);
             notifyDynamicPrefixAdmins();
         });
@@ -103,7 +107,7 @@ public class DynamicPrefixes {
     }
 
     public static void notifyDynamicPrefixAdmins() {
-        CacheManager.cacheManager.database.getPendingDynamicPrefixRequestAmount().thenAccept(amount -> {
+        DatabaseManager.databaseManager.database.getPendingDynamicPrefixRequestAmount().thenAccept(amount -> {
             if (amount <= 0) {
                 return;
             }

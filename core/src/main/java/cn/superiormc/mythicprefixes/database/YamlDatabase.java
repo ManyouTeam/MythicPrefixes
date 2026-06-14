@@ -68,6 +68,7 @@ public class YamlDatabase extends AbstractDatabase {
             }
             cache.setActivePrefixes(tempVal3.toString());
         }
+        cache.ready();
     }
 
     @Override
@@ -91,8 +92,7 @@ public class YamlDatabase extends AbstractDatabase {
         YamlConfiguration config = new YamlConfiguration();
         Map<String, Object> data = new HashMap<>();
         List<String> prefixes = new ArrayList<>();
-        for (ObjectPrefix single : CacheManager.cacheManager.getPlayerCache(
-                cache.getPlayer()).getActivePrefixes()) {
+        for (ObjectPrefix single : cache.getActivePrefixes()) {
             prefixes.add(single.getId());
         }
         data.put("prefixID", prefixes);

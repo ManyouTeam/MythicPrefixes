@@ -5,37 +5,27 @@ import cn.superiormc.mythicprefixes.manager.CacheManager;
 import cn.superiormc.mythicprefixes.manager.ConfigManager;
 import cn.superiormc.mythicprefixes.manager.ListenerManager;
 import cn.superiormc.mythicprefixes.methods.DynamicPrefixes;
+import cn.superiormc.mythicprefixes.objects.ObjectCache;
 import cn.superiormc.mythicprefixes.utils.PacketInventoryUtil;
 import cn.superiormc.mythicprefixes.utils.SchedulerUtil;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 public class CacheListener implements Listener {
 
     @EventHandler
-    public void onLogin(PlayerLoginEvent event) {
+    public void onJoin(PlayerJoinEvent event) {
+        CacheManager.cacheManager.addPlayerCache(event.getPlayer());
+        DynamicPrefixes.notifyDynamicPrefixAdmins();
         SchedulerUtil.runTaskLater(() -> {
             if (!event.getPlayer().isOnline()) {
                 return;
             }
-            CacheManager.cacheManager.addPlayerCache(event.getPlayer());
-            if (ConfigManager.configManager.getString("cache.load-mode").equals("LOGIN")) {
-                CacheManager.cacheManager.loadPlayerCache(event.getPlayer());
-            }
-        }, 7L);
-    }
-
-    @EventHandler
-    public void onJoin(PlayerJoinEvent event) {
-        CacheManager.cacheManager.getPlayerCache(event.getPlayer()).setAsFinished();
-        if (!ConfigManager.configManager.getString("cache.load-mode").equals("LOGIN")) {
             CacheManager.cacheManager.loadPlayerCache(event.getPlayer());
-        }
-        DynamicPrefixes.notifyDynamicPrefixAdmins();
+        }, ConfigManager.configManager.getLong("cache.load-delay", 7L));
     }
 
     @EventHandler
@@ -45,7 +35,10 @@ public class CacheListener implements Listener {
         if (MythicPrefixes.usePacketEvents && PacketInventoryUtil.packetInventoryUtil != null) {
             PacketInventoryUtil.packetInventoryUtil.clear(event.getPlayer());
         }
-        CacheManager.cacheManager.getPlayerCache(event.getPlayer()).runAllPrefixEndActions();
+        ObjectCache cache = CacheManager.cacheManager.getPlayerCache(event.getPlayer());
+        if (cache != null) {
+            cache.runAllPrefixEndActions();
+        }
         CacheManager.cacheManager.savePlayerCacheOnExit(event.getPlayer());
     }
 

@@ -102,10 +102,7 @@ public class SQLDatabase extends AbstractDatabase {
 
     @Override
     public void checkData(ObjectCache cache) {
-        CompletableFuture.runAsync(
-                () -> loadData(cache),
-                DatabaseExecutor.getExecutor()
-        );
+        CompletableFuture.runAsync(() -> loadData(cache), DatabaseExecutor.getExecutor());
     }
 
     private void loadData(ObjectCache cache) {
@@ -157,7 +154,7 @@ public class SQLDatabase extends AbstractDatabase {
             if (activePrefixes != null) {
                 cache.setActivePrefixes(activePrefixes);
             }
-
+            cache.ready();
         } catch (SQLException e) {
             e.printStackTrace();
         }

@@ -25,7 +25,7 @@ public class DatabaseExecutor {
 
     public static synchronized ExecutorService getExecutor() {
         if (executor == null || executor.isShutdown()) {
-            throw new RejectedExecutionException("UltimateShop database executor is not running");
+            throw new RejectedExecutionException("MythicPrefixes database executor is not running");
         }
         return executor;
     }
@@ -59,7 +59,7 @@ public class DatabaseExecutor {
                                  TimeUnit unit,
                                  LinkedBlockingQueue<Runnable> workQueue) {
             super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue,
-                    runnable -> new Thread(runnable, "UltimateShop-DB"));
+                    runnable -> new Thread(runnable, "MythicPrefixes-DB"));
         }
 
         @Override

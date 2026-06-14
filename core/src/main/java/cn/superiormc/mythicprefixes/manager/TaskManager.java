@@ -40,8 +40,9 @@ public class TaskManager {
                         "you should consider disable auto save feature at config.yml!");
             }
             for (Player player : Bukkit.getOnlinePlayers()) {
-                if (CacheManager.cacheManager.getPlayerCache(player) != null) {
-                    CacheManager.cacheManager.getPlayerCache(player).shutPlayerCache(false);
+                ObjectCache cache = CacheManager.cacheManager.getPlayerCache(player);
+                if (cache != null) {
+                    cache.shutPlayerCache(false);
                 }
             }
         }, 180L, ConfigManager.configManager.config.getLong("auto-save.period-tick", 600));
@@ -50,8 +51,9 @@ public class TaskManager {
     public void initConditionCheckTasks() {
         conditionCheckTask = SchedulerUtil.runTaskTimer(() -> {
             for (Player player : Bukkit.getOnlinePlayers()) {
-                if (CacheManager.cacheManager.getPlayerCache(player) != null) {
-                    CacheManager.cacheManager.getPlayerCache(player).checkCondition();
+                ObjectCache cache = CacheManager.cacheManager.getPlayerCache(player);
+                if (cache != null) {
+                    cache.checkCondition();
                 }
             }
         }, 20L, 20L);
@@ -71,10 +73,12 @@ public class TaskManager {
             SchedulerUtil task = SchedulerUtil.runTaskTimer(() -> {
                 for (Player player : Bukkit.getOnlinePlayers()) {
                     ObjectCache cache = CacheManager.cacheManager.getPlayerCache(player);
-                    Collection<ObjectPrefix> activePrefixes = cache.getActivePrefixes();
-                    for (ObjectPrefix prefix : prefixes) {
-                        if (activePrefixes.contains(prefix)) {
-                            prefix.runCircleAction(player);
+                    if (cache != null) {
+                        Collection<ObjectPrefix> activePrefixes = cache.getActivePrefixes();
+                        for (ObjectPrefix prefix : prefixes) {
+                            if (activePrefixes.contains(prefix)) {
+                                prefix.runCircleAction(player);
+                            }
                         }
                     }
                 }

@@ -71,10 +71,12 @@ public class MythicPrefixesAPI {
                     "please try restart the server.");
 
             return new TreeSet<>();
-        } else if (CacheManager.cacheManager.getPlayerCache(player) == null) {
+        }
+        ObjectCache cache = CacheManager.cacheManager.getPlayerCache(player);
+        if (cache == null) {
             return new TreeSet<>();
         } else {
-            return CacheManager.cacheManager.getPlayerCache(player).getActivePrefixes();
+            return cache.getActivePrefixes();
         }
     }
 

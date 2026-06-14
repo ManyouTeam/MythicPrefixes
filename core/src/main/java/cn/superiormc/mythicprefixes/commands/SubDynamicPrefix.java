@@ -2,6 +2,7 @@ package cn.superiormc.mythicprefixes.commands;
 
 import cn.superiormc.mythicprefixes.manager.CacheManager;
 import cn.superiormc.mythicprefixes.manager.ConfigManager;
+import cn.superiormc.mythicprefixes.manager.DatabaseManager;
 import cn.superiormc.mythicprefixes.manager.LanguageManager;
 import cn.superiormc.mythicprefixes.objects.AbstractCommand;
 import cn.superiormc.mythicprefixes.objects.DynamicPrefixRequest;
@@ -45,7 +46,7 @@ public class SubDynamicPrefix extends AbstractCommand {
 
     private void execute(Player sender, String[] args) {
         if (args[1].equalsIgnoreCase("list")) {
-            CacheManager.cacheManager.database.getPendingDynamicPrefixRequests().thenAccept(requests ->
+            DatabaseManager.databaseManager.database.getPendingDynamicPrefixRequests().thenAccept(requests ->
                     SchedulerUtil.runSync(() -> sendList(sender, requests)));
             return;
         }
@@ -60,10 +61,10 @@ public class SubDynamicPrefix extends AbstractCommand {
             return;
         }
         if (args[1].equalsIgnoreCase("approve")) {
-            CacheManager.cacheManager.database.approveDynamicPrefixRequest(playerUUID, prefixID).thenAccept(success ->
+            DatabaseManager.databaseManager.database.approveDynamicPrefixRequest(playerUUID, prefixID).thenAccept(success ->
                     SchedulerUtil.runSync(() -> afterHandle(sender, playerUUID, prefixID, success, true)));
         } else if (args[1].equalsIgnoreCase("deny")) {
-            CacheManager.cacheManager.database.denyDynamicPrefixRequest(playerUUID, prefixID).thenAccept(success ->
+            DatabaseManager.databaseManager.database.denyDynamicPrefixRequest(playerUUID, prefixID).thenAccept(success ->
                     SchedulerUtil.runSync(() -> afterHandle(sender, playerUUID, prefixID, success, false)));
         } else {
             LanguageManager.languageManager.sendStringText(sender, "error.args");
@@ -105,21 +106,25 @@ public class SubDynamicPrefix extends AbstractCommand {
         Player target = Bukkit.getPlayer(UUID.fromString(playerUUID));
         if (target != null) {
             ObjectCache cache = CacheManager.cacheManager.getPlayerCache(target);
+            if (cache == null) {
+                LanguageManager.languageManager.sendStringText(sender, "error.player-not-found", "player", target.getName());
+                return;
+            }
             String pending = cache.getPendingDynamicPrefixValue(prefixID);
             if (pending == null) {
                 pending = cache.getCleanDynamicPrefixValue(prefixID);
             }
             if (approve) {
                 cache.setDynamicPrefixValue(prefixID, pending);
-                CacheManager.cacheManager.database.saveDynamicPrefixValue(playerUUID, prefixID, pending);
+                DatabaseManager.databaseManager.database.saveDynamicPrefixValue(playerUUID, prefixID, pending);
             } else {
                 String approvedValue = cache.getApprovedDynamicPrefixValue(prefixID);
                 if (approvedValue == null || approvedValue.isEmpty()) {
                     cache.clearDynamicPrefixValue(prefixID);
-                    CacheManager.cacheManager.database.clearDynamicPrefixValue(playerUUID, prefixID);
+                    DatabaseManager.databaseManager.database.clearDynamicPrefixValue(playerUUID, prefixID);
                 } else {
                     cache.setDynamicPrefixValue(prefixID, approvedValue);
-                    CacheManager.cacheManager.database.saveDynamicPrefixValue(playerUUID, prefixID, approvedValue);
+                    DatabaseManager.databaseManager.database.saveDynamicPrefixValue(playerUUID, prefixID, approvedValue);
                 }
             }
             cache.clearPendingDynamicPrefixValue(prefixID);
@@ -169,11 +174,11 @@ public class SubDynamicPrefix extends AbstractCommand {
     }
 
     public void refreshPendingRequestCache() {
-        if (refreshingTabCache || CacheManager.cacheManager == null || CacheManager.cacheManager.database == null) {
+        if (refreshingTabCache || CacheManager.cacheManager == null || DatabaseManager.databaseManager.database == null) {
             return;
         }
         refreshingTabCache = true;
-        CacheManager.cacheManager.database.getPendingDynamicPrefixRequests().thenAccept(requests -> {
+        DatabaseManager.databaseManager.database.getPendingDynamicPrefixRequests().thenAccept(requests -> {
             Collection<DynamicPrefixRequest> safeRequests = requests == null ? Collections.emptyList() : requests;
             pendingRequestCache = new ArrayList<>(safeRequests);
         }).whenComplete((ignored, throwable) -> refreshingTabCache = false);

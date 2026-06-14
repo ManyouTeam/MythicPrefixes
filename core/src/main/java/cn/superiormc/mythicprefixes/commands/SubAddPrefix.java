@@ -46,6 +46,10 @@ public class SubAddPrefix extends AbstractCommand {
             return;
         }
         ObjectCache playerCache = CacheManager.cacheManager.getPlayerCache(whoWillAdd);
+        if (playerCache == null) {
+            LanguageManager.languageManager.sendStringText(player, "error.player-not-found", "player", whoWillAdd.getName());
+            return;
+        }
         if (whatPrefix.getPrefixStatus(playerCache) == PrefixStatus.USING) {
             LanguageManager.languageManager.sendStringText(player, "error.prefix-is-using",
                     "player", whoWillAdd.getName(),
@@ -74,17 +78,21 @@ public class SubAddPrefix extends AbstractCommand {
     public void executeCommandInConsole(String[] args) {
         Player whoWillAdd = Bukkit.getPlayer(args[1]);
         if (whoWillAdd == null) {
-            LanguageManager.languageManager.sendStringText(Bukkit.getConsoleSender(), "error.player-not-found", "player", args[1]);
+            LanguageManager.languageManager.sendStringText("error.player-not-found", "player", args[1]);
             return;
         }
         ObjectPrefix whatPrefix = ConfigManager.configManager.getPrefix(args[2]);
         if (whatPrefix == null) {
-            LanguageManager.languageManager.sendStringText(Bukkit.getConsoleSender(), "error.prefix-not-found", "prefix", args[2]);
+            LanguageManager.languageManager.sendStringText("error.prefix-not-found", "prefix", args[2]);
             return;
         }
         ObjectCache playerCache = CacheManager.cacheManager.getPlayerCache(whoWillAdd);
+        if (playerCache == null) {
+            LanguageManager.languageManager.sendStringText("error.player-not-found", "player", whoWillAdd.getName());
+            return;
+        }
         playerCache.addActivePrefix(whatPrefix);
-        LanguageManager.languageManager.sendStringText(Bukkit.getConsoleSender(), "success-add-prefix",
+        LanguageManager.languageManager.sendStringText("success-add-prefix",
                 "player", args[1],
                 "prefix", args[2]);
     }
