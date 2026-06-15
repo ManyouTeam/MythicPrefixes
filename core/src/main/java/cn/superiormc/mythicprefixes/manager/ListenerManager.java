@@ -6,6 +6,7 @@ import cn.superiormc.mythicprefixes.listeners.CacheListener;
 import cn.superiormc.mythicprefixes.listeners.DupeListener;
 import cn.superiormc.mythicprefixes.listeners.GUIListener;
 import cn.superiormc.mythicprefixes.utils.CommonUtil;
+import cn.superiormc.mythicprefixes.utils.PacketInventoryUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
@@ -54,5 +55,8 @@ public class ListenerManager {
     public void unregisterAllListener() {
         listeners.clear();
         HandlerList.unregisterAll(MythicPrefixes.instance);
+        if (MythicPrefixes.usePacketEvents && PacketInventoryUtil.packetInventoryUtil != null) {
+            PacketInventoryUtil.packetInventoryUtil.shutdown();
+        }
     }
 }

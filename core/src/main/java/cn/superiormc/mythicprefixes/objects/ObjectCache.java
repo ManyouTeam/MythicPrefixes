@@ -325,12 +325,18 @@ public class ObjectCache {
         return ready;
     }
 
-    public void ready() {
-        ready = true;
-    }
-
     public void close() {
         closed = true;
+        if (player != null) {
+            TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fUnloaded player data: " + player.getName() + ".");
+        }
+    }
+
+    public void ready() {
+        ready = true;
+        if (player != null) {
+            TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fLoaded player data: " + player.getName() + ".");
+        }
     }
 
     public boolean canNotModify() {

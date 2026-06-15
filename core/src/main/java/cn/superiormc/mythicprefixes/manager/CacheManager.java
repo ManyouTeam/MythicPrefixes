@@ -46,6 +46,7 @@ public class CacheManager {
             if (CommonUtil.checkPluginLoad("AuraSkills")) {
                 ObjectAuraSkillsEffect.removePlayerStat(player, 1);
             }
+            TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fLoading player data: " + player.getName() + "...");
             cache.initPlayerCache();
         }
     }

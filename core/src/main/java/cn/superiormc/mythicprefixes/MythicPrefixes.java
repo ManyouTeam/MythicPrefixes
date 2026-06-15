@@ -104,9 +104,6 @@ public final class MythicPrefixes extends JavaPlugin {
             HookManager.hookManager.papi.unregister();
             HookManager.hookManager.papi = null;
         }
-        if (PacketInventoryUtil.packetInventoryUtil != null) {
-            PacketInventoryUtil.packetInventoryUtil.shutdown();
-        }
         TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fWaiting for all pending database task finished, this may freeze your server if your database is lost connection.");
         DatabaseExecutor.await();
         for (Player player : Bukkit.getOnlinePlayers()) {
