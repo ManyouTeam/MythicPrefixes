@@ -22,6 +22,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPrefix> {
 
@@ -39,7 +40,7 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
 
     private final ObjectAction clickActionMXR;
 
-    private final Map<Player, EffectStatus> mmoEffects = new HashMap<>();
+    private final Map<Player, EffectStatus> mmoEffects = new ConcurrentHashMap<>();
 
     private boolean useEffect;
 

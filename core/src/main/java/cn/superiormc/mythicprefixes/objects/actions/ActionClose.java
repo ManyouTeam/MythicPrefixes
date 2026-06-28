@@ -1,5 +1,6 @@
 package cn.superiormc.mythicprefixes.objects.actions;
 
+import cn.superiormc.mythicprefixes.utils.SchedulerUtil;
 import org.bukkit.entity.Player;
 
 public class ActionClose extends AbstractRunAction {
@@ -10,6 +11,6 @@ public class ActionClose extends AbstractRunAction {
 
     @Override
     protected void onDoAction(ObjectSingleAction singleAction, Player player) {
-        player.closeInventory();
+        SchedulerUtil.runSync(player, player::closeInventory);
     }
 }

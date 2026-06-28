@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeSet;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ObjectCache {
 
@@ -27,9 +28,9 @@ public class ObjectCache {
 
     private final Collection<ObjectPrefix> prefixCaches = new TreeSet<>();
 
-    private final Map<String, String> dynamicPrefixValues = new HashMap<>();
+    private final Map<String, String> dynamicPrefixValues = new ConcurrentHashMap<>();
 
-    private final Map<String, String> pendingDynamicPrefixValues = new HashMap<>();
+    private final Map<String, String> pendingDynamicPrefixValues = new ConcurrentHashMap<>();
 
     private volatile boolean initialized = false;
 

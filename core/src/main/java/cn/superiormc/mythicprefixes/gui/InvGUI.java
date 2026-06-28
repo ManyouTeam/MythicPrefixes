@@ -1,20 +1,18 @@
 package cn.superiormc.mythicprefixes.gui;
 
-import cn.superiormc.mythicprefixes.manager.ListenerManager;
 import cn.superiormc.mythicprefixes.methods.Dupe;
 import cn.superiormc.mythicprefixes.utils.SchedulerUtil;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.jspecify.annotations.NonNull;
 
-public abstract class InvGUI extends AbstractGUI {
+public abstract class InvGUI extends AbstractGUI implements InventoryHolder {
 
     protected Inventory inv;
-
-    public Listener guiListener;
 
     public String title;
 
@@ -28,14 +26,11 @@ public abstract class InvGUI extends AbstractGUI {
     public void openGUI() {
         constructGUI();
         if (inv != null) {
-            SchedulerUtil.runSync(player, () -> {
-                player.openInventory(inv);
-                ListenerManager.listenerManager.registerNewGUIListener(player, this);
-            });
+            SchedulerUtil.runSync(player, () -> player.openInventory(inv));
         }
     }
 
-    public Inventory getInv() {
+    public @NonNull Inventory getInventory() {
         return inv;
     }
 

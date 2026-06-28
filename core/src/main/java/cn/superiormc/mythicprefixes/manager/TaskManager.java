@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class TaskManager {
 
@@ -21,7 +22,7 @@ public class TaskManager {
 
     private SchedulerUtil conditionCheckTask;
 
-    private final Map<Long, SchedulerUtil> circleActionTasks = new HashMap<>();
+    private final Map<Long, SchedulerUtil> circleActionTasks = new ConcurrentHashMap<>();
 
     public TaskManager() {
         taskManager = this;

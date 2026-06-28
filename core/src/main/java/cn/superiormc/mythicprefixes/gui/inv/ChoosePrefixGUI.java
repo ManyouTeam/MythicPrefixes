@@ -75,7 +75,7 @@ public class ChoosePrefixGUI extends InvGUI {
                 "title", "Tag GUI", "now", String.valueOf(nowPage), "max", String.valueOf(needPages)), player);
         if (Objects.isNull(inv)) {
             int size = ConfigManager.configManager.getInt("choose-prefix-gui.size", 54);
-            inv = MythicPrefixes.methodUtil.createNewInv(player, size, title);
+            inv = MythicPrefixes.methodUtil.createNewInv(player, size, title, this);
         }
         for (int c = 0 ; c < slotCache.size() ; c ++) {
             AbstractButton prefix = prefixCache.get((nowPage - 1)  * slotCache.size() + c);

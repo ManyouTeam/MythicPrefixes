@@ -12,6 +12,7 @@ import org.bukkit.boss.BossBar;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.profile.PlayerProfile;
@@ -206,8 +207,8 @@ public class SpigotMethodUtil implements SpecialMethodUtil {
     }
 
     @Override
-    public Inventory createNewInv(Player player, int size, String text) {
-        return Bukkit.createInventory(player, size, TextUtil.parse(text, player));
+    public Inventory createNewInv(Player player, int size, String text, InventoryHolder holder) {
+        return Bukkit.createInventory(holder, size, TextUtil.parse(text, player));
     }
 
     @Override
