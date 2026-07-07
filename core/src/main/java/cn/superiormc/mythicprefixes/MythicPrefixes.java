@@ -41,11 +41,11 @@ public final class MythicPrefixes extends JavaPlugin {
         DatabaseExecutor.start();
         try {
             String[] versionParts = Bukkit.getBukkitVersion().split("-")[0].split("\\.");
-            yearVersion = versionParts.length > 0 ? Integer.parseInt(versionParts[0]) : 1;
-            majorVersion = versionParts.length > 1 ? Integer.parseInt(versionParts[1]) : 0;
-            minorVersion = versionParts.length > 2 ? Integer.parseInt(versionParts[2]) : 0;
+            yearVersion = versionParts.length > 0 && versionParts[0].matches("\\d+") ? Integer.parseInt(versionParts[0]) : 1;
+            majorVersion = versionParts.length > 1 && versionParts[1].matches("\\d+") ? Integer.parseInt(versionParts[1]) : 0;
+            minorVersion = versionParts.length > 2 && versionParts[2].matches("\\d+") ? Integer.parseInt(versionParts[2]) : 0;
         } catch (Throwable throwable) {
-            TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §cError: Can not get your Minecraft version! Default set to 1.0.0.");
+            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §cError: Can not get your Minecraft version! Default set to 1.0.0.");
         }
         if (CommonUtil.getClass("com.destroystokyo.paper.PaperConfig") && CommonUtil.getMinorVersion(18, 2)) {
             try {
