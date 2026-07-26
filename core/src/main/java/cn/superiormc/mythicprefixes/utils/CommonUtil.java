@@ -10,8 +10,7 @@ import org.geysermc.floodgate.api.FloodgateApi;
 
 import java.io.File;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -56,6 +55,24 @@ public class CommonUtil {
         } catch (ClassNotFoundException e) {
             return false;
         }
+    }
+
+    public static List<File> getYamlFiles(File dir) {
+        File[] files = dir.listFiles();
+        if (files == null || files.length == 0) {
+            return Collections.emptyList();
+        }
+
+        Arrays.sort(files, Comparator.comparing(File::getName));
+        List<File> yamlFiles = new ArrayList<>();
+        for (File file : files) {
+            if (file.isDirectory()) {
+                yamlFiles.addAll(getYamlFiles(file));
+            } else if (file.getName().endsWith(".yml")) {
+                yamlFiles.add(file);
+            }
+        }
+        return yamlFiles;
     }
 
     public static boolean getYearVersion(int year, int majorVersion, int minorVersion) {

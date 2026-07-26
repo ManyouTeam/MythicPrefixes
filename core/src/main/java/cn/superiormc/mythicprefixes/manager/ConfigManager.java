@@ -5,8 +5,8 @@ import cn.superiormc.mythicprefixes.libreforge.LibreforgeEffects;
 import cn.superiormc.mythicprefixes.objects.ObjectDisplayPlaceholder;
 import cn.superiormc.mythicprefixes.objects.buttons.ObjectButton;
 import cn.superiormc.mythicprefixes.objects.buttons.ObjectPrefix;
+import cn.superiormc.mythicprefixes.utils.CommonUtil;
 import cn.superiormc.mythicprefixes.utils.TextUtil;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -62,11 +62,7 @@ public class ConfigManager {
         if (!dir.exists()) {
             dir.mkdir();
         }
-        File[] files = dir.listFiles();
-        if (!Objects.nonNull(files) && files.length != 0) {
-            return;
-        }
-        for (File file : files) {
+        for (File file : CommonUtil.getYamlFiles(dir)) {
             String fileName = file.getName();
             if (fileName.endsWith(".yml")) {
                 String substring = fileName.substring(0, fileName.length() - 4);
@@ -107,11 +103,7 @@ public class ConfigManager {
         if (!dir.exists()) {
             dir.mkdir();
         }
-        File[] files = dir.listFiles();
-        if (!Objects.nonNull(files) && files.length != 0) {
-            return;
-        }
-        for (File file : files) {
+        for (File file : CommonUtil.getYamlFiles(dir)) {
             String fileName = file.getName();
             if (fileName.endsWith(".yml")) {
                 String substring = fileName.substring(0, fileName.length() - 4);

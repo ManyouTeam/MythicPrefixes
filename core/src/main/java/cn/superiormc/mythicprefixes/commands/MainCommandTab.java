@@ -25,7 +25,7 @@ public class MainCommandTab implements TabCompleter {
         } else {
             AbstractCommand object = CommandManager.commandManager.getSubCommandsMap().get(args[0].toLowerCase(Locale.ROOT));
             if (object != null && canUse(sender, object)) {
-                tempVal1 = object.getTabResult(args);
+                tempVal1 = object.filterTabResult(args);
             }
         }
         return tempVal1;
