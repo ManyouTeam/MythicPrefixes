@@ -40,7 +40,7 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
 
     private final ObjectAction clickActionMXR;
 
-    private final Map<Player, EffectStatus> mmoEffects = new ConcurrentHashMap<>();
+    private final Map<UUID, EffectStatus> mmoEffects = new ConcurrentHashMap<>();
 
     private boolean useEffect;
 
@@ -89,7 +89,7 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
         Player player = cache.getPlayer();
         if (useEffect) {
             TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fStarted effect for player " + player.getName());
-            mmoEffects.put(player, MythicPrefixesAPI.startEffect(this, player));
+            mmoEffects.put(player.getUniqueId(), MythicPrefixesAPI.startEffect(this, player));
         }
         startAction.runAllActions(player);
     }
@@ -98,8 +98,9 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
         if (!circleAction.isEmpty()) {
             circleAction.runAllActions(player);
         }
-        if (mmoEffects.get(player) != null) {
-            mmoEffects.get(player).retryActiveEffects();
+        EffectStatus effectStatus = mmoEffects.get(player.getUniqueId());
+        if (effectStatus != null) {
+            effectStatus.retryActiveEffects();
         }
     }
 
@@ -112,17 +113,17 @@ public class ObjectPrefix extends AbstractButton implements Comparable<ObjectPre
     }
 
     public EffectStatus getEffectStatus(Player player) {
-        return mmoEffects.get(player);
+        return player == null ? null : mmoEffects.get(player.getUniqueId());
     }
 
     public void runEndAction(ObjectCache cache) {
         Player player = cache.getPlayer();
         if (useEffect) {
-            if (mmoEffects.get(player) != null) {
-                for (AbstractEffect tempVal1 : mmoEffects.get(player).getActivedEffects()) {
+            EffectStatus effectStatus = mmoEffects.remove(player.getUniqueId());
+            if (effectStatus != null) {
+                for (AbstractEffect tempVal1 : effectStatus.getActivedEffects()) {
                     tempVal1.removePlayerStat();
                 }
-                mmoEffects.remove(player);
             }
         }
         endAction.runAllActions(player);

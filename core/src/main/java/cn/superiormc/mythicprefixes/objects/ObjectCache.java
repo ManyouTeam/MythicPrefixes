@@ -1,5 +1,7 @@
 package cn.superiormc.mythicprefixes.objects;
 
+import cn.superiormc.mythicprefixes.database.PlayerDataSnapshot;
+import cn.superiormc.mythicprefixes.manager.CacheManager;
 import cn.superiormc.mythicprefixes.manager.ConfigManager;
 import cn.superiormc.mythicprefixes.manager.DatabaseManager;
 import cn.superiormc.mythicprefixes.manager.LanguageManager;
@@ -54,8 +56,10 @@ public class ObjectCache {
         if (canNotModify()) {
             return;
         }
-        DatabaseManager.databaseManager.database.updateData(this, quitServer);
+        PlayerDataSnapshot snapshot = PlayerDataSnapshot.from(this);
+        DatabaseManager.databaseManager.database.updateData(snapshot);
         if (quitServer) {
+            CacheManager.cacheManager.removePlayerCache(this);
             closed = true;
         }
     }
@@ -64,7 +68,9 @@ public class ObjectCache {
         if (canNotModify()) {
             return;
         }
-        DatabaseManager.databaseManager.database.updateDataOnDisable(this, disable);
+        PlayerDataSnapshot snapshot = PlayerDataSnapshot.from(this);
+        DatabaseManager.databaseManager.database.updateDataOnDisable(snapshot, disable);
+        CacheManager.cacheManager.removePlayerCache(this);
         closed = true;
 
     }

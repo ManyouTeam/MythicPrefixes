@@ -102,7 +102,7 @@ public class SQLDatabase extends AbstractDatabase {
 
     @Override
     public void checkData(ObjectCache cache) {
-        CompletableFuture.runAsync(() -> loadData(cache), DatabaseExecutor.getExecutor());
+        DatabaseExecutor.executeCacheLoad(cache, this::loadData);
     }
 
     private void loadData(ObjectCache cache) {
@@ -161,30 +161,24 @@ public class SQLDatabase extends AbstractDatabase {
     }
 
     @Override
-    public void updateData(ObjectCache cache, boolean quitServer) {
-        CompletableFuture.runAsync(() -> {
-            saveData(cache);
-            if (quitServer) {
-                CacheManager.cacheManager.removePlayerCache(cache);
-            }
-        }, DatabaseExecutor.getExecutor());
+    public void updateData(PlayerDataSnapshot snapshot) {
+        DatabaseExecutor.executePlayerSave(snapshot.storageId(), () -> saveData(snapshot));
     }
 
     @Override
-    public void updateDataOnDisable(ObjectCache cache, boolean disable) {
-        saveData(cache);
-        CacheManager.cacheManager.removePlayerCache(cache);
+    public void updateDataOnDisable(PlayerDataSnapshot snapshot, boolean disable) {
+        saveData(snapshot);
     }
 
-    private void saveData(ObjectCache cache) {
-        String playerUUID = cache.getPlayer().getUniqueId().toString();
+    private void saveData(PlayerDataSnapshot snapshot) {
+        String playerUUID = snapshot.storageId();
         String sql = dialect.upsertPrefix();
 
         try (Connection conn = dataSource.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, playerUUID);
-            ps.setString(2, cache.getActivePrefixesID());
+            ps.setString(2, snapshot.activePrefixes());
 
             ps.executeUpdate();
 
@@ -195,18 +189,20 @@ public class SQLDatabase extends AbstractDatabase {
 
     @Override
     public CompletableFuture<Void> saveDynamicPrefixRequest(org.bukkit.entity.Player player, String prefixID, String value) {
-        return CompletableFuture.runAsync(() -> {
+        String playerUUID = player.getUniqueId().toString();
+        String playerName = player.getName();
+        ObjectCache cache = CacheManager.cacheManager.getPlayerCache(player);
+        String markedValue = cache == null ? ObjectCache.markDynamicPrefixPending(value) : cache.getDynamicPrefixValue(prefixID);
+        return DatabaseExecutor.executeDatabaseTask(() -> {
             try (Connection conn = dataSource.getConnection();
                  PreparedStatement ps = conn.prepareStatement(dialect.upsertDynamicPrefixRequest())) {
-                ps.setString(1, player.getUniqueId().toString());
-                ps.setString(2, player.getName());
+                ps.setString(1, playerUUID);
+                ps.setString(2, playerName);
                 ps.setString(3, prefixID);
                 ps.setString(4, value);
                 ps.executeUpdate();
                 try (PreparedStatement ps2 = conn.prepareStatement(dialect.upsertDynamicPrefix())) {
-                    ObjectCache cache = CacheManager.cacheManager.getPlayerCache(player);
-                    String markedValue = cache == null ? ObjectCache.markDynamicPrefixPending(value) : cache.getDynamicPrefixValue(prefixID);
-                    ps2.setString(1, player.getUniqueId().toString());
+                    ps2.setString(1, playerUUID);
                     ps2.setString(2, prefixID);
                     ps2.setString(3, markedValue == null ? ObjectCache.markDynamicPrefixPending(value) : markedValue);
                     ps2.executeUpdate();
@@ -214,12 +210,12 @@ public class SQLDatabase extends AbstractDatabase {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-        }, DatabaseExecutor.getExecutor());
+        });
     }
 
     @Override
     public CompletableFuture<Collection<DynamicPrefixRequest>> getPendingDynamicPrefixRequests() {
-        return CompletableFuture.supplyAsync(() -> {
+        return DatabaseExecutor.supplyDatabaseTask(() -> {
             List<DynamicPrefixRequest> result = new ArrayList<>();
             try (Connection conn = dataSource.getConnection();
                  PreparedStatement ps = conn.prepareStatement("""
@@ -240,12 +236,12 @@ public class SQLDatabase extends AbstractDatabase {
                 e.printStackTrace();
             }
             return result;
-        }, DatabaseExecutor.getExecutor());
+        });
     }
 
     @Override
     public CompletableFuture<Integer> getPendingDynamicPrefixRequestAmount() {
-        return CompletableFuture.supplyAsync(() -> {
+        return DatabaseExecutor.supplyDatabaseTask(() -> {
             try (Connection conn = dataSource.getConnection();
                  PreparedStatement ps = conn.prepareStatement("""
                          SELECT COUNT(*) AS amount
@@ -260,7 +256,7 @@ public class SQLDatabase extends AbstractDatabase {
                 e.printStackTrace();
             }
             return 0;
-        }, DatabaseExecutor.getExecutor());
+        });
     }
 
     @Override
@@ -274,7 +270,7 @@ public class SQLDatabase extends AbstractDatabase {
     }
 
     private CompletableFuture<Boolean> handleDynamicPrefixRequest(String playerUUID, String prefixID, boolean approve) {
-        return CompletableFuture.supplyAsync(() -> {
+        return DatabaseExecutor.supplyDatabaseTask(() -> {
             Connection conn = null;
             try {
                 conn = dataSource.getConnection();
@@ -342,12 +338,12 @@ public class SQLDatabase extends AbstractDatabase {
                 }
             }
             return false;
-        }, DatabaseExecutor.getExecutor());
+        });
     }
 
     @Override
     public CompletableFuture<Void> clearDynamicPrefixValue(String playerUUID, String prefixID) {
-        return CompletableFuture.runAsync(() -> {
+        return DatabaseExecutor.executeDatabaseTask(() -> {
             try (Connection conn = dataSource.getConnection();
                  PreparedStatement ps = conn.prepareStatement("""
                          DELETE FROM mythicprefixes_dynamic
@@ -359,12 +355,12 @@ public class SQLDatabase extends AbstractDatabase {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-        }, DatabaseExecutor.getExecutor());
+        });
     }
 
     @Override
     public CompletableFuture<Void> saveDynamicPrefixValue(String playerUUID, String prefixID, String value) {
-        return CompletableFuture.runAsync(() -> {
+        return DatabaseExecutor.executeDatabaseTask(() -> {
             try (Connection conn = dataSource.getConnection();
                  PreparedStatement ps = conn.prepareStatement(dialect.upsertDynamicPrefix())) {
                 ps.setString(1, playerUUID);
@@ -374,7 +370,7 @@ public class SQLDatabase extends AbstractDatabase {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-        }, DatabaseExecutor.getExecutor());
+        });
     }
 
     private String getPendingValue(Connection conn, String playerUUID, String prefixID) throws SQLException {

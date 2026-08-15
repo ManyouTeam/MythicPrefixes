@@ -1,6 +1,7 @@
 package cn.superiormc.mythicprefixes.methods;
 
 import cn.superiormc.mythicprefixes.MythicPrefixes;
+import cn.superiormc.mythicprefixes.database.DatabaseExecutor;
 import cn.superiormc.mythicprefixes.manager.CacheManager;
 import cn.superiormc.mythicprefixes.manager.ConfigManager;
 import cn.superiormc.mythicprefixes.manager.LanguageManager;
@@ -20,11 +21,19 @@ public class ReloadPlugin {
             if (cache != null) {
                 cache.runAllPrefixEndActions();
             }
-            CacheManager.cacheManager.savePlayerCacheOnDisable(p, false);
         }
-        CacheManager.cacheManager.shutdown();
-        new ConfigManager();
-        new LanguageManager();
+        DatabaseExecutor.quiesce();
+        try {
+            DatabaseExecutor.await();
+            for (Player p : Bukkit.getOnlinePlayers()) {
+                CacheManager.cacheManager.savePlayerCacheOnDisable(p, false);
+            }
+            CacheManager.cacheManager.shutdown();
+            new ConfigManager();
+            new LanguageManager();
+        } finally {
+            DatabaseExecutor.resume();
+        }
         new CacheManager();
         new TaskManager();
         LanguageManager.languageManager.sendStringText(sender, "plugin.reloaded");

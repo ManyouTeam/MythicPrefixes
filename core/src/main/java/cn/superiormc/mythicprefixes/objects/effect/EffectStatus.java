@@ -32,13 +32,13 @@ public class EffectStatus {
     }
 
     public void retryActiveEffects() {
-        for (AbstractEffect effect : notActivedEffects) {
+        for (AbstractEffect effect : new HashSet<>(notActivedEffects)) {
             if (effect.getCondition().getAllBoolean(effect.player)) {
                 effect.addPlayerStat();
                 addAcvtiedEffects(effect);
             }
         }
-        for (AbstractEffect effect : activedEffects) {
+        for (AbstractEffect effect : new HashSet<>(activedEffects)) {
             if (!effect.isAlwaysCheckCondition() && !effect.getCondition().getAllBoolean(effect.player)) {
                 effect.removePlayerStat();
                 addNotActivedEffects(effect);
