@@ -83,7 +83,11 @@ public class MythicPrefixesAPI {
     public static Collection<ObjectPrefix> getActivedPrefixesHasEffect(Player player) {
         Collection<ObjectPrefix> prefixes = new HashSet<>();
         for (ObjectPrefix prefix : getActivedPrefixes(player)) {
-            if (!prefix.getEffectStatus(player).getActivedEffects().isEmpty()) {
+            EffectStatus effectStatus = prefix.getEffectStatus(player);
+            if (effectStatus == null) {
+                continue;
+            }
+            if (!effectStatus.getActivedEffects().isEmpty()) {
                 prefixes.add(prefix);
             }
         }
