@@ -4,9 +4,7 @@ import cn.superiormc.mythicprefixes.MythicPrefixes;
 import cn.superiormc.mythicprefixes.papi.PlaceholderAPIExpansion;
 import cn.superiormc.mythicprefixes.utils.CommonUtil;
 import cn.superiormc.mythicprefixes.utils.TextUtil;
-import org.bukkit.Bukkit;
-
-public class HookManager {
+public class HookManager extends AbstractManager {
 
     public static HookManager hookManager;
 
@@ -21,7 +19,7 @@ public class HookManager {
         if (CommonUtil.checkPluginLoad("PlaceholderAPI")) {
             papi = new PlaceholderAPIExpansion(MythicPrefixes.instance);
             TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fHooking into PlaceholderAPI...");
-            if (papi.register()){
+            if (papi.register()) {
                 TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fFinished hook!");
             }
         }

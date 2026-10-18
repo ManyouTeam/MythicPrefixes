@@ -4,7 +4,7 @@ import cn.superiormc.mythicprefixes.database.AbstractDatabase;
 import cn.superiormc.mythicprefixes.database.SQLDatabase;
 import cn.superiormc.mythicprefixes.database.YamlDatabase;
 
-public class DatabaseManager {
+public class DatabaseManager extends AbstractManager {
 
     public static DatabaseManager databaseManager;
 

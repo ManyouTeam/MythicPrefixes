@@ -3,10 +3,9 @@ package cn.superiormc.mythicprefixes.gui.form;
 import cn.superiormc.mythicprefixes.MythicPrefixes;
 import cn.superiormc.mythicprefixes.gui.Filter;
 import cn.superiormc.mythicprefixes.gui.FormGUI;
+import cn.superiormc.mythicprefixes.gui.inv.ChoosePrefixGUI;
 import cn.superiormc.mythicprefixes.manager.CacheManager;
 import cn.superiormc.mythicprefixes.manager.ConfigManager;
-import cn.superiormc.mythicprefixes.objects.ObjectCache;
-import cn.superiormc.mythicprefixes.objects.PrefixStatus;
 import cn.superiormc.mythicprefixes.objects.buttons.AbstractButton;
 import cn.superiormc.mythicprefixes.objects.buttons.ObjectPrefix;
 import cn.superiormc.mythicprefixes.utils.TextUtil;
@@ -28,38 +27,41 @@ public class FormChoosePrefixGUI extends FormGUI {
 
     private Filter filter = Filter.ALL;
 
+    private final String selectedGroup;
+
     public FormChoosePrefixGUI(Player owner) {
+        this(owner, "all");
+    }
+
+    public FormChoosePrefixGUI(Player owner, String group) {
         super(owner);
+        selectedGroup = group == null || group.isEmpty() ? "all" : group;
         constructGUI();
     }
 
     @Override
     protected void constructGUI() {
         SimpleForm.Builder tempVal2 = SimpleForm.builder();
-        ObjectCache cache = CacheManager.cacheManager.getPlayerCache(player);
-        if (buttonCache.isEmpty() && cache != null) {
-            for (ObjectPrefix prefix : ConfigManager.configManager.getPrefixesWithoutHide()) {
-                PrefixStatus status = prefix.getPrefixStatus(cache);
-                if ((filter == Filter.ALL || (filter == Filter.USING && status == PrefixStatus.USING) || (
-                        filter == Filter.CAN_USE && status == PrefixStatus.CAN_USE))
-                        && prefix.shouldHideInGUI(player)) {
-                    ButtonComponent tempVal1 = prefix.parseToBedrockButton(cache);
-                    if (tempVal1 != null) {
-                        tempVal2.button(tempVal1);
-                    }
-                    buttonCache.put(tempVal1, prefix);
-                }
+        buttonCache.clear();
+        filterButtonCache = null;
+        if (CacheManager.cacheManager.getPlayerCache(player) == null) {
+            return;
+        }
+        for (ObjectPrefix prefix : ChoosePrefixGUI.collectVisiblePrefixes(player, selectedGroup, filter)) {
+            ButtonComponent component = prefix.parseToBedrockButton(CacheManager.cacheManager.getPlayerCache(player));
+            if (component != null) {
+                tempVal2.button(component);
+                buttonCache.put(component, prefix);
             }
-            for (int slot : ConfigManager.configManager.getButtons().keySet()) {
-                AbstractButton button = ConfigManager.configManager.getButtons().get(slot);
-                if (button == null) {
-                    continue;
-                }
-                ButtonComponent tempVal1 = button.parseToBedrockButton(cache);
-                if (tempVal1 != null) {
-                    tempVal2.button(tempVal1);
-                }
-                buttonCache.put(tempVal1, button);
+        }
+        for (AbstractButton button : ConfigManager.configManager.getButtons().values()) {
+            if (button == null) {
+                continue;
+            }
+            ButtonComponent component = button.parseToBedrockButton(CacheManager.cacheManager.getPlayerCache(player));
+            if (component != null) {
+                tempVal2.button(component);
+                buttonCache.put(component, button);
             }
         }
         tempVal2.title(TextUtil.parse(ConfigManager.configManager.getString(player, "choose-prefix-gui.bedrock-title", "Tag GUI")));
@@ -88,29 +90,27 @@ public class FormChoosePrefixGUI extends FormGUI {
             }
             filterButtonCache = tempVal1;
         }
-        tempVal2.validResultHandler(response -> {
-            if (filterButtonCache != null && response.clickedButton().equals(filterButtonCache)) {
+        tempVal2.validResultHandler((submittedForm, response) -> handleResponse(submittedForm, () -> {
+            ButtonComponent clicked = response.clickedButton();
+            if (filterButtonCache != null && filterButtonCache.equals(clicked)) {
                 if (!MythicPrefixes.freeVersion) {
-                    if (filter == Filter.ALL) {
-                        filter = Filter.USING;
-                    } else if (filter == Filter.USING) {
-                        filter = Filter.CAN_USE;
-                    } else if (filter == Filter.CAN_USE) {
-                        filter = Filter.ALL;
-                    }
-                    buttonCache.clear();
-                    constructGUI();
-                    openGUI();
+                    filter = filter.next();
+                    updateGUI();
                 }
-            } else {
-                AbstractButton button = buttonCache.get(response.clickedButton());
+                return;
+            }
+            AbstractButton button = buttonCache.get(clicked);
+            if (button != null) {
                 if (button instanceof ObjectPrefix && ((ObjectPrefix) button).isDynamicPrefix()) {
                     new FormDynamicPrefixGUI(player, (ObjectPrefix) button).openGUI();
                     return;
                 }
                 button.clickEvent(ClickType.LEFT, player);
+                finishGUI();
             }
-        });
+        }));
+        tempVal2.closedOrInvalidResultHandler((submittedForm, response) ->
+                handleResponse(submittedForm, this::finishGUI));
         form = tempVal2.build();
     }
 }

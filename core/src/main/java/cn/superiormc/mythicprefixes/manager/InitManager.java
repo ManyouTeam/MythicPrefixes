@@ -5,7 +5,7 @@ import cn.superiormc.mythicprefixes.utils.CommonUtil;
 
 import java.io.File;
 
-public class InitManager {
+public class InitManager extends AbstractManager {
     public static InitManager initManager;
 
     private boolean firstLoad = false;

@@ -2,7 +2,20 @@ package cn.superiormc.mythicprefixes;
 
 import cn.superiormc.mythicprefixes.bstats.Metrics;
 import cn.superiormc.mythicprefixes.database.DatabaseExecutor;
-import cn.superiormc.mythicprefixes.manager.*;
+import cn.superiormc.mythicprefixes.manager.AbstractManager;
+import cn.superiormc.mythicprefixes.manager.ActionManager;
+import cn.superiormc.mythicprefixes.manager.CacheManager;
+import cn.superiormc.mythicprefixes.manager.CommandManager;
+import cn.superiormc.mythicprefixes.manager.ConditionManager;
+import cn.superiormc.mythicprefixes.manager.ConfigManager;
+import cn.superiormc.mythicprefixes.manager.DatabaseManager;
+import cn.superiormc.mythicprefixes.manager.ErrorManager;
+import cn.superiormc.mythicprefixes.manager.HookManager;
+import cn.superiormc.mythicprefixes.manager.InitManager;
+import cn.superiormc.mythicprefixes.manager.LanguageManager;
+import cn.superiormc.mythicprefixes.manager.ListenerManager;
+import cn.superiormc.mythicprefixes.manager.MenuStatusManager;
+import cn.superiormc.mythicprefixes.manager.TaskManager;
 import cn.superiormc.mythicprefixes.methods.DynamicPrefixes;
 import cn.superiormc.mythicprefixes.objects.ObjectCache;
 import cn.superiormc.mythicprefixes.utils.CommonUtil;
@@ -77,6 +90,7 @@ public final class MythicPrefixes extends JavaPlugin {
         new ActionManager();
         new ConditionManager();
         new ConfigManager();
+        new MenuStatusManager();
         new HookManager();
         new LanguageManager();
         new DatabaseManager();
@@ -84,6 +98,7 @@ public final class MythicPrefixes extends JavaPlugin {
         new CommandManager();
         new ListenerManager();
         new TaskManager();
+        AbstractManager.initializeManagers();
         if (ConfigManager.configManager.getBoolean("choose-prefix-gui.title-update.enabled") && MythicPrefixes.methodUtil.methodID().equals("paper") &&
                 CommonUtil.checkPluginLoad("packetevents") && !MythicPrefixes.freeVersion) {
             usePacketEvents = true;
@@ -97,6 +112,7 @@ public final class MythicPrefixes extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        AbstractManager.disableManagers();
         TaskManager.taskManager.cancelTask();
         ListenerManager.listenerManager.unregisterAllListener();
         DynamicPrefixes.clearDynamicPrefixEditors();

@@ -1,6 +1,16 @@
 package cn.superiormc.mythicprefixes.manager;
 
-import cn.superiormc.mythicprefixes.commands.*;
+import cn.superiormc.mythicprefixes.commands.MainCommand;
+import cn.superiormc.mythicprefixes.commands.MainCommandTab;
+import cn.superiormc.mythicprefixes.commands.SubAddPrefix;
+import cn.superiormc.mythicprefixes.commands.SubDynamicPrefix;
+import cn.superiormc.mythicprefixes.commands.SubHelp;
+import cn.superiormc.mythicprefixes.commands.SubOpenGUI;
+import cn.superiormc.mythicprefixes.commands.SubParsePlaceholder;
+import cn.superiormc.mythicprefixes.commands.SubReload;
+import cn.superiormc.mythicprefixes.commands.SubRemovePrefix;
+import cn.superiormc.mythicprefixes.commands.SubSetPrefix;
+import cn.superiormc.mythicprefixes.commands.SubViewUsingPrefix;
 import cn.superiormc.mythicprefixes.objects.AbstractCommand;
 import org.bukkit.Bukkit;
 
@@ -8,19 +18,19 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class CommandManager {
+public class CommandManager extends AbstractManager {
 
     public static CommandManager commandManager;
 
     private Map<String, AbstractCommand> registeredCommands = new HashMap<>();
 
-    public CommandManager(){
+    public CommandManager() {
         commandManager = this;
         registerBukkitCommand();
         registerObjectCommand();
     }
 
-    private void registerBukkitCommand(){
+    private void registerBukkitCommand() {
         Objects.requireNonNull(Bukkit.getPluginCommand("mythicprefixes")).setExecutor(new MainCommand());
         Objects.requireNonNull(Bukkit.getPluginCommand("mythicprefixes")).setTabCompleter(new MainCommandTab());
     }

@@ -10,12 +10,11 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class LanguageManager {
+public class LanguageManager extends AbstractManager {
 
     public static LanguageManager languageManager;
 
@@ -123,7 +122,8 @@ public class LanguageManager {
         try {
             config.save(file);
         } catch (IOException e) {
-            e.printStackTrace();
+            ErrorManager.errorManager.sendErrorMessage(
+                    "§cError: Can not save language file " + lang + ": " + e.getMessage());
         }
     }
 
@@ -193,7 +193,8 @@ public class LanguageManager {
         try (InputStreamReader reader = new InputStreamReader(inputStream)) {
             return YamlConfiguration.loadConfiguration(reader);
         } catch (IOException e) {
-            e.printStackTrace();
+            ErrorManager.errorManager.sendErrorMessage(
+                    "§cError: Can not load internal language " + language + ": " + e.getMessage());
             return null;
         }
     }

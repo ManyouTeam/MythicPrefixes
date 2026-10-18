@@ -1,12 +1,22 @@
 package cn.superiormc.mythicprefixes.manager;
 
-import cn.superiormc.mythicprefixes.objects.conditions.*;
+import cn.superiormc.mythicprefixes.objects.conditions.AbstractCheckCondition;
+import cn.superiormc.mythicprefixes.objects.conditions.ConditionAny;
+import cn.superiormc.mythicprefixes.objects.conditions.ConditionBiome;
+import cn.superiormc.mythicprefixes.objects.conditions.ConditionEffectedPrefixAmount;
+import cn.superiormc.mythicprefixes.objects.conditions.ConditionEquippedPrefix;
+import cn.superiormc.mythicprefixes.objects.conditions.ConditionEquippedPrefixAmount;
+import cn.superiormc.mythicprefixes.objects.conditions.ConditionNot;
+import cn.superiormc.mythicprefixes.objects.conditions.ConditionPermission;
+import cn.superiormc.mythicprefixes.objects.conditions.ConditionPlaceholder;
+import cn.superiormc.mythicprefixes.objects.conditions.ConditionWorld;
+import cn.superiormc.mythicprefixes.objects.conditions.ObjectSingleCondition;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class ConditionManager {
+public class ConditionManager extends AbstractManager {
 
     public static ConditionManager conditionManager;
 

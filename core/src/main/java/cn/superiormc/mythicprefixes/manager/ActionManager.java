@@ -1,13 +1,34 @@
 package cn.superiormc.mythicprefixes.manager;
 
 
-import cn.superiormc.mythicprefixes.objects.actions.*;
+import cn.superiormc.mythicprefixes.objects.actions.AbstractRunAction;
+import cn.superiormc.mythicprefixes.objects.actions.ActionActionBar;
+import cn.superiormc.mythicprefixes.objects.actions.ActionAddPrefix;
+import cn.superiormc.mythicprefixes.objects.actions.ActionAnnouncement;
+import cn.superiormc.mythicprefixes.objects.actions.ActionAny;
+import cn.superiormc.mythicprefixes.objects.actions.ActionChance;
+import cn.superiormc.mythicprefixes.objects.actions.ActionClose;
+import cn.superiormc.mythicprefixes.objects.actions.ActionConditional;
+import cn.superiormc.mythicprefixes.objects.actions.ActionConsoleCommand;
+import cn.superiormc.mythicprefixes.objects.actions.ActionDelay;
+import cn.superiormc.mythicprefixes.objects.actions.ActionEffect;
+import cn.superiormc.mythicprefixes.objects.actions.ActionEntitySpawn;
+import cn.superiormc.mythicprefixes.objects.actions.ActionMessage;
+import cn.superiormc.mythicprefixes.objects.actions.ActionOPCommand;
+import cn.superiormc.mythicprefixes.objects.actions.ActionParticle;
+import cn.superiormc.mythicprefixes.objects.actions.ActionPlayerCommand;
+import cn.superiormc.mythicprefixes.objects.actions.ActionRemoveAll;
+import cn.superiormc.mythicprefixes.objects.actions.ActionRemovePrefix;
+import cn.superiormc.mythicprefixes.objects.actions.ActionSound;
+import cn.superiormc.mythicprefixes.objects.actions.ActionTeleport;
+import cn.superiormc.mythicprefixes.objects.actions.ActionTitle;
+import cn.superiormc.mythicprefixes.objects.actions.ObjectSingleAction;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class ActionManager {
+public class ActionManager extends AbstractManager {
 
     public static ActionManager actionManager;
 

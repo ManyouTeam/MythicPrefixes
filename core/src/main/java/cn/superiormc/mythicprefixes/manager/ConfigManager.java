@@ -13,9 +13,14 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import java.io.File;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
-public class ConfigManager {
+public class ConfigManager extends AbstractManager {
 
     public static ConfigManager configManager;
 
@@ -52,7 +57,7 @@ public class ConfigManager {
                     LibreforgeEffects.libreforgeEffects.cleanMap();
                 }
             } catch (Exception ignored) {
-                TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §cFailed to hook into.");
+                ErrorManager.errorManager.sendErrorMessage("§cError: Failed to hook into libreforge.");
             }
         }
     }
@@ -111,7 +116,8 @@ public class ConfigManager {
                 if (!MythicPrefixes.freeVersion || useEffectPrefixAmount < 3) {
                     prefix.initEffects();
                 } else if (prefix.enabledEffect()) {
-                    TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §cError: Free version can only create up to 3 prefixes that enable effect, skipping init effect for prefix: " + substring + "!");
+                    ErrorManager.errorManager.sendErrorMessage("§cError: Free version can only create up to 3 "
+                            + "prefixes that enable effect, skipping init effect for prefix: " + substring + "!");
                 }
                 useEffectPrefixAmount ++;
                 prefixConfigs.put(substring, prefix);

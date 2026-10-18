@@ -6,6 +6,7 @@ import cn.superiormc.mythicprefixes.gui.InvGUI;
 import cn.superiormc.mythicprefixes.gui.form.FormChoosePrefixGUI;
 import cn.superiormc.mythicprefixes.manager.CacheManager;
 import cn.superiormc.mythicprefixes.manager.ConfigManager;
+import cn.superiormc.mythicprefixes.manager.ErrorManager;
 import cn.superiormc.mythicprefixes.objects.ObjectCache;
 import cn.superiormc.mythicprefixes.objects.PrefixStatus;
 import cn.superiormc.mythicprefixes.objects.buttons.AbstractButton;
@@ -19,7 +20,11 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 public class ChoosePrefixGUI extends InvGUI {
 
@@ -46,37 +51,42 @@ public class ChoosePrefixGUI extends InvGUI {
     private ChoosePrefixGUI(Player player, String group) {
         super(player);
         selectedGroup = group;
-        slotCache = ConfigManager.configManager.getIntList("choose-prefix-gui.prefix-item-slot");
-        constructGUI();
+        int size = ConfigManager.configManager.getInt("choose-prefix-gui.size", 54);
+        slotCache = new ArrayList<>();
+        for (int slot : ConfigManager.configManager.getIntList("choose-prefix-gui.prefix-item-slot")) {
+            if (slot < 0 || slot >= size) {
+                ErrorManager.errorManager.sendErrorMessage("§cError: Invalid prefix menu slot: " + slot);
+            } else if (slotCache.contains(slot)) {
+                ErrorManager.errorManager.sendErrorMessage("§cError: Duplicate prefix menu slot: " + slot);
+            } else {
+                slotCache.add(slot);
+            }
+        }
     }
 
     @Override
     protected void constructGUI() {
-        int i = 0;
-        ObjectCache cache = CacheManager.cacheManager.getPlayerCache(player);
-        if (prefixCache.isEmpty()) {
-            for (ObjectPrefix prefix : ConfigManager.configManager.getPrefixesWithoutHide()) {
-                if (!selectedGroup.equals("all") && !prefix.getGroups().contains(selectedGroup)) {
-                    continue;
-                }
-                PrefixStatus status = prefix.getPrefixStatus(cache);
-                if ((filter == Filter.ALL || (filter == Filter.USING && status == PrefixStatus.USING) || (
-                        filter == Filter.CAN_USE && status == PrefixStatus.CAN_USE))
-                        && prefix.shouldHideInGUI(player)) {
-                    prefixCache.put(i, prefix);
-                    i++;
-                }
-            }
-            if (prefixCache.size() >= slotCache.size()) {
-                needPages = (int) (Math.ceil((double) prefixCache.size() / slotCache.size()));
-            }
+        prefixCache.clear();
+        int index = 0;
+        for (ObjectPrefix prefix : collectVisiblePrefixes(player, selectedGroup, filter)) {
+            prefixCache.put(index, prefix);
+            index++;
         }
-        title = TextUtil.withPAPI(ConfigManager.configManager.getString(player,"choose-prefix-gui." +
+        if (slotCache.isEmpty()) {
+            needPages = 1;
+            nowPage = 1;
+            ErrorManager.errorManager.sendErrorMessage("§cError: Prefix menu has no valid prefix-item-slot.");
+        } else {
+            needPages = Math.max(1, (int) Math.ceil((double) prefixCache.size() / slotCache.size()));
+            nowPage = Math.max(1, Math.min(nowPage, needPages));
+        }
+        title = TextUtil.withPAPI(ConfigManager.configManager.getString(player, "choose-prefix-gui." +
                 "title", "Tag GUI", "now", String.valueOf(nowPage), "max", String.valueOf(needPages)), player);
         if (Objects.isNull(inv)) {
             int size = ConfigManager.configManager.getInt("choose-prefix-gui.size", 54);
             inv = MythicPrefixes.methodUtil.createNewInv(player, size, title, this);
         }
+        inv.clear();
         for (int c = 0 ; c < slotCache.size() ; c ++) {
             AbstractButton prefix = prefixCache.get((nowPage - 1)  * slotCache.size() + c);
             if (prefix == null) {
@@ -85,15 +95,18 @@ public class ChoosePrefixGUI extends InvGUI {
             }
             setItem(slotCache.get(c), prefix.getDisplayItem(player));
         }
-        if (buttonCache.isEmpty()) {
-            for (int slot : ConfigManager.configManager.getButtons().keySet()) {
-                AbstractButton button = ConfigManager.configManager.getButtons().get(slot);
-                if (button == null) {
-                    continue;
+        buttonCache.clear();
+        for (Map.Entry<Integer, ? extends AbstractButton> entry : ConfigManager.configManager.getButtons().entrySet()) {
+            int slot = entry.getKey();
+            AbstractButton button = entry.getValue();
+            if (button == null || slot < 0 || slot >= inv.getSize()) {
+                if (slot < 0 || slot >= inv.getSize()) {
+                    ErrorManager.errorManager.sendErrorMessage("§cError: Invalid custom menu slot: " + slot);
                 }
-                buttonCache.put(slot, button);
-                setItem(slot, button.getDisplayItem(player));
+                continue;
             }
+            buttonCache.put(slot, button);
+            setItem(slot, button.getDisplayItem(player));
         }
         ConfigurationSection nextPageSection = ConfigManager.configManager.getConfigurationSection("choose-prefix-gui.next-page-item");
         if (nowPage < needPages && nextPageSection != null) {
@@ -101,7 +114,7 @@ public class ChoosePrefixGUI extends InvGUI {
                     "max", String.valueOf(needPages),
                     "now", String.valueOf(nowPage));
             nextPageSlot = nextPageSection.getInt("slot", 52);
-            if (nextPageSlot >= 0) {
+            if (nextPageSlot >= 0 && nextPageSlot < inv.getSize()) {
                 setItem(nextPageSlot, nextPageItem);
             }
         } else {
@@ -115,7 +128,7 @@ public class ChoosePrefixGUI extends InvGUI {
                     "max", String.valueOf(needPages),
                     "now", String.valueOf(nowPage));
             previousPageSlot = previousPageSection.getInt("slot", 46);
-            if (previousPageSlot >= 0) {
+            if (previousPageSlot >= 0 && previousPageSlot < inv.getSize()) {
                 setItem(previousPageSlot, previousPageItem);
             }
         } else {
@@ -134,7 +147,7 @@ public class ChoosePrefixGUI extends InvGUI {
             ItemStack filterItem = ItemUtil.buildItemStack(player, filterSection,
                     "filter", filterPlaceholder);
             filterSlot = filterSection.getInt("slot", 47);
-            if (filterSlot >= 0) {
+            if (filterSlot >= 0 && filterSlot < inv.getSize()) {
                 setItem(filterSlot, filterItem);
             }
         }
@@ -159,11 +172,8 @@ public class ChoosePrefixGUI extends InvGUI {
         }
 
         if (slot == filterSlot && !MythicPrefixes.freeVersion) {
-            if (filter == Filter.ALL) filter = Filter.USING;
-            else if (filter == Filter.USING) filter = Filter.CAN_USE;
-            else if (filter == Filter.CAN_USE) filter = Filter.ALL;
-
-            prefixCache.clear();
+            filter = filter.next();
+            nowPage = 1;
             constructGUI();
             return true;
         }
@@ -191,11 +201,33 @@ public class ChoosePrefixGUI extends InvGUI {
 
     public static void openGUI(Player player, String group) {
         if (CommonUtil.isBedrockPlayer(player)) {
-            FormChoosePrefixGUI gui = new FormChoosePrefixGUI(player);
+            FormChoosePrefixGUI gui = new FormChoosePrefixGUI(player, group);
             gui.openGUI();
             return;
         }
         ChoosePrefixGUI gui = new ChoosePrefixGUI(player, group);
         gui.openGUI();
+    }
+
+    public static List<ObjectPrefix> collectVisiblePrefixes(Player player, String group, Filter filter) {
+        List<ObjectPrefix> prefixes = new ArrayList<>();
+        ObjectCache cache = CacheManager.cacheManager.getPlayerCache(player);
+        if (cache == null) {
+            return prefixes;
+        }
+        String selectedGroup = group == null || group.isEmpty() ? "all" : group;
+        for (ObjectPrefix prefix : ConfigManager.configManager.getPrefixesWithoutHide()) {
+            if (!selectedGroup.equalsIgnoreCase("all") && !prefix.getGroups().contains(selectedGroup)) {
+                continue;
+            }
+            PrefixStatus status = prefix.getPrefixStatus(cache);
+            boolean matches = filter == Filter.ALL
+                    || filter == Filter.USING && status == PrefixStatus.USING
+                    || filter == Filter.CAN_USE && status == PrefixStatus.CAN_USE;
+            if (matches && prefix.shouldHideInGUI(player)) {
+                prefixes.add(prefix);
+            }
+        }
+        return prefixes;
     }
 }

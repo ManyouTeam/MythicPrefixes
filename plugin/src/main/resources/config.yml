@@ -71,6 +71,11 @@ choose-prefix-gui:
     enabled: true
     # Support value: FLOODGATE, UUID
     check-method: FLOODGATE
+  cooldown:
+    click: -1
+    reopen: -1
+  menu-update:
+    circle-update: false
   # Premium version only
   filter-item:
     # Set to -1 to hide.

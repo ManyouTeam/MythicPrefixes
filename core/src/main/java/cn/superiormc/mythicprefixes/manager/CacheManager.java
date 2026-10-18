@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class CacheManager {
+public class CacheManager extends AbstractManager {
 
     public static CacheManager cacheManager;
 
@@ -62,7 +62,8 @@ public class CacheManager {
     public void savePlayerCacheOnExit(Player player) {
         ObjectCache cache = playerCacheMap.get(player.getUniqueId());
         if (cache == null) {
-            TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §cError: Can not save player data: " + player.getName() + "!");
+            ErrorManager.errorManager.sendErrorMessage(
+                    "§cError: Can not save player data: " + player.getName() + "!");
             return;
         }
         if (cache.canNotModify()) {
@@ -76,7 +77,8 @@ public class CacheManager {
     public void savePlayerCacheOnDisable(Player player, boolean disable) {
         ObjectCache cache = playerCacheMap.get(player.getUniqueId());
         if (cache == null) {
-            TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §cError: Can not save player data: " + player.getName() + "!");
+            ErrorManager.errorManager.sendErrorMessage(
+                    "§cError: Can not save player data: " + player.getName() + "!");
             return;
         }
         if (cache.canNotModify()) {

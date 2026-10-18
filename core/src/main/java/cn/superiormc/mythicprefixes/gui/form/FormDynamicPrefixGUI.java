@@ -53,13 +53,16 @@ public class FormDynamicPrefixGUI extends FormGUI {
                         "dynamic-prefix.form-action")), actions)
                 .input(TextUtil.parse(LanguageManager.languageManager.getStringText(player,
                         "dynamic-prefix.form-input")), "", current == null ? "" : current);
-        builder.validResultHandler(response -> {
+        builder.validResultHandler((submittedForm, response) -> handleResponse(submittedForm, () -> {
             if (response.asDropdown(1) == 1) {
                 prefix.clickEvent(ClickType.LEFT, player);
-                return;
+            } else {
+                DynamicPrefixes.submitDynamicPrefix(player, prefix, response.asInput(2));
             }
-            DynamicPrefixes.submitDynamicPrefix(player, prefix, response.asInput(2));
-        });
+            finishGUI();
+        }));
+        builder.closedOrInvalidResultHandler((submittedForm, response) ->
+                handleResponse(submittedForm, this::finishGUI));
         form = builder.build();
     }
 }

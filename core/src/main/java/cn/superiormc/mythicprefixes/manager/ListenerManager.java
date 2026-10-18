@@ -9,16 +9,16 @@ import cn.superiormc.mythicprefixes.utils.PacketInventoryUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 
-public class ListenerManager {
+public class ListenerManager extends AbstractManager {
 
     public static ListenerManager listenerManager;
 
-    public ListenerManager(){
+    public ListenerManager() {
         listenerManager = this;
         registerListeners();
     }
 
-    private void registerListeners(){
+    private void registerListeners() {
         Bukkit.getPluginManager().registerEvents(new GUIListener(), MythicPrefixes.instance);
         Bukkit.getPluginManager().registerEvents(new CacheListener(), MythicPrefixes.instance);
         if (CommonUtil.getMajorVersion(19) && MythicPrefixes.methodUtil.methodID().equals("paper") &&

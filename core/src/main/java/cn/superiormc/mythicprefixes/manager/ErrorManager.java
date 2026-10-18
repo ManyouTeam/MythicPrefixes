@@ -5,7 +5,7 @@ import cn.superiormc.mythicprefixes.utils.TextUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 
-public class ErrorManager {
+public class ErrorManager extends AbstractManager {
 
     public static ErrorManager errorManager;
 
@@ -13,13 +13,17 @@ public class ErrorManager {
 
     private String lastErrorMessage = "";
 
-    public ErrorManager(){
+    public ErrorManager() {
         errorManager = this;
     }
 
-    public void sendErrorMessage(String message){
+    public void sendErrorMessage(String message) {
         if (!getError || !message.equals(lastErrorMessage)) {
-            TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " " + message);
+            if (MythicPrefixes.methodUtil == null) {
+                Bukkit.getConsoleSender().sendMessage("[MythicPrefixes] " + message);
+            } else {
+                TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " " + message);
+            }
             lastErrorMessage = message;
             getError = true;
             try {
